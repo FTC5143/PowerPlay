@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.components.live.DriveTrain;
 import org.firstinspires.ftc.teamcode.components.live.OCVPhoneCamera;
+import org.firstinspires.ftc.teamcode.components.live.Shooter;
 import org.firstinspires.ftc.teamcode.systems.pathfollowing.Point;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 public class LiveRobot extends Robot {
 
     public DriveTrain       drive_train;
+    public Shooter          shooter;
     public OCVPhoneCamera   phone_camera;
 
     FtcDashboard            dashboard;
@@ -30,6 +32,7 @@ public class LiveRobot extends Robot {
         super(opmode);
 
         drive_train     = new DriveTrain(this);
+        shooter         = new Shooter(this);
         phone_camera    = new OCVPhoneCamera(this);
 
         dashboard = FtcDashboard.getInstance();
@@ -67,19 +70,11 @@ public class LiveRobot extends Robot {
 
         Canvas canvas = packet.fieldOverlay();
 
-
-
         int offset_x = -33;
         int offset_y = -63;
         double offset_a = Math.PI/2;
 
         DashboardUtil.drawRobot(canvas, new Pose2d(drive_train.lcs.x+offset_x, drive_train.lcs.y+offset_y, drive_train.lcs.a+offset_a));
-
-
-        /*
-        robot_movement.add(new Point(drive_train.lcs.x+offset_x, drive_train.lcs.y+offset_y));
-        DashboardUtil.drawPointList(canvas, robot_movement);
-        */
 
         canvas.setStrokeWidth(1);
         canvas.setStroke("#0000ff");
