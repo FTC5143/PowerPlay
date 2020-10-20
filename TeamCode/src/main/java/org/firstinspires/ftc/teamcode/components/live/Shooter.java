@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.components.live;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
@@ -13,12 +14,12 @@ import org.firstinspires.ftc.teamcode.robots.Robot;
 
 public class Shooter extends Component {
 
-    private final int TARGET_SPEED = 6000; // rpm
+    private final int TARGET_SPEED = 2200; // counts per second
 
     //// MOTORS ////
     private DcMotorEx flywheel;   // Flywheel
 
-    private PIDCoefficients flywheel_pid_coeffs = new PIDCoefficients(10, 0.1, 2);
+    private PIDCoefficients flywheel_pid_coeffs = new PIDCoefficients(10, 1, 5);
 
     {
         name = "Shooter";
@@ -45,7 +46,7 @@ public class Shooter extends Component {
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
-        telemetry.addData("FLYWHEEL VEL", robot.bulk_data_1.getMotorVelocity(flywheel));
+        telemetry.addData("FLYWHEEL VEL", robot.bulk_data_2.getMotorVelocity(flywheel));
     }
 
     @Override
@@ -56,6 +57,8 @@ public class Shooter extends Component {
 
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+
         flywheel.setVelocityPIDFCoefficients(
                 flywheel_pid_coeffs.p,
                 flywheel_pid_coeffs.i,
@@ -63,9 +66,8 @@ public class Shooter extends Component {
                 0 // no f
         );
 
-        flywheel.setVelocity(TARGET_SPEED*360, AngleUnit.DEGREES);
+        flywheel.setVelocity(TARGET_SPEED);
 
-        flywheel.setPower(1);
     }
 
     @Override

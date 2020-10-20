@@ -87,6 +87,8 @@ public class LiveRobot extends Robot {
         packet.put("ce", drive_train.lcs.prev_ce);
         packet.put("freq", update_freq);
 
+        packet.put("flyvel", bulk_data_2.getMotorVelocity(0));
+
         if (drive_train.current_path != null) {
             drive_train.current_path.dashboard_draw(canvas, drive_train.lcs.x, drive_train.lcs.y);
         }
