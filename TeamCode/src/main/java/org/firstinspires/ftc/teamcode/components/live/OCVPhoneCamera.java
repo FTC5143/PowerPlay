@@ -67,11 +67,6 @@ public class OCVPhoneCamera extends Component {
 
     }
 
-    @Override
-    public void shutdown() {
-        stop_streaming();
-    }
-
     public void start_streaming() {
         phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
     }
