@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -50,6 +52,8 @@ public class OCVPhoneCamera extends Component {
 
         stone_pipeline = new SamplePipeline();
         phone_camera.setPipeline(stone_pipeline);
+
+        start_streaming();
     }
 
     @Override
@@ -57,35 +61,19 @@ public class OCVPhoneCamera extends Component {
         super.updateTelemetry(telemetry);
         telemetry.addData("FRAME", phone_camera.getFrameCount());
         telemetry.addData("FPS", String.format("%.2f", phone_camera.getFps()));
-        telemetry.addData("LEFT RECT", stone_pipeline.left_hue + " " + stone_pipeline.left_br);
-        telemetry.addData("RIGHT RECT", stone_pipeline.right_hue + " " + stone_pipeline.right_br);
+        telemetry.addData("TOP RECT", stone_pipeline.top_sat);
+        telemetry.addData("BOT RECT", stone_pipeline.bot_sat);
         telemetry.addData("PATTERN", stone_pipeline.pattern);
 
     }
 
     @Override
     public void shutdown() {
-    }
-
-    public void start_streaming(int c) {
-        color = c;
-        start_streaming();
+        stop_streaming();
     }
 
     public void start_streaming() {
-        phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT );
-    }
-
-    public int get_pattern(int color) {
-        int pattern = get_pattern();
-        if (color == BLUE) {
-            if (pattern == 3) {
-                return 2;
-            } else if (pattern == 2) {
-                return 3;
-            }
-        }
-        return pattern;
+        phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
     }
 
     public int get_pattern() {
@@ -97,11 +85,8 @@ public class OCVPhoneCamera extends Component {
     }
 
     class SamplePipeline extends OpenCvPipeline {
-        int left_hue;
-        int right_hue;
-
-        int left_br;
-        int right_br;
+        int top_sat;
+        int bot_sat;
 
         int pattern;
 
@@ -110,113 +95,69 @@ public class OCVPhoneCamera extends Component {
 
             input.convertTo(input, CV_8UC1, 1, 10);
 
-            int[] left_rect = {
-                    (int) (input.cols() * (27f / 64f)),
-                    (int) (input.rows() * (18f / 64f)),
-                    (int) (input.cols() * (35f / 64f)),
-                    (int) (input.rows() * (28f / 64f))
+            int[] top_rect = {
+                    (int) (input.cols() * (20f / 100f)),
+                    (int) (input.rows() * (20f / 100f)),
+                    (int) (input.cols() * (65f / 100f)),
+                    (int) (input.rows() * (80f / 100f))
             };
 
-            int[] right_rect = {
-                    (int) (input.cols() * (27f / 64f)),
-                    (int) (input.rows() * (32f / 64f)),
-                    (int) (input.cols() * (35f / 64f)),
-                    (int) (input.rows() * (42f / 64f))
+            int[] bot_rect = {
+                    (int) (input.cols() * (35f / 100f)),
+                    (int) (input.rows() * (65f / 100f)),
+                    (int) (input.cols() * (80f / 100f)),
+                    (int) (input.rows() * (80f / 100f))
             };
 
-            if (color == BLUE) {
-                left_rect[0] = (int) (input.cols() * (27f / 64f));
-                left_rect[1] = (int) (input.rows() * (23f / 64f));
-                left_rect[2] = (int) (input.cols() * (35f / 64f));
-                left_rect[3] = (int) (input.rows() * (33f / 64f));
-
-                right_rect[0] = (int) (input.cols() * (27f / 64f));
-                right_rect[1] = (int) (input.rows() * (35f / 64f));
-                right_rect[2] = (int) (input.cols() * (35f / 64f));
-                right_rect[3] = (int) (input.rows() * (45f / 64f));
-
-            }
             Imgproc.rectangle(
                     input,
                     new Point(
-                            left_rect[0],
-                            left_rect[1]),
+                            top_rect[0],
+                            top_rect[1]),
 
                     new Point(
-                            left_rect[2],
-                            left_rect[3]),
+                            top_rect[2],
+                            top_rect[3]),
                     new Scalar(0, 255, 0), 1);
 
             Imgproc.rectangle(
                     input,
                     new Point(
-                            right_rect[0],
-                            right_rect[1]),
+                            bot_rect[0],
+                            bot_rect[1]),
 
                     new Point(
-                            right_rect[2],
-                            right_rect[3]),
+                            bot_rect[2],
+                            bot_rect[3]),
                     new Scalar(0, 0, 255), 1);
 
-            Mat left_block = input.submat(left_rect[1], left_rect[3], left_rect[0], left_rect[2]);
-            Mat right_block = input.submat(right_rect[1], right_rect[3], right_rect[0], right_rect[2]);
+            Mat top_block = input.submat(top_rect[1], top_rect[3], top_rect[0], top_rect[2]);
+            Mat bot_block = input.submat(bot_rect[1], bot_rect[3], bot_rect[0], bot_rect[2]);
 
 
-            Scalar left_mean = Core.mean(left_block);
+            Scalar top_mean = Core.mean(top_block);
+            Scalar bot_mean = Core.mean(bot_block);
 
+            float[] top_hsv = new float[3];
+            float[] bot_hsv = new float[3];
 
-            Scalar right_mean = Core.mean(right_block);
+            Color.RGBToHSV((int) top_mean.val[0], (int) top_mean.val[1], (int) top_mean.val[2], top_hsv);
+            Color.RGBToHSV((int) bot_mean.val[0], (int) bot_mean.val[1], (int) bot_mean.val[2], bot_hsv);
 
-            left_hue = get_hue((int) left_mean.val[0], (int) left_mean.val[1], (int) left_mean.val[2]);
-            right_hue = get_hue((int) right_mean.val[0], (int) right_mean.val[1], (int) right_mean.val[2]);
-            left_br = get_brightness((int) left_mean.val[0], (int) left_mean.val[1], (int) left_mean.val[2]);
-            right_br = get_brightness((int) right_mean.val[0], (int) right_mean.val[1], (int) right_mean.val[2]);
+            top_sat = (int)(100.0 * top_hsv[1]);
+            bot_sat = (int)(100.0 * bot_hsv[1]);
 
-            if (left_br > 100 && right_br > 100) pattern = 1;
-            else if (left_br > 100 && right_br < 100) pattern = 2;
-            else if (left_br < 100 && right_br > 100) pattern = 3;
-            else if (left_br < 100 && right_br < 100) {
-                if (left_br > right_br) {
-                    pattern = 1;
-                } else if (left_br < right_br) {
-                    pattern = 2;
-                } else {
+            if (bot_sat > 40) {
+                if (top_sat > 40) {
                     pattern = 3;
+                } else {
+                    pattern = 2;
                 }
+            } else {
+                pattern = 1;
             }
 
             return input;
         }
-    }
-
-
-    private int get_hue(int red, int green, int blue) {
-
-        float min = Math.min(Math.min(red, green), blue);
-        float max = Math.max(Math.max(red, green), blue);
-
-        if (min == max) {
-            return 0;
-        }
-
-        float hue = 0f;
-        if (max == red) {
-            hue = (green - blue) / (max - min);
-
-        } else if (max == green) {
-            hue = 2f + (blue - red) / (max - min);
-
-        } else {
-            hue = 4f + (red - green) / (max - min);
-        }
-
-        hue = hue * 60;
-        if (hue < 0) hue = hue + 360;
-
-        return Math.round(hue);
-    }
-
-    private int get_brightness(int red, int green, int blue) {
-        return (int) (((double) (red + green + blue)) / 3);
     }
 }
