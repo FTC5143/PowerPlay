@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.components.live.DriveTrain;
+import org.firstinspires.ftc.teamcode.components.live.Intake;
 import org.firstinspires.ftc.teamcode.components.live.OCVPhoneCamera;
 import org.firstinspires.ftc.teamcode.components.live.Shooter;
 import org.firstinspires.ftc.teamcode.systems.pathfollowing.Point;
@@ -18,6 +19,7 @@ public class LiveRobot extends Robot {
 
     public DriveTrain       drive_train;
     public Shooter          shooter;
+    public Intake           intake;
     public OCVPhoneCamera   phone_camera;
 
     FtcDashboard            dashboard;
@@ -33,6 +35,7 @@ public class LiveRobot extends Robot {
 
         drive_train     = new DriveTrain(this);
         shooter         = new Shooter(this);
+        intake          = new Intake(this);
         phone_camera    = new OCVPhoneCamera(this);
 
         dashboard = FtcDashboard.getInstance();
