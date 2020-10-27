@@ -103,8 +103,8 @@ public class OCVPhoneCamera extends Component {
             };
 
             int[] bot_rect = {
-                    (int) (input.cols() * (35f / 100f)),
-                    (int) (input.rows() * (65f / 100f)),
+                    (int) (input.cols() * (65f / 100f)),
+                    (int) (input.rows() * (20f / 100f)),
                     (int) (input.cols() * (80f / 100f)),
                     (int) (input.rows() * (80f / 100f))
             };
@@ -147,8 +147,8 @@ public class OCVPhoneCamera extends Component {
             top_sat = (int)(100.0 * top_hsv[1]);
             bot_sat = (int)(100.0 * bot_hsv[1]);
 
-            if (bot_sat > 40) {
-                if (top_sat > 40) {
+            if (bot_sat > 30) {
+                if (top_sat > 30) {
                     pattern = 3;
                 } else {
                     pattern = 2;
