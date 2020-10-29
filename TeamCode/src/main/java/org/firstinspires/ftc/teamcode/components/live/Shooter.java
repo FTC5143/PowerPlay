@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,14 +13,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
-public class Shooter extends Component {
+@Config
+class ShooterConfig {
+    public static PIDCoefficients flywheel_pid_coeffs = new PIDCoefficients(250, 2, 30);
 
-    private final int TARGET_SPEED = 2200; // counts per second
+    public static int target_speed = 2200; // counts per second
+}
+
+public class Shooter extends Component {
 
     //// MOTORS ////
     private DcMotorEx flywheel;   // Flywheel
-
-    private PIDCoefficients flywheel_pid_coeffs = new PIDCoefficients(10, 1, 5);
 
     {
         name = "Shooter";
@@ -59,15 +63,16 @@ public class Shooter extends Component {
 
         flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        update_pid_coeffs();
+    }
+
+    public void update_pid_coeffs() {
         flywheel.setVelocityPIDFCoefficients(
-                flywheel_pid_coeffs.p,
-                flywheel_pid_coeffs.i,
-                flywheel_pid_coeffs.d,
+                ShooterConfig.flywheel_pid_coeffs.p,
+                ShooterConfig.flywheel_pid_coeffs.i,
+                ShooterConfig.flywheel_pid_coeffs.d,
                 0 // no f
         );
-
-        flywheel.setVelocity(TARGET_SPEED);
-
     }
 
     @Override
@@ -75,5 +80,17 @@ public class Shooter extends Component {
         super.shutdown();
 
         flywheel.setPower(0);
+    }
+
+    public void spin() {
+        flywheel.setVelocity(ShooterConfig.target_speed);
+    }
+
+    public void stop() {
+        flywheel.setVelocity(0);
+    }
+
+    public void shoot() {
+        /* todo */
     }
 }

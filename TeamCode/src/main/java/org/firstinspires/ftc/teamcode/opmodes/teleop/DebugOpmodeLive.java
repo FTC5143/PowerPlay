@@ -9,18 +9,6 @@ import org.firstinspires.ftc.teamcode.opmodes.LiveTeleopBase;
 //@Disabled
 public class DebugOpmodeLive extends LiveTeleopBase {
 
-    boolean dpad_up_pressed = false;
-    boolean dpad_down_pressed = false;
-
-    boolean dpad_left_pressed = false;
-    boolean dpad_right_pressed = false;
-
-    boolean a2_pressed = false;
-
-    long slow_accel_starttime = System.currentTimeMillis();
-
-    int prepared_level = 1;
-
     @Override
     public void on_init() {
 
@@ -29,10 +17,47 @@ public class DebugOpmodeLive extends LiveTeleopBase {
     @Override
     public void on_start() {
         this.getRuntime();
+
+        robot.shooter.spin();
+        robot.intake.spin();
     }
 
     @Override
     public void on_loop() {
+
+        /// GAMEPAD 2 CONTROLS ///
+
+        if (gamepad2.back) { // Hotkeys of a sort, less used things only accessed by holding back
+            if (gamepad2.x) {
+                robot.phone_camera.start_streaming();
+            } else if (gamepad2.y) {
+                robot.phone_camera.stop_streaming();
+            }
+
+            if (gamepad2.dpad_up) {
+                robot.shooter.update_pid_coeffs();
+            }
+
+        } else {
+            if (gamepad2.a) {
+                robot.shooter.spin();
+            } else if (gamepad2.b) {
+                robot.shooter.stop();
+            }
+
+            if (gamepad2.x) {
+                robot.intake.spin();
+            } else if (gamepad2.y) {
+                robot.intake.stop();
+            }
+
+            if (gamepad2.right_bumper) {
+                robot.shooter.shoot();
+            }
+        }
+
+        /// GAMEPAD 1 CONTROLS ///
+
         double speed_mod = 1;
 
         if(gamepad1.left_bumper) {

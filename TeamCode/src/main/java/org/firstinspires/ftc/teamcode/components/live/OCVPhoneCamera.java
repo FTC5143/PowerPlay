@@ -28,6 +28,8 @@ public class OCVPhoneCamera extends Component {
 
     SamplePipeline stone_pipeline;
 
+    private boolean streaming;
+
     {
         name = "Phone Camera (OCV)";
     }
@@ -52,8 +54,6 @@ public class OCVPhoneCamera extends Component {
 
         stone_pipeline = new SamplePipeline();
         phone_camera.setPipeline(stone_pipeline);
-
-        start_streaming();
     }
 
     @Override
@@ -68,7 +68,10 @@ public class OCVPhoneCamera extends Component {
     }
 
     public void start_streaming() {
-        phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+        if (!streaming) {
+            phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            streaming = true;
+        }
     }
 
     public int get_pattern() {
@@ -77,6 +80,7 @@ public class OCVPhoneCamera extends Component {
 
     public void stop_streaming() {
         phone_camera.stopStreaming();
+        streaming = false;
     }
 
     class SamplePipeline extends OpenCvPipeline {

@@ -50,17 +50,24 @@ public class Intake extends Component {
     @Override
     public void startup() {
         super.startup();
+    }
 
+    public void spin() {
         front_intake.setPower(1);
         back_intake.setPower(1);
         front_lift.setPower(1);
         back_lift.setPower(1);
     }
 
+    public void stop() {
+        front_intake.setPower(0);
+        back_intake.setPower(0);
+        front_lift.setPower(0);
+        back_lift.setPower(0);
+    }
+
     @Override
     public void shutdown() {
         super.shutdown();
-
-
     }
 }
