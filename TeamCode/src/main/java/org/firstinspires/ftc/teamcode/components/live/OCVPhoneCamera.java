@@ -104,28 +104,6 @@ public class OCVPhoneCamera extends Component {
                     (int) (input.rows() * (80f / 100f))
             };
 
-            Imgproc.rectangle(
-                    input,
-                    new Point(
-                            top_rect[0],
-                            top_rect[1]),
-
-                    new Point(
-                            top_rect[2],
-                            top_rect[3]),
-                    new Scalar(0, 255, 0), 1);
-
-            Imgproc.rectangle(
-                    input,
-                    new Point(
-                            bot_rect[0],
-                            bot_rect[1]),
-
-                    new Point(
-                            bot_rect[2],
-                            bot_rect[3]),
-                    new Scalar(0, 0, 255), 1);
-
             Mat top_block = input.submat(top_rect[1], top_rect[3], top_rect[0], top_rect[2]);
             Mat bot_block = input.submat(bot_rect[1], bot_rect[3], bot_rect[0], bot_rect[2]);
 
@@ -151,6 +129,28 @@ public class OCVPhoneCamera extends Component {
             } else {
                 pattern = 1;
             }
+
+            Imgproc.rectangle(
+                    input,
+                    new Point(
+                            top_rect[0],
+                            top_rect[1]),
+
+                    new Point(
+                            top_rect[2],
+                            top_rect[3]),
+                    new Scalar(0, 255, 0), 2);
+
+            Imgproc.rectangle(
+                    input,
+                    new Point(
+                            bot_rect[0],
+                            bot_rect[1]),
+
+                    new Point(
+                            bot_rect[2],
+                            bot_rect[3]),
+                    new Scalar(0, 0, 255), 2);
 
             return input;
         }
