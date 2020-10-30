@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -20,6 +21,11 @@ import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 // Drive Train component
 // Includes: Drive Motors, IMU
 // I hate it also
+
+@Config
+class DriveTrainConfig {
+
+}
 
 public class DriveTrain extends Component {
 

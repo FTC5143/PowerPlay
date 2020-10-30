@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,6 +8,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
+
+@Config
+class IntakeConfig {
+
+}
 
 public class Intake extends Component {
 
@@ -53,7 +59,7 @@ public class Intake extends Component {
     }
 
     public void spin() {
-        front_intake.setPower(1);
+        front_intake.setPower(-1);
         back_intake.setPower(1);
         front_lift.setPower(1);
         back_lift.setPower(1);

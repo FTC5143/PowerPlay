@@ -23,7 +23,8 @@ class ShooterConfig {
 public class Shooter extends Component {
 
     //// MOTORS ////
-    private DcMotorEx flywheel;   // Flywheel
+    private DcMotorEx flywheel;     // Flywheel
+    private DcMotorEx angler;       // Motor to angle our barrel
 
     {
         name = "Shooter";
@@ -38,7 +39,8 @@ public class Shooter extends Component {
         super.registerHardware(hwmap);
 
         //// MOTORS ////
-        flywheel = hwmap.get(DcMotorEx.class, "flywheel");
+        flywheel    = hwmap.get(DcMotorEx.class, "flywheel");
+        angler      = hwmap.get(DcMotorEx.class, "angler");
     }
 
     @Override

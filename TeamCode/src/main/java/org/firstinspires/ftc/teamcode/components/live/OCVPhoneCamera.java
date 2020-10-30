@@ -34,8 +34,6 @@ public class OCVPhoneCamera extends Component {
         name = "Phone Camera (OCV)";
     }
 
-    int color = RED;
-
     public OCVPhoneCamera(Robot robot) {
         super(robot);
     }

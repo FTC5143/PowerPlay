@@ -1,5 +1,19 @@
 package org.firstinspires.ftc.teamcode.systems;
 
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
+class LCSConfig {
+    public static double ENCODER_CPR          = 1440;           // Counts per full rotation of an encoder
+    public static double ROBOT_DIAMETER       = 14.625;         // Distance between the left and right encoder (diameter) in inches
+    public static double CENTER_WHEEL_OFFSET  = 7.594180357;    //Distance of the center encoder to the line made between the left and right encoders (radius) in inches
+
+    public static double WHEEL_DIAMETER_L     = 1.88976;
+    public static double WHEEL_DIAMETER_R     = 1.88976;
+    public static double WHEEL_DIAMETER_C     = 1.88976;
+
+}
+
 public class LocalCoordinateSystem {
     public double x = 0;    // The approximated x position of the robot relative to where it started
     public double y = 0;    // The approximated y position of the robot relative to where it started
@@ -9,20 +23,14 @@ public class LocalCoordinateSystem {
     public double prev_re;
     public double prev_ce;
 
-
-    private double ENCODER_CPR          = 1440;             // Counts per full rotation of an encoder
-    private double ROBOT_DIAMETER       = 15.75716126;      //15.7075609922;    //15.74735 //15.53           // Distance between the left and right encoder (diameter) in inches
-    private double CENTER_WHEEL_OFFSET  = 7.594180357;      //7.725136416;      //7.719 //7.375 Distance of the center encoder to the line made between the left and right encoders (radius) in inches
-
-    private double WHEEL_DIAMETER_L     = 1.487592046; //1.49420962888;
-    private double WHEEL_DIAMETER_R     = 1.495218487; //1.49420962888;
-    private double WHEEL_DIAMETER_C     = 1.484900111; //1.49420962888;
-
-    private double INCHES_PER_COUNT_L   = WHEEL_DIAMETER_L * Math.PI / ENCODER_CPR;
-    private double INCHES_PER_COUNT_R   = WHEEL_DIAMETER_R * Math.PI / ENCODER_CPR;
-    private double INCHES_PER_COUNT_C   = WHEEL_DIAMETER_C * Math.PI / ENCODER_CPR;
+    private double INCHES_PER_COUNT_L;
+    private double INCHES_PER_COUNT_R;
+    private double INCHES_PER_COUNT_C;
 
     public void update(double le, double re, double ce) {
+        INCHES_PER_COUNT_L   = LCSConfig.WHEEL_DIAMETER_L * Math.PI / LCSConfig.ENCODER_CPR;
+        INCHES_PER_COUNT_R   = LCSConfig.WHEEL_DIAMETER_R * Math.PI / LCSConfig.ENCODER_CPR;
+        INCHES_PER_COUNT_C   = LCSConfig.WHEEL_DIAMETER_C * Math.PI / LCSConfig.ENCODER_CPR;
 
         // Calculate encoder deltas
         double ld = le - prev_le;
@@ -30,16 +38,16 @@ public class LocalCoordinateSystem {
         double cd = ce - prev_ce;
 
         // Calculate phi, or the delta of our angle
-        double ph = (rd * INCHES_PER_COUNT_R - ld * INCHES_PER_COUNT_L) / ROBOT_DIAMETER;
+        double ph = (rd * INCHES_PER_COUNT_R - ld * INCHES_PER_COUNT_L) / LCSConfig.ROBOT_DIAMETER;
 
         // The arclength of movement forward/backward
         double dc = (rd * INCHES_PER_COUNT_R + ld * INCHES_PER_COUNT_L) / 2;
 
         // The arclength of movement left/right
-        double sc = (cd * INCHES_PER_COUNT_C) + (ph * CENTER_WHEEL_OFFSET);
+        double sc = (cd * INCHES_PER_COUNT_C) + (ph * LCSConfig.CENTER_WHEEL_OFFSET);
 
         // Calculate the new angle of the robot using the difference between the left and right encoder
-        a = (re * INCHES_PER_COUNT_R - le * INCHES_PER_COUNT_L) / ROBOT_DIAMETER;
+        a = (re * INCHES_PER_COUNT_R - le * INCHES_PER_COUNT_L) / LCSConfig.ROBOT_DIAMETER;
 
         // Calculate the new position of the robot by adding the arc vector to the absolute pos
         double sinph = Math.sin(ph);
@@ -74,6 +82,5 @@ public class LocalCoordinateSystem {
         prev_le = le;
         prev_re = re;
         prev_ce = ce;
-
     }
 }
