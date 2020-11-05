@@ -61,7 +61,7 @@ public class Intake extends Component {
     public void spin() {
         front_intake.setPower(-1);
         back_intake.setPower(1);
-        front_lift.setPower(1);
+        front_lift.setPower(-1);
         back_lift.setPower(1);
     }
 

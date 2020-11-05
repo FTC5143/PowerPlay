@@ -230,12 +230,12 @@ public class DriveTrain extends Component {
         double original_distance = Math.hypot(x-lcs.x, y-lcs.y);
         double original_distance_a = Math.abs(a - lcs.a);
 
-        robot.lopmode.resetStartTime();
+        robot.opmode.resetStartTime();
 
         double time_at_goal = 0;
 
         if (original_distance > 0 || original_distance_a > 0) {
-            while (robot.lopmode.opModeIsActive()) {
+            while (robot.opmode.opModeIsActive()) {
                 double distance = Math.hypot(x - lcs.x, y - lcs.y);
                 double distance_a = Math.abs(a - lcs.a);
 
@@ -251,13 +251,13 @@ public class DriveTrain extends Component {
 
 
 
-                if ((distance < pos_acc && distance_a < angle_acc) || (timeout > 0 && robot.lopmode.getRuntime() > timeout)) {
-                    if (robot.lopmode.getRuntime()-time_at_goal >= time_at_target) {
+                if ((distance < pos_acc && distance_a < angle_acc) || (timeout > 0 && robot.opmode.getRuntime() > timeout)) {
+                    if (robot.opmode.getRuntime()-time_at_goal >= time_at_target) {
                         stop();
                         break;
                     }
                 } else {
-                    time_at_goal = robot.lopmode.getRuntime();
+                    time_at_goal = robot.opmode.getRuntime();
                 }
             }
         }
@@ -269,7 +269,7 @@ public class DriveTrain extends Component {
         // Update our current path, for telemetry
         this.current_path = path;
 
-        while (robot.lopmode.opModeIsActive()) {
+        while (robot.opmode.opModeIsActive()) {
             
             // Get our lookahead point
             Pose lookahead_pose = path.get_lookahead_pose(lcs.x, lcs.y);

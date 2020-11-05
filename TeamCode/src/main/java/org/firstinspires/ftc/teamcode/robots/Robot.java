@@ -26,8 +26,7 @@ class RobotConfig {
 public class Robot {
 
     HardwareMap hwmap;
-    public OpMode opmode;
-    public LinearOpMode lopmode;
+    public LinearOpMode opmode;
 
     ArrayList<Component> components = new ArrayList<>();
 
@@ -69,17 +68,14 @@ public class Robot {
         }
     }
 
-    public Robot(OpMode opmode) { // FIRST THIS IS *YOUR* FAULT IT HAS TO BE THIS WAY AND I HATE IT AND YOU SHOULD BE ASHAMED
-        if (opmode instanceof LinearOpMode) {
-            this.lopmode = (LinearOpMode) opmode;
-            this.telemetry = this.lopmode.telemetry;
-        } else {
-            this.opmode = opmode;
-            this.telemetry = this.opmode.telemetry;
-        }
+    public Robot(LinearOpMode opmode) { // FIRST THIS IS *YOUR* FAULT IT HAS TO BE THIS WAY AND I HATE IT AND YOU SHOULD BE ASHAMED
+        this.opmode = opmode;
+        this.telemetry = this.opmode.telemetry;
 
         this.hwmap  = opmode.hardwareMap;
         registerHardware(this.hwmap);
+
+        this.telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE); // Begone jumpy telemetry
     }
 
     public void startup() {
