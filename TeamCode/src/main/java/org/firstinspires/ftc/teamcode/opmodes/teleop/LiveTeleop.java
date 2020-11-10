@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.opmodes.LiveTeleopBase;
 
 @TeleOp(name="Teleop Live", group="driver control")
 //@Disabled
-public class DebugOpmodeLive extends LiveTeleopBase {
+public class LiveTeleop extends LiveTeleopBase {
 
     @Override
     public void on_init() {
@@ -17,9 +17,6 @@ public class DebugOpmodeLive extends LiveTeleopBase {
     @Override
     public void on_start() {
         this.getRuntime();
-
-        robot.shooter.spin();
-        robot.intake.spin();
     }
 
     @Override
@@ -47,7 +44,7 @@ public class DebugOpmodeLive extends LiveTeleopBase {
 
             if (gamepad2.x) {
                 robot.intake.spin();
-            } else if (gamepad2.y) {
+            } else {
                 robot.intake.stop();
             }
 

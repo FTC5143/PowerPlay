@@ -22,7 +22,8 @@ public class Intake extends Component {
     private CRServo front_lift;
     private CRServo back_lift;
 
-    //// SENSORS ////
+    private boolean spinning_intake = false;
+    private boolean spinning_lift = false;
 
     {
         name = "Intake";
@@ -58,22 +59,51 @@ public class Intake extends Component {
         super.startup();
     }
 
+    public void spin_intake() {
+        if (!spinning_intake) {
+            spinning_intake = true;
+            front_intake.setPower(-1);
+            back_intake.setPower(1);
+        }
+    }
+
+    public void spin_lift() {
+        if (!spinning_lift) {
+            spinning_lift = true;
+            front_lift.setPower(-1);
+            back_lift.setPower(1);
+        }
+    }
+
     public void spin() {
-        front_intake.setPower(-1);
-        back_intake.setPower(1);
-        front_lift.setPower(-1);
-        back_lift.setPower(1);
+        spin_intake();
+        spin_lift();
+    }
+
+    public void stop_intake() {
+        if (spinning_intake) {
+            spinning_intake = false;
+            front_intake.setPower(0);
+            back_intake.setPower(0);
+        }
+    }
+
+    public void stop_lift() {
+        if (spinning_lift) {
+            spinning_lift = false;
+            front_lift.setPower(0);
+            back_lift.setPower(0);
+        };
     }
 
     public void stop() {
-        front_intake.setPower(0);
-        back_intake.setPower(0);
-        front_lift.setPower(0);
-        back_lift.setPower(0);
+        stop_intake();
+        stop_lift();
     }
 
     @Override
     public void shutdown() {
+        stop();
         super.shutdown();
     }
 }
