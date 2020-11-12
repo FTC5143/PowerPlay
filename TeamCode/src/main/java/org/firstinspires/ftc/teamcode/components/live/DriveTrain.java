@@ -138,8 +138,8 @@ public class DriveTrain extends Component {
         drive_rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the left motors, because they have a different orientation on the robot
-        drive_lf.setDirection(DcMotor.Direction.REVERSE);
-        drive_lb.setDirection(DcMotor.Direction.REVERSE);
+        drive_rf.setDirection(DcMotor.Direction.REVERSE);
+        drive_rb.setDirection(DcMotor.Direction.REVERSE);
         
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // We run without encoder because we do not have motor encoders, we have odometry instead
@@ -156,7 +156,7 @@ public class DriveTrain extends Component {
 
     // Return the motor powers needed to move in the given travel vector. Should give optimal speeds
     private double[] mecanum_math(double x, double y, double a) {
-        double[] power = new double[]{-x + y + a, +x + y - a, +x + y + a, -x + y - a};
+        double[] power = new double[]{- x + y - a, + x + y + a, + x + y - a, - x + y + a};
 
         double max = Math.max(Math.max(Math.abs(power[0]),Math.abs(power[1])),Math.max(Math.abs(power[2]),Math.abs(power[3])));
 

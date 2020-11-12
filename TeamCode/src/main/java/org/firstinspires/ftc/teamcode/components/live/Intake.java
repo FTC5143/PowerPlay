@@ -62,8 +62,8 @@ public class Intake extends Component {
     public void spin_intake() {
         if (!spinning_intake) {
             spinning_intake = true;
-            front_intake.setPower(-1);
-            back_intake.setPower(1);
+            front_intake.setPower(1);
+            back_intake.setPower(-1);
         }
     }
 
