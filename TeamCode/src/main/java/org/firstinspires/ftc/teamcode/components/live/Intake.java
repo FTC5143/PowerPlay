@@ -88,6 +88,7 @@ public class Intake extends Component {
         }
     }
 
+
     public void stop_lift() {
         if (spinning_lift) {
             spinning_lift = false;

@@ -50,6 +50,8 @@ public class LiveTeleop extends LiveTeleopBase {
 
             if (gamepad2.right_bumper) {
                 robot.shooter.shoot();
+            } else if (gamepad2.left_bumper) {
+                robot.shooter.unshoot();
             }
         }
 

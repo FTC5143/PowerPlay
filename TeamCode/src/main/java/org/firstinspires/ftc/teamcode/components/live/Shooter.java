@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -26,6 +27,9 @@ public class Shooter extends Component {
     private DcMotorEx flywheel;     // Flywheel
     private DcMotorEx angler;       // Motor to angle our barrel
 
+    //// SERVOS ////
+    private Servo shunter;
+
     {
         name = "Shooter";
     }
@@ -41,6 +45,9 @@ public class Shooter extends Component {
         //// MOTORS ////
         flywheel    = hwmap.get(DcMotorEx.class, "flywheel");
         angler      = hwmap.get(DcMotorEx.class, "angler");
+
+        //// SERVOS ////
+        shunter     = hwmap.get(Servo.class, "shunter");
     }
 
     @Override
@@ -93,6 +100,10 @@ public class Shooter extends Component {
     }
 
     public void shoot() {
-        /* todo */
+        shunter.setPosition(1);
+    }
+
+    public void unshoot() {
+        shunter.setPosition(0.5);
     }
 }
