@@ -100,7 +100,7 @@ public class Shooter extends Component {
     }
 
     public void shoot() {
-        shunter.setPosition(1);
+        shunter.setPosition(0.9);
     }
 
     public void unshoot() {
