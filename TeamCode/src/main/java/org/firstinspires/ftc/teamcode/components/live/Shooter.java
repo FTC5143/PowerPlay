@@ -20,8 +20,8 @@ class ShooterConfig {
 
     public static int target_speed = 2200; // counts per second
 
-    public static double shunter_unshot = 0.5;
-    public static double shunter_shot = 0.8;
+    public static double shunter_unshot = 0.57;
+    public static double shunter_shot = 0.9;
 }
 
 public class Shooter extends Component {
