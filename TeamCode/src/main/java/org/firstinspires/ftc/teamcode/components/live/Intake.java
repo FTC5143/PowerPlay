@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.components.live;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.robots.Robot;
 
 @Config
 class IntakeConfig {
-
+    public static double lift_speed = 0.33;
 }
 
 public class Intake extends Component {
@@ -19,8 +20,8 @@ public class Intake extends Component {
     //// SERVOS ////
     private CRServo front_intake;
     private CRServo back_intake;
-    private CRServo front_lift;
-    private CRServo back_lift;
+    private DcMotorEx front_lift;
+    private DcMotorEx back_lift;
 
     private boolean spinning_intake = false;
     private boolean spinning_lift = false;
@@ -40,8 +41,8 @@ public class Intake extends Component {
         //// MOTORS ////
         front_intake    = hwmap.get(CRServo.class, "front_intake");
         back_intake     = hwmap.get(CRServo.class, "back_intake");
-        front_lift      = hwmap.get(CRServo.class, "front_lift");
-        back_lift       = hwmap.get(CRServo.class, "back_lift");
+        front_lift      = hwmap.get(DcMotorEx.class, "front_lift");
+        back_lift       = hwmap.get(DcMotorEx.class, "back_lift");
     }
 
     @Override
@@ -70,8 +71,8 @@ public class Intake extends Component {
     public void spin_lift() {
         if (!spinning_lift) {
             spinning_lift = true;
-            front_lift.setPower(-1);
-            back_lift.setPower(1);
+            front_lift.setPower(-1 * IntakeConfig.lift_speed);
+            back_lift.setPower(1 * IntakeConfig.lift_speed);
         }
     }
 
