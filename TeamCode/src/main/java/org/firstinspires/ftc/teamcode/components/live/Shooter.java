@@ -19,6 +19,9 @@ class ShooterConfig {
     public static PIDCoefficients flywheel_pid_coeffs = new PIDCoefficients(250, 2, 30);
 
     public static int target_speed = 2200; // counts per second
+
+    public static double shunter_unshot = 0.5;
+    public static double shunter_shot = 0.8;
 }
 
 public class Shooter extends Component {
@@ -100,10 +103,10 @@ public class Shooter extends Component {
     }
 
     public void shoot() {
-        shunter.setPosition(0.9);
+        shunter.setPosition(ShooterConfig.shunter_shot);
     }
 
     public void unshoot() {
-        shunter.setPosition(0.5);
+        shunter.setPosition(ShooterConfig.shunter_unshot);
     }
 }
