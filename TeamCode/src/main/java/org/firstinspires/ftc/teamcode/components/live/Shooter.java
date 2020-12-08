@@ -18,10 +18,10 @@ import org.firstinspires.ftc.teamcode.robots.Robot;
 class ShooterConfig {
     public static PIDCoefficients flywheel_pid_coeffs = new PIDCoefficients(250, 2, 30);
 
-    public static int target_speed = 2200; // counts per second
+    public static int target_speed = 1750; // counts per second
 
     public static double shunter_unshot = 0.57;
-    public static double shunter_shot = 0.9;
+    public static double shunter_shot = 0.88;
 }
 
 public class Shooter extends Component {

@@ -4,12 +4,12 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 class LCSConfig {
-    public static double ENCODER_CPR          = 1440;           // Counts per full rotation of an encoder
-    public static double ROBOT_DIAMETER       = 14.625;         // Distance between the left and right encoder (diameter) in inches
-    public static double CENTER_WHEEL_OFFSET  = 7.594180357;    //Distance of the center encoder to the line made between the left and right encoders (radius) in inches
+    public static double ENCODER_CPR          = 8192;    // Counts per full rotation of an encoder
+    public static double ROBOT_DIAMETER       = 14.5;    // Distance between the left and right encoder (diameter) in inches
+    public static double CENTER_WHEEL_OFFSET  = -1.5;    //Distance of the center encoder to the line made between the left and right encoders (radius) in inches
 
-    public static double WHEEL_DIAMETER_L     = 1.88976;
-    public static double WHEEL_DIAMETER_R     = 1.88976;
+    public static double WHEEL_DIAMETER_L     = -1.88976;
+    public static double WHEEL_DIAMETER_R     = -1.88976;
     public static double WHEEL_DIAMETER_C     = 1.88976;
 
 }
