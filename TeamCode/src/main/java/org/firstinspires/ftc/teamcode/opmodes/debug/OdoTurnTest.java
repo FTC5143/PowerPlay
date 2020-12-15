@@ -7,9 +7,9 @@ import org.firstinspires.ftc.teamcode.robots.LiveRobot;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
-@Autonomous(name="Odo Test", group="autonomous")
+@Autonomous(name="Odo Turn Test", group="autonomous")
 //@Disabled
-public class OdoTest extends LinearOpMode {
+public class OdoTurnTest extends LinearOpMode {
 
     LiveRobot robot;
 
@@ -24,11 +24,9 @@ public class OdoTest extends LinearOpMode {
 
         robot.drive_train.color = color;
 
-
         waitForStart();
 
-        robot.drive_train.odo_move(48, 0, 2*Math.PI, 1, -1, -1);
-
+        robot.drive_train.odo_move(0, 0, 20*2*Math.PI, 1, -1, -1);
 
         robot.shutdown();
     }

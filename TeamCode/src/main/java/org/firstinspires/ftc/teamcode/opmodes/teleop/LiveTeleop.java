@@ -65,6 +65,14 @@ public class LiveTeleop extends LiveTeleopBase {
             speed_mod = 0.5;
         }
 
+        if (gamepad2.dpad_up) {
+            robot.shooter.raise(1);
+        } else if (gamepad2.dpad_down) {
+            robot.shooter.raise(-1);
+        } else {
+            robot.shooter.raise(0);
+        }
+
         robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
     }
 

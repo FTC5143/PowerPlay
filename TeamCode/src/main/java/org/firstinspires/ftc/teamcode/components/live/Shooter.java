@@ -109,4 +109,8 @@ public class Shooter extends Component {
     public void unshoot() {
         shunter.setPosition(ShooterConfig.shunter_unshot);
     }
+
+    public void raise(double dir) {
+        angler.setPower(dir);
+    }
 }

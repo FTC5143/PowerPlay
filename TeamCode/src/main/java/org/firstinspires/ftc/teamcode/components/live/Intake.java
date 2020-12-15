@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.robots.Robot;
 
 @Config
 class IntakeConfig {
-    public static double lift_speed = 0.5;
+    public static double lift_speed = 1.0;
 }
 
 public class Intake extends Component {
