@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -20,8 +21,16 @@ class ShooterConfig {
 
     public static int target_speed = 1750; // counts per second
 
-    public static double shunter_unshot = 0.57;
-    public static double shunter_shot = 0.88;
+    public static double shunter_unshot = 0.88;
+    public static double shunter_shot = 0.57;
+
+
+    public static double angler_pid_p = 6;
+
+    public static int low_goal = 0;
+    public static int mid_goal = 325;
+    public static int high_goal = 750;
+    public static int power_shot = 550;
 }
 
 public class Shooter extends Component {
@@ -32,6 +41,9 @@ public class Shooter extends Component {
 
     //// SERVOS ////
     private Servo shunter;
+
+    private int[] targets = {ShooterConfig.low_goal, ShooterConfig.mid_goal, ShooterConfig.high_goal, ShooterConfig.power_shot};
+    public int shot_target = 0;
 
     {
         name = "Shooter";
@@ -63,6 +75,8 @@ public class Shooter extends Component {
         super.updateTelemetry(telemetry);
 
         telemetry.addData("FLYWHEEL VEL", robot.bulk_data_2.getMotorVelocity(flywheel));
+
+        telemetry.addData("ANGLER", robot.bulk_data_2.getMotorCurrentPosition(angler));
     }
 
     @Override
@@ -70,10 +84,13 @@ public class Shooter extends Component {
         super.startup();
 
         flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        angler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        angler.setTargetPosition(targets[shot_target % targets.length]);
+        angler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        angler.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         update_pid_coeffs();
     }
@@ -85,6 +102,8 @@ public class Shooter extends Component {
                 ShooterConfig.flywheel_pid_coeffs.d,
                 0 // no f
         );
+
+        angler.setPositionPIDFCoefficients(ShooterConfig.angler_pid_p);
     }
 
     @Override
@@ -110,7 +129,15 @@ public class Shooter extends Component {
         shunter.setPosition(ShooterConfig.shunter_unshot);
     }
 
-    public void raise(double dir) {
-        angler.setPower(dir);
+    public void raise(int dir) {
+        aim(shot_target + dir);
+    }
+
+    public void aim(int target) {
+        targets[0] = ShooterConfig.low_goal; targets[1] = ShooterConfig.mid_goal; targets[2] = ShooterConfig.high_goal; targets[3] = ShooterConfig.power_shot;
+        update_pid_coeffs();
+        shot_target = target;
+        angler.setTargetPosition(targets[shot_target % targets.length]);
+        angler.setPower(1);
     }
 }
