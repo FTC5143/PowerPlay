@@ -37,8 +37,6 @@ public class DriveTrain extends Component {
 
     public LocalCoordinateSystem lcs = new LocalCoordinateSystem();
 
-    public int color = RED;
-
     // Drive train moves according to these. Update them, it moves
     private double drive_x = 0;
     private double drive_y = 0;
@@ -220,12 +218,7 @@ public class DriveTrain extends Component {
 
 
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc, double timeout, double time_at_target) {
-
-        if (color == RED) {
-            a = -a;
-        } else {
-            x = -x;
-        }
+        a = -a;
 
         double original_distance = Math.hypot(x-lcs.x, y-lcs.y);
         double original_distance_a = Math.abs(a - lcs.a);
@@ -261,6 +254,27 @@ public class DriveTrain extends Component {
                 }
             }
         }
+    }
+
+    public void odo_drive_towards(double x, double y, double a, double speed) {
+        a = -a;
+
+        double distance = Math.hypot(x - lcs.x, y - lcs.y);
+        double distance_a = Math.abs(a - lcs.a);
+
+        double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
+        double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+        double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+        double mvmt_a = -Range.clip((a-lcs.a)*3, -1, 1) * speed;
+
+        mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
+    }
+
+
+    public void odo_reset(double x, double y, double a) {
+        this.lcs.x = x;
+        this.lcs.y = y;
+        this.lcs.a = a;
     }
     
     // Following a pure pursuit path with odometry

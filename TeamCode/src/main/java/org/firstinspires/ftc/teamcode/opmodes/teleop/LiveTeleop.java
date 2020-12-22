@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.opmodes.LiveTeleopBase;
+import org.firstinspires.ftc.teamcode.systems.pathfollowing.Pose;
 
 @TeleOp(name="Teleop Live", group="driver control")
 //@Disabled
@@ -11,7 +12,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
     @Override
     public void on_init() {
-
+        robot.drive_train.odo_reset(-10, 72, 0);
     }
 
     @Override
@@ -75,7 +76,11 @@ public class LiveTeleop extends LiveTeleopBase {
             robot.shooter.aim(2);
         }
 
-        robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
+        if (gamepad1.back) {
+            robot.drive_train.odo_drive_towards(-10, 62, 0, 1);
+        } else {
+            robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
+        }
     }
 
     @Override

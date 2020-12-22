@@ -20,10 +20,6 @@ public class OdoTurnTest extends LinearOpMode {
         robot = new LiveRobot(this);
         robot.startup();
 
-        int color = RED;
-
-        robot.drive_train.color = color;
-
         waitForStart();
 
         robot.drive_train.odo_move(0, 0, 20*2*Math.PI, 1, -1, -1);

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.components.live;
 
 import android.graphics.Color;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -21,6 +22,19 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.BLUE;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 import static org.opencv.core.CvType.CV_8UC1;
+
+@Config
+class OCVPhoneCameraConfig {
+    public static double top_rect_left = 46;
+    public static double top_rect_top = 6;
+    public static double top_rect_width = 9;
+    public static double top_rect_height = 15;
+
+    public static double bot_rect_left = 43;
+    public static double bot_rect_top = 6;
+    public static double bot_rect_width = 3;
+    public static double bot_rect_height = 15;
+}
 
 public class OCVPhoneCamera extends Component {
 
@@ -93,22 +107,21 @@ public class OCVPhoneCamera extends Component {
             input.convertTo(input, CV_8UC1, 1, 10);
 
             int[] top_rect = {
-                    (int) (input.cols() * (20f / 100f)),
-                    (int) (input.rows() * (20f / 100f)),
-                    (int) (input.cols() * (65f / 100f)),
-                    (int) (input.rows() * (80f / 100f))
+                    (int) (input.cols() * (OCVPhoneCameraConfig.top_rect_left / 100f)),
+                    (int) (input.rows() * (OCVPhoneCameraConfig.top_rect_top / 100f)),
+                    (int) (input.cols() * ((OCVPhoneCameraConfig.top_rect_left+OCVPhoneCameraConfig.top_rect_width) / 100f)),
+                    (int) (input.rows() * ((OCVPhoneCameraConfig.top_rect_top+OCVPhoneCameraConfig.top_rect_height) / 100f))
             };
 
             int[] bot_rect = {
-                    (int) (input.cols() * (65f / 100f)),
-                    (int) (input.rows() * (20f / 100f)),
-                    (int) (input.cols() * (80f / 100f)),
-                    (int) (input.rows() * (80f / 100f))
+                    (int) (input.cols() * (OCVPhoneCameraConfig.bot_rect_left / 100f)),
+                    (int) (input.rows() * (OCVPhoneCameraConfig.bot_rect_top / 100f)),
+                    (int) (input.cols() * ((OCVPhoneCameraConfig.bot_rect_left+OCVPhoneCameraConfig.bot_rect_width) / 100f)),
+                    (int) (input.rows() * ((OCVPhoneCameraConfig.bot_rect_top+OCVPhoneCameraConfig.bot_rect_height) / 100f))
             };
 
             Mat top_block = input.submat(top_rect[1], top_rect[3], top_rect[0], top_rect[2]);
             Mat bot_block = input.submat(bot_rect[1], bot_rect[3], bot_rect[0], bot_rect[2]);
-
 
             Scalar top_mean = Core.mean(top_block);
             Scalar bot_mean = Core.mean(bot_block);
@@ -141,7 +154,7 @@ public class OCVPhoneCamera extends Component {
                     new Point(
                             top_rect[2],
                             top_rect[3]),
-                    new Scalar(0, 255, 0), 2);
+                    new Scalar(0, 255, 0), 1);
 
             Imgproc.rectangle(
                     input,
@@ -152,7 +165,7 @@ public class OCVPhoneCamera extends Component {
                     new Point(
                             bot_rect[2],
                             bot_rect[3]),
-                    new Scalar(0, 0, 255), 2);
+                    new Scalar(0, 0, 255), 1);
 
             return input;
         }

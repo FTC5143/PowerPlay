@@ -20,10 +20,6 @@ public class OdoHold extends LinearOpMode {
         robot = new LiveRobot(this);
         robot.startup();
 
-        int color = RED;
-
-        robot.drive_train.color = color;
-
         waitForStart();
 
         // Hold position at 0, 0 forever

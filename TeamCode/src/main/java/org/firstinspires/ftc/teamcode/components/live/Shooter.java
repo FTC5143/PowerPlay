@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
+import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 
 @Config
 class ShooterConfig {
@@ -21,16 +22,16 @@ class ShooterConfig {
 
     public static int target_speed = 1750; // counts per second
 
-    public static double shunter_unshot = 0.88;
-    public static double shunter_shot = 0.54;
+    public static double shunter_unshot = 0.7;
+    public static double shunter_shot = 0.35;
 
 
     public static double angler_pid_p = 6;
 
     public static int low_goal = 0;
-    public static int mid_goal = 325;
-    public static int high_goal = 750;
-    public static int power_shot = 550;
+    public static int mid_goal = 70;
+    public static int high_goal = 1780;
+    public static int power_shot = 1512;
 }
 
 public class Shooter extends Component {
@@ -40,7 +41,7 @@ public class Shooter extends Component {
     private DcMotorEx angler;       // Motor to angle our barrel
 
     //// SERVOS ////
-    private Servo shunter;
+    private ServoQUS shunter;
 
     private int[] targets = {ShooterConfig.low_goal, ShooterConfig.mid_goal, ShooterConfig.high_goal, ShooterConfig.power_shot};
     public int shot_target = 0;
@@ -62,12 +63,14 @@ public class Shooter extends Component {
         angler      = hwmap.get(DcMotorEx.class, "angler");
 
         //// SERVOS ////
-        shunter     = hwmap.get(Servo.class, "shunter");
+        shunter     = new ServoQUS(hwmap.get(Servo.class, "shunter"));
     }
 
     @Override
     public void update(OpMode opmode) {
         super.update(opmode);
+
+        shunter.update();
     }
 
     @Override
@@ -122,11 +125,11 @@ public class Shooter extends Component {
     }
 
     public void shoot() {
-        shunter.setPosition(ShooterConfig.shunter_shot);
+        shunter.queue_position(ShooterConfig.shunter_shot);
     }
 
     public void unshoot() {
-        shunter.setPosition(ShooterConfig.shunter_unshot);
+        shunter.queue_position(ShooterConfig.shunter_unshot);
     }
 
     public void raise(int dir) {
