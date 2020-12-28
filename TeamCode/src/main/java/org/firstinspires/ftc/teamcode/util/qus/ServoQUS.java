@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ServoQUS extends QUS {
     private double queued_position;
 
-    private Servo servo;
+    public Servo servo;
 
     public ServoQUS(Servo servo) {
         this.servo = servo;

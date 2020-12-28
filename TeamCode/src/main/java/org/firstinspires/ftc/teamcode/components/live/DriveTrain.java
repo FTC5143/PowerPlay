@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
 import org.firstinspires.ftc.teamcode.systems.pathfollowing.CurvePath;
 import org.firstinspires.ftc.teamcode.systems.pathfollowing.Pose;
+import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
@@ -30,10 +31,10 @@ class DriveTrainConfig {
 public class DriveTrain extends Component {
 
     //// MOTORS ////
-    private DcMotorEx drive_lf;   // Left-Front drive motor
-    private DcMotorEx drive_rf;   // Right-Front drive motor
-    private DcMotorEx drive_lb;   // Left-Back drive motor
-    private DcMotorEx drive_rb;   // Right-Back drive motor
+    private DcMotorQUS drive_lf;   // Left-Front drive motor
+    private DcMotorQUS drive_rf;   // Right-Front drive motor
+    private DcMotorQUS drive_lb;   // Left-Back drive motor
+    private DcMotorQUS drive_rb;   // Right-Back drive motor
 
     public LocalCoordinateSystem lcs = new LocalCoordinateSystem();
 
@@ -41,12 +42,6 @@ public class DriveTrain extends Component {
     private double drive_x = 0;
     private double drive_y = 0;
     private double drive_a = 0;
-
-    // Cached motor powers so we only write when we need to
-    private double cache_lf_power = 0;
-    private double cache_rf_power = 0;
-    private double cache_lb_power = 0;
-    private double cache_rb_power = 0;
 
     public CurvePath current_path;
 
@@ -69,10 +64,10 @@ public class DriveTrain extends Component {
         super.registerHardware(hwmap);
 
         //// MOTORS ////
-        drive_lf    = hwmap.get(DcMotorEx.class, "drive_lf");
-        drive_rf    = hwmap.get(DcMotorEx.class, "drive_rf");
-        drive_lb    = hwmap.get(DcMotorEx.class, "drive_lb");
-        drive_rb    = hwmap.get(DcMotorEx.class, "drive_rb");
+        drive_lf    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_lf"));
+        drive_rf    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_rf"));
+        drive_lb    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_lb"));
+        drive_rb    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_rb"));
 
     }
 
@@ -82,31 +77,32 @@ public class DriveTrain extends Component {
 
         // Updating the localizer with the new odometry encoder counts
         lcs.update(
-                robot.bulk_data_1.getMotorCurrentPosition(drive_lf),
-                robot.bulk_data_1.getMotorCurrentPosition(drive_rf),
-                robot.bulk_data_1.getMotorCurrentPosition(drive_lb)
+                robot.bulk_data_1.getMotorCurrentPosition(drive_lf.motor),
+                robot.bulk_data_1.getMotorCurrentPosition(drive_rf.motor),
+                robot.bulk_data_1.getMotorCurrentPosition(drive_lb.motor)
         );
 
         // Finding new motors powers from the drive variables
         double[] motor_powers = mecanum_math(drive_x, drive_y, drive_a);
 
+        drive_lf.queue_power(motor_powers[0]);
+        drive_rf.queue_power(motor_powers[1]);
+        drive_lb.queue_power(motor_powers[2]);
+        drive_rb.queue_power(motor_powers[3]);
+
         // Set one motor power per cycle. We do this to maintain a good odometry update speed
         // We should be doing a full drive train update at about 40hz with this configuration, which is more than enough
-        if (robot.cycle % 4 == 0 /*&& motor_powers[0] != cache_lf_power*/) {
-            drive_lf.setPower(motor_powers[0]);
-            cache_lf_power = motor_powers[0];
+        if (robot.cycle % 4 == 0) {
+            drive_lf.update();
         }
-        if (robot.cycle % 4 == 1 /*&& motor_powers[0] != cache_rf_power*/) {
-            drive_rf.setPower(motor_powers[1]);
-            cache_rf_power = motor_powers[1];
+        if (robot.cycle % 4 == 1) {
+            drive_rf.update();
         }
-        if (robot.cycle % 4 == 2 /*&& motor_powers[0] != cache_lb_power*/) {
-            drive_lb.setPower(motor_powers[2]);
-            cache_lb_power = motor_powers[2];
+        if (robot.cycle % 4 == 2) {
+            drive_lb.update();
         }
-        if (robot.cycle % 4 == 3 /*&& motor_powers[0] != cache_rb_power*/) {
-            drive_rb.setPower(motor_powers[3]);
-            cache_rb_power = motor_powers[3];
+        if (robot.cycle % 4 == 3) {
+            drive_rb.update();
         }
     }
 
@@ -114,15 +110,15 @@ public class DriveTrain extends Component {
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
-        telemetry.addData("LE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lf));
-        telemetry.addData("RE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_rf));
-        telemetry.addData("CE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lb));
+        telemetry.addData("LE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lf.motor));
+        telemetry.addData("RE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_rf.motor));
+        telemetry.addData("CE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lb.motor));
 
         telemetry.addData("X", lcs.x);
         telemetry.addData("Y", lcs.y);
         telemetry.addData("A", lcs.a);
 
-        telemetry.addData("PID", drive_lf.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_rf.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_lb.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_rb.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+        telemetry.addData("PID", drive_lf.motor.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
     }
 
     @Override
@@ -130,14 +126,14 @@ public class DriveTrain extends Component {
         super.startup();
 
         // Set all the zero power behaviors to brake on startup, to prevent slippage as much as possible
-        drive_lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drive_lf.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drive_rf.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drive_lb.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drive_rb.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the left motors, because they have a different orientation on the robot
-        drive_rf.setDirection(DcMotor.Direction.REVERSE);
-        drive_rb.setDirection(DcMotor.Direction.REVERSE);
+        drive_rf.motor.setDirection(DcMotor.Direction.REVERSE);
+        drive_rb.motor.setDirection(DcMotor.Direction.REVERSE);
         
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // We run without encoder because we do not have motor encoders, we have odometry instead
@@ -178,28 +174,18 @@ public class DriveTrain extends Component {
     // Stop all motors, and reset drive variables
     public void stop() {
         mechanum_drive(0, 0, 0);
-        set_power(0);
+        drive_lf.motor.setPower(0);
+        drive_rf.motor.setPower(0);
+        drive_lb.motor.setPower(0);
+        drive_rb.motor.setPower(0);
     }
     
     // Bulk motor set mode
     private void set_mode(DcMotor.RunMode mode) {
-        drive_lf.setMode(mode);
-        drive_rf.setMode(mode);
-        drive_lb.setMode(mode);
-        drive_rb.setMode(mode);
-    }
-
-    // Bulk motor set power
-    private void set_power(double lf, double rf, double lb, double rb) {
-        drive_lf.setPower(lf);
-        drive_rf.setPower(rf);
-        drive_lb.setPower(lb);
-        drive_rb.setPower(rb);
-    }
-
-    // For setting all motors to the same power
-    private void set_power(double power) {
-        set_power(power, power, power ,power);
+        drive_lf.motor.setMode(mode);
+        drive_rf.motor.setMode(mode);
+        drive_lb.motor.setMode(mode);
+        drive_rb.motor.setMode(mode);
     }
 
     
@@ -257,8 +243,6 @@ public class DriveTrain extends Component {
     }
 
     public void odo_drive_towards(double x, double y, double a, double speed) {
-        a = -a;
-
         double distance = Math.hypot(x - lcs.x, y - lcs.y);
         double distance_a = Math.abs(a - lcs.a);
 

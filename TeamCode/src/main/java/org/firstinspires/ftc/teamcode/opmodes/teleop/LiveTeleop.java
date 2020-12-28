@@ -27,11 +27,12 @@ public class LiveTeleop extends LiveTeleopBase {
 
         if (gamepad2.back) { // Hotkeys of a sort, less used things only accessed by holding back
             if (gamepad2.x) {
-                robot.phone_camera.start_streaming();
-            } else if (gamepad2.y) {
-                robot.phone_camera.stop_streaming();
+                robot.intake.spin(-1);
             }
 
+            if (gamepad2.left_stick_button) {
+                robot.phone_camera.start_streaming();
+            }
             if (gamepad2.dpad_up) {
                 robot.shooter.update_pid_coeffs();
             }
@@ -44,7 +45,7 @@ public class LiveTeleop extends LiveTeleopBase {
             }
 
             if (gamepad2.x) {
-                robot.intake.spin();
+                robot.intake.spin(1);
             } else if (gamepad2.y) {
                 robot.intake.stop();
             }
@@ -77,7 +78,11 @@ public class LiveTeleop extends LiveTeleopBase {
         }
 
         if (gamepad1.back) {
-            robot.drive_train.odo_drive_towards(-10, 62, 0, 1);
+            robot.drive_train.odo_drive_towards(
+                    -10, 62,
+                    ((double)Math.round(robot.drive_train.lcs.a/(Math.PI * 2))) * (Math.PI * 2),
+                    1
+            );
         } else {
             robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
         }

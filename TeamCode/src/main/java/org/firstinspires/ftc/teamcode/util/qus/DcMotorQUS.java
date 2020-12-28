@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.util.qus;
 
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-public class CRServoQUS extends QUS {
+public class DcMotorQUS extends QUS {
     private double queued_power;
 
-    public CRServo servo;
+    public DcMotorEx motor;
 
-    public CRServoQUS(CRServo servo) {
-        this.servo = servo;
+    public DcMotorQUS(DcMotorEx motor) {
+        this.motor = motor;
     }
 
     public void queue_power(double speed) {
@@ -18,6 +18,6 @@ public class CRServoQUS extends QUS {
 
     @Override
     protected void write() {
-        servo.setPower(queued_power);
+        motor.setPower(queued_power);
     }
 }
