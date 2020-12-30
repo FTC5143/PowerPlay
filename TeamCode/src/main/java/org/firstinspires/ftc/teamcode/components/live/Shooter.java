@@ -46,6 +46,8 @@ public class Shooter extends Component {
     private int[] targets = {ShooterConfig.low_goal, ShooterConfig.mid_goal, ShooterConfig.high_goal, ShooterConfig.power_shot};
     public int shot_target = 0;
 
+    int angler_zero = 0;
+
     {
         name = "Shooter";
     }
@@ -70,6 +72,10 @@ public class Shooter extends Component {
     public void update(OpMode opmode) {
         super.update(opmode);
 
+        if (!robot.bulk_data_2.getDigitalInputState(0)) {
+            angler_zero = robot.bulk_data_2.getMotorCurrentPosition(angler);
+        }
+
         shunter.update();
     }
 
@@ -80,6 +86,8 @@ public class Shooter extends Component {
         telemetry.addData("FLYWHEEL VEL", robot.bulk_data_2.getMotorVelocity(flywheel));
 
         telemetry.addData("ANGLER", robot.bulk_data_2.getMotorCurrentPosition(angler));
+
+        telemetry.addData("ANGLER ZERO", angler_zero);
     }
 
     @Override

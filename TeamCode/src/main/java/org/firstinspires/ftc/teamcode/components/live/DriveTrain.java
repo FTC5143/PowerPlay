@@ -11,10 +11,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.coyote.geometry.Pose;
+import org.firstinspires.ftc.teamcode.coyote.path.Path;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
-import org.firstinspires.ftc.teamcode.systems.pathfollowing.CurvePath;
-import org.firstinspires.ftc.teamcode.systems.pathfollowing.Pose;
 import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
@@ -43,7 +43,7 @@ public class DriveTrain extends Component {
     private double drive_y = 0;
     private double drive_a = 0;
 
-    public CurvePath current_path;
+    public Path current_path;
 
     private PIDCoefficients drive_pos_coeffs = new PIDCoefficients(10, 0.1, 2);
     private PIDCoefficients drive_ang_coeffs = new PIDCoefficients(10, 0.1, 2);
@@ -262,7 +262,7 @@ public class DriveTrain extends Component {
     }
     
     // Following a pure pursuit path with odometry
-    public void follow_curve_path(CurvePath path) {
+    public void follow_curve_path(Path path) {
         
         // Update our current path, for telemetry
         this.current_path = path;
@@ -270,24 +270,25 @@ public class DriveTrain extends Component {
         while (robot.opmode.opModeIsActive()) {
             
             // Get our lookahead point
-            Pose lookahead_pose = path.get_lookahead_pose(lcs.x, lcs.y);
+            path.update(lcs.get_pose());
+            Pose lookahead_pose = path.getFollowPose();
 
             // Get the distance to our lookahead point
             double distance = Math.hypot(lookahead_pose.x-lcs.x, lookahead_pose.y-lcs.y);
 
             double speed;
             // Find our drive speed based on distance
-            if (distance < current_path.radius) {
+            if (distance < current_path.getFollowCircle().radius) {
                 speed = Range.clip((distance / 8) + 0.1, 0, 1);
             } else {
                 speed = 1;
             }
 
             // Find our turn speed based on angle difference
-            double turn_speed = Range.clip(Math.abs(lcs.a-lookahead_pose.a) / (Math.PI/4) + 0.1, 0, 1);
+            double turn_speed = Range.clip(Math.abs(lcs.a-lookahead_pose.angle) / (Math.PI/4) + 0.1, 0, 1);
 
             // Drive towards the lookahead point
-            drive_to_pose(lookahead_pose, speed, 1);
+            drive_to_pose(lookahead_pose, speed, turn_speed);
         }
 
     }
@@ -302,7 +303,7 @@ public class DriveTrain extends Component {
         double mvmt_x = Math.cos(drive_angle - lcs.a) * drive_speed;
         double mvmt_y = -Math.sin(drive_angle - lcs.a) * drive_speed;
         // Find angle speed to turn towards the desired angle
-        double mvmt_a = -Math.signum(Range.clip((pose.a - lcs.a - (Math.PI/2)), -1, 1)) * turn_speed;
+        double mvmt_a = -Math.signum(Range.clip((pose.angle - lcs.a - (Math.PI/2)), -1, 1)) * turn_speed;
 
         // Update actual motor powers with our movement vector
         mechanum_drive(mvmt_x, mvmt_y, mvmt_a);

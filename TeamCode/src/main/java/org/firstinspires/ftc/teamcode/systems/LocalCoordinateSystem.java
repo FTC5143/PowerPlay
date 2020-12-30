@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.systems;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.teamcode.coyote.geometry.Pose;
+
 @Config
 class LCSConfig {
     public static double ENCODER_CPR          = 8192;    // Counts per full rotation of an encoder
@@ -82,5 +84,9 @@ public class LocalCoordinateSystem {
         prev_le = le;
         prev_re = re;
         prev_ce = ce;
+    }
+
+    public Pose get_pose() {
+        return new Pose(x, y, a);
     }
 }
