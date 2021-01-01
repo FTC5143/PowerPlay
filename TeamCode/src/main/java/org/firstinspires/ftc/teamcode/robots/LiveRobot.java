@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.components.live.DriveTrain;
 import org.firstinspires.ftc.teamcode.components.live.Intake;
 import org.firstinspires.ftc.teamcode.components.live.OCVPhoneCamera;
 import org.firstinspires.ftc.teamcode.components.live.Shooter;
-import org.firstinspires.ftc.teamcode.systems.pathfollowing.Point;
+import org.firstinspires.ftc.teamcode.coyote.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class LiveRobot extends Robot {
         packet.put("flyvel", bulk_data_2.getMotorVelocity(0));
 
         if (drive_train.current_path != null) {
-            drive_train.current_path.dashboard_draw(canvas, drive_train.lcs.x, drive_train.lcs.y);
+            drive_train.current_path.dashboard_draw(canvas);
         }
 
         dashboard.sendTelemetryPacket(packet);

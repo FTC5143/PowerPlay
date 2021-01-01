@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.coyote.path;
 
+import com.acmerobotics.dashboard.canvas.Canvas;
+
 import org.firstinspires.ftc.teamcode.coyote.geometry.Circle;
 import org.firstinspires.ftc.teamcode.coyote.geometry.Point;
 import org.firstinspires.ftc.teamcode.coyote.geometry.Pose;
@@ -276,5 +278,9 @@ public class Path {
 
     public PathPoint getSecondLastPoint() {
         return points.get(points.size() - 2);
+    }
+
+    public void dashboard_draw(Canvas canvas) {
+
     }
 }
