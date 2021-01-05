@@ -4,11 +4,19 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.opmodes.LiveTeleopBase;
-import org.firstinspires.ftc.teamcode.systems.pathfollowing.Pose;
+
+import static android.graphics.Typeface.NORMAL;
 
 @TeleOp(name="Teleop Live", group="driver control")
 //@Disabled
 public class LiveTeleop extends LiveTeleopBase {
+
+    enum TeleopStates {
+        NORMAL,
+        UNJAM
+    }
+
+    TeleopStates state = TeleopStates.NORMAL;
 
     @Override
     public void on_init() {
@@ -26,10 +34,6 @@ public class LiveTeleop extends LiveTeleopBase {
         /// GAMEPAD 2 CONTROLS ///
 
         if (gamepad2.back) { // Hotkeys of a sort, less used things only accessed by holding back
-            if (gamepad2.x) {
-                robot.intake.spin(-1);
-            }
-
             if (gamepad2.left_stick_button) {
                 robot.phone_camera.start_streaming();
             }
@@ -37,22 +41,49 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.shooter.update_pid_coeffs();
             }
 
+            if (gamepad2.x && state == TeleopStates.NORMAL) {
+                state = TeleopStates.UNJAM;
+                resetStartTime();
+            }
+
         } else {
+            if (gamepad1.a) {
+                robot.wobbler.grab();
+            } else if (gamepad1.b) {
+                robot.wobbler.ungrab();
+            }
+
+
             if (gamepad2.a) {
                 robot.shooter.spin();
             } else if (gamepad2.b) {
                 robot.shooter.stop();
             }
 
-            if (gamepad2.x) {
-                robot.intake.spin(1);
-            } else if (gamepad2.y) {
-                robot.intake.stop();
+            if (state == TeleopStates.NORMAL) {
+                if (gamepad2.x) {
+                    robot.intake.spin(1);
+                } else if (gamepad2.y) {
+                    robot.intake.stop();
+                }
+            } else if (state == TeleopStates.UNJAM) {
+
+                if (getRuntime() < 0.5 /*seconds*/) {
+                    robot.intake.spin(-1);
+                } else {
+                    robot.intake.spin(1);
+                    state = TeleopStates.NORMAL;
+                }
+
+                if (gamepad2.y) {
+                    robot.intake.stop();
+                    state = TeleopStates.NORMAL;
+                }
             }
 
             if (gamepad2.right_bumper) {
                 robot.shooter.shoot();
-            } else if (gamepad2.left_bumper) {
+            } else {
                 robot.shooter.unshoot();
             }
         }

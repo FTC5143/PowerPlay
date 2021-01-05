@@ -10,7 +10,7 @@ public class DcMotorQUS extends QUS {
     public DcMotorEx motor;
 
     public DcMotorQUS(DcMotorEx motor) {
-        this(motor, false);
+        this(motor, true);
     }
 
     public DcMotorQUS(DcMotorEx motor, boolean do_cache) {

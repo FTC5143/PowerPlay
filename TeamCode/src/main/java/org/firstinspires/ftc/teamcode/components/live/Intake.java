@@ -27,8 +27,6 @@ public class Intake extends Component {
     private DcMotorQUS front_lift;
     private DcMotorQUS back_lift;
 
-    private boolean spinning_lift = false;
-
     {
         name = "Intake";
     }
@@ -70,11 +68,8 @@ public class Intake extends Component {
 
 
     public void spin_lift(int dir) {
-        if (!spinning_lift) {
-            spinning_lift = true;
-            front_lift.queue_power(-1 * IntakeConfig.lift_speed * dir);
-            back_lift.queue_power(1 * IntakeConfig.lift_speed * dir);
-        }
+        front_lift.queue_power(-1 * IntakeConfig.lift_speed * dir);
+        back_lift.queue_power(1 * IntakeConfig.lift_speed * dir);
     }
 
     public void spin(int dir) {
@@ -83,11 +78,8 @@ public class Intake extends Component {
     }
 
     public void stop_lift() {
-        if (spinning_lift) {
-            spinning_lift = false;
-            front_lift.queue_power(0);
-            back_lift.queue_power(0);
-        }
+        front_lift.queue_power(0);
+        back_lift.queue_power(0);
     }
 
     public void stop() {
