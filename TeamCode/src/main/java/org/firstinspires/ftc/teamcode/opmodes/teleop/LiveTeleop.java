@@ -50,11 +50,11 @@ public class LiveTeleop extends LiveTeleopBase {
             //// GAMEPAD ONE ////
             if (gamepad1.a) {
                 robot.wobbler.grab();
-            } else if (gamepad1.b) {
+            } else if (gamepad1.b && !robot.wobbler.raised) {
                 robot.wobbler.ungrab();
             }
 
-            if (gamepad1.x) {
+            if (gamepad1.x && robot.wobbler.closed) {
                 robot.wobbler.raise();
             } else if (gamepad1.y) {
                 robot.wobbler.lower();
