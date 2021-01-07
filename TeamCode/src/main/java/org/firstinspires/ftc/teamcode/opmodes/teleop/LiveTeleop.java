@@ -31,9 +31,9 @@ public class LiveTeleop extends LiveTeleopBase {
     @Override
     public void on_loop() {
 
-        /// GAMEPAD 2 CONTROLS ///
+        /// GAMEPAD TWO BACK HOTKEYS ///
 
-        if (gamepad2.back) { // Hotkeys of a sort, less used things only accessed by holding back
+        if (gamepad2.back) {
             if (gamepad2.left_stick_button) {
                 robot.phone_camera.start_streaming();
             }
@@ -47,13 +47,20 @@ public class LiveTeleop extends LiveTeleopBase {
             }
 
         } else {
+            //// GAMEPAD ONE ////
             if (gamepad1.a) {
                 robot.wobbler.grab();
             } else if (gamepad1.b) {
                 robot.wobbler.ungrab();
             }
 
+            if (gamepad1.x) {
+                robot.wobbler.raise();
+            } else if (gamepad1.y) {
+                robot.wobbler.lower();
+            }
 
+            //// GAMEPAD TWO ////
             if (gamepad2.a) {
                 robot.shooter.spin();
             } else if (gamepad2.b) {
@@ -86,9 +93,19 @@ public class LiveTeleop extends LiveTeleopBase {
             } else {
                 robot.shooter.unshoot();
             }
+
+            if (gamepad2.dpad_up) {
+                robot.shooter.aim(3);
+            } else if (gamepad2.dpad_down) {
+                robot.shooter.aim(0);
+            } else if (gamepad2.dpad_left) {
+                robot.shooter.aim(1);
+            } else if (gamepad2.dpad_right) {
+                robot.shooter.aim(2);
+            }
         }
 
-        /// GAMEPAD 1 CONTROLS ///
+        /// DRIVE CONTROLS ///
 
         double speed_mod = 1;
 
@@ -96,16 +113,6 @@ public class LiveTeleop extends LiveTeleopBase {
             speed_mod = 0.25;
         } else if(gamepad1.right_bumper) {
             speed_mod = 0.5;
-        }
-
-        if (gamepad2.dpad_up) {
-            robot.shooter.aim(3);
-        } else if (gamepad2.dpad_down) {
-            robot.shooter.aim(0);
-        } else if (gamepad2.dpad_left) {
-            robot.shooter.aim(1);
-        } else if (gamepad2.dpad_right) {
-            robot.shooter.aim(2);
         }
 
         if (gamepad1.back) {

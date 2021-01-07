@@ -20,13 +20,16 @@ import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 class WobblerConfig {
     public static double grabbed = 0.48;
     public static double ungrabbed = 0.7;
+
+    public static double down_position = 0.0;
+    public static double up_position = 0.65;
 }
 
 public class Wobbler extends Component {
 
     //// SERVOS ////
     private ServoQUS grabber;
-    private CRServoQUS flopper;
+    private ServoQUS flopper;
 
     {
         name = "Wobbler";
@@ -42,7 +45,7 @@ public class Wobbler extends Component {
 
         //// SERVOS ////
         grabber     = new ServoQUS(hwmap.get(Servo.class, "grabber"));
-        flopper     = new CRServoQUS(hwmap.get(CRServo.class, "flopper"));
+        flopper     = new ServoQUS(hwmap.get(Servo.class, "flopper"));
     }
 
     @Override
@@ -62,15 +65,13 @@ public class Wobbler extends Component {
     public void startup() {
         super.startup();
 
-        grabber.queue_position(WobblerConfig.ungrabbed);
-        flopper.queue_power(0);
+        grabber.queue_position(WobblerConfig.grabbed);
+        flopper.queue_position(WobblerConfig.up_position);
     }
 
     @Override
     public void shutdown() {
         super.shutdown();
-
-        flopper.queue_power(0);
     }
 
     public void grab() {
@@ -79,6 +80,14 @@ public class Wobbler extends Component {
 
     public void ungrab() {
         grabber.queue_position(WobblerConfig.ungrabbed);
+    }
+
+    public void raise() {
+        flopper.queue_position(WobblerConfig.up_position);
+    }
+
+    public void lower() {
+        flopper.queue_position(WobblerConfig.down_position);
     }
 
 }
