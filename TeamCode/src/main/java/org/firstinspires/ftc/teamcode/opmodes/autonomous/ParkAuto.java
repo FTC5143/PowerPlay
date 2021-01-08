@@ -46,12 +46,18 @@ public class ParkAuto extends LiveAutoBase {
         robot.shooter.aim(LOW_GOAL);
 
         if (pattern == 1) {
-            robot.drive_train.odo_move(4, 74, 0, 1.0);
+            robot.drive_train.odo_move(4, 56, 0, 1.0);
         } else if (pattern == 2) {
-            robot.drive_train.odo_move(-19, 97, 0, 1.0);
+            robot.drive_train.odo_move(-19, 79, 0, 1.0);
         } else if (pattern == 3) {
-            robot.drive_train.odo_move(4, 120, 0, 1.0);
+            robot.drive_train.odo_move(4, 102, 0, 1.0);
         }
+
+        resetStartTime();
+        robot.wobbler.lower();
+        while (getRuntime() <= 1) {}
+        robot.wobbler.ungrab();
+        while (getRuntime() <= 1.5) {}
 
         robot.drive_train.odo_move(-10, 72, 0, 1.0, -1, -1);
     }
