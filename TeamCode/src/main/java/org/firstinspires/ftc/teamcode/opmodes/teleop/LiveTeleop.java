@@ -20,7 +20,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
     @Override
     public void on_init() {
-        robot.drive_train.odo_reset(-10, 72, 0);
+        robot.drive_train.odo_reset(-20, 72, 0);
     }
 
     @Override

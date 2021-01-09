@@ -25,11 +25,11 @@ public class ParkAuto extends LiveAutoBase {
     public void on_start() {
         robot.shooter.spin();
 
-        robot.drive_train.odo_move(0, 40, 0, 1.0);
+        robot.drive_train.odo_move(0, 40, 0, 1.0, 1, 0.02, 6 /*6*/);
 
         robot.shooter.aim(HIGH_GOAL);
 
-        robot.drive_train.odo_move(-10, 62, 0, 1.0);
+        robot.drive_train.odo_move(-8, 57, 0, 1.0, 1, 0.02, 6 /*12*/);
 
         for (int i = 0; i < 4; i++) {
             resetStartTime();
@@ -41,25 +41,36 @@ public class ParkAuto extends LiveAutoBase {
             robot.shooter.unshoot();
 
             while (getRuntime() <= 1) {}
-        }
+        } /*16*/
 
         robot.shooter.aim(LOW_GOAL);
 
         if (pattern == 1) {
-            robot.drive_train.odo_move(4, 56, 0, 1.0);
+            robot.drive_train.odo_move(4, 56, 0, 1.0, 1, 0.02, 6);
         } else if (pattern == 2) {
-            robot.drive_train.odo_move(-19, 79, 0, 1.0);
+            robot.drive_train.odo_move(-14, 79, 0, 1.0, 1, 0.02, 6);
         } else if (pattern == 3) {
-            robot.drive_train.odo_move(4, 102, 0, 1.0);
-        }
+            robot.drive_train.odo_move(4, 102, 0, 1.0, 1, 0.02, 6);
+        } /*22*/
 
         resetStartTime();
         robot.wobbler.lower();
         while (getRuntime() <= 1) {}
         robot.wobbler.ungrab();
         while (getRuntime() <= 1.5) {}
+        robot.wobbler.raise();
+        while (getRuntime() <= 2) {}
+        robot.wobbler.grab();
+        /*24*/
 
-        robot.drive_train.odo_move(-10, 72, 0, 1.0, -1, -1);
+        if (pattern == 1) {
+            robot.drive_train.odo_move(-14, 52, 0, 1.0, 1, 0.02, 4);
+            robot.drive_train.odo_move(-20, 72, 0, 1.0, -1, -1, 4);
+        } else if (pattern == 2) {
+            robot.drive_train.odo_move(-20, 72, 0, 1.0, -1, -1, 8);
+        } else if (pattern == 3) {
+            robot.drive_train.odo_move(-20, 72, 0, 1.0, -1, -1, 8);
+        }
     }
 
     @Override

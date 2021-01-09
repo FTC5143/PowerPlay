@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 class ShooterConfig {
     public static PIDCoefficients flywheel_pid_coeffs = new PIDCoefficients(250, 2, 30);
 
-    public static int target_speed = 1750; // counts per second
+    public static int target_speed = 1720; // counts per second
 
     public static double shunter_unshot = 0.7;
     public static double shunter_shot = 0.35;
