@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.components.live;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.coyote.geometry.Pose;
 import org.firstinspires.ftc.teamcode.coyote.path.Path;
@@ -35,6 +37,11 @@ public class DriveTrain extends Component {
     private DcMotorQUS drive_rf;   // Right-Front drive motor
     private DcMotorQUS drive_lb;   // Left-Back drive motor
     private DcMotorQUS drive_rb;   // Right-Back drive motor
+
+    //// SENSORS ////
+    private BNO055IMU imu;          // For recalibrating odometry angle periodically
+
+    private Orientation last_imu_orientation = new Orientation();
 
     public LocalCoordinateSystem lcs = new LocalCoordinateSystem();
 
@@ -68,6 +75,9 @@ public class DriveTrain extends Component {
         drive_rf    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_rf"));
         drive_lb    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_lb"));
         drive_rb    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_rb"));
+
+        //// SENSORS ////
+        imu = hwmap.get(BNO055IMU.class, "imu");
 
     }
 
@@ -119,11 +129,21 @@ public class DriveTrain extends Component {
         telemetry.addData("A", lcs.a);
 
         telemetry.addData("PID", drive_lf.motor.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+
+        telemetry.addData("IMU", last_imu_orientation.firstAngle+" "+last_imu_orientation.secondAngle+" "+last_imu_orientation.thirdAngle);
     }
 
     @Override
     public void startup() {
         super.startup();
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode                = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled      = false;
+
+        imu.initialize(parameters);
 
         // Set all the zero power behaviors to brake on startup, to prevent slippage as much as possible
         drive_lf.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -162,6 +182,10 @@ public class DriveTrain extends Component {
         }
 
         return power;
+    }
+
+    public void read_from_imu() {
+        last_imu_orientation = imu.getAngularOrientation();
     }
 
     // An easy public setter for the drive variables
@@ -222,8 +246,8 @@ public class DriveTrain extends Component {
                 double progress_a = distance_a/original_distance_a;
 
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
-                double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
-                double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+                double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (7*speed)))/(7*speed)) * speed;
+                double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (7*speed)))/(7*speed)) * speed;
                 double mvmt_a = -Range.clip((a-lcs.a)*3, -1, 1) * speed;
 
                 mechanum_drive(mvmt_x, mvmt_y, mvmt_a);

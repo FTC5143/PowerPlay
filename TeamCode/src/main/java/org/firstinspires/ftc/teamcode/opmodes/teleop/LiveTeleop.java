@@ -46,6 +46,10 @@ public class LiveTeleop extends LiveTeleopBase {
                 resetStartTime();
             }
 
+            if(gamepad2.left_stick_button) {
+                robot.drive_train.read_from_imu();
+            }
+
         } else {
             //// GAMEPAD ONE ////
             if (gamepad1.a) {

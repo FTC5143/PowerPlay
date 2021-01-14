@@ -53,26 +53,25 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
         if (preloaded_wobble_goal) {
             if (pattern == 1) {
-                robot.drive_train.odo_move(4, 56, 0, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(4, 64, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 2) {
-                robot.drive_train.odo_move(-14, 79, 0, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(-14, 87, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
-                robot.drive_train.odo_move(4, 102, 0, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(4, 110, 0, 1.0, 1, 0.02, 6);
             }
 
             drop_wobble_goal();
 
             if (pattern == 1) {
-                robot.drive_train.odo_move(-14, 52, 0, 1.0, 1, 0.02, 4);
+                robot.drive_train.odo_move(-14, 68, 0, 1.0, 1, 0.02, 4);
             }
         }
 
         if (second_wobble_goal) {
-            robot.drive_train.odo_move(-36, 0, Math.PI, 1.0, 1, 0.02, 4);
+            robot.drive_train.odo_move(-34, 30, Math.PI, 1.0, 1, 0.02, 8);
+            robot.drive_train.odo_move(-34, 24, Math.PI, 1.0, 1, 0.02, 4);
 
             resetStartTime();
-            robot.wobbler.lower();
-            robot.wobbler.ungrab();
             while (getRuntime() <= 1) {
             }
             robot.wobbler.grab();
@@ -91,6 +90,8 @@ public class UltimateGoalAuto extends LiveAutoBase {
             drop_wobble_goal();
         }
 
+        robot.wobbler.raise();
+
         robot.drive_train.odo_move(-20, 72, 0, 1.0, -1, -1, 8);
     }
 
@@ -102,10 +103,8 @@ public class UltimateGoalAuto extends LiveAutoBase {
     private void drop_wobble_goal() {
         resetStartTime();
         robot.wobbler.lower();
-        robot.wobbler.ungrab();
         while (getRuntime() <= 1) {}
-        robot.wobbler.raise();
+        robot.wobbler.ungrab();
         while (getRuntime() <= 1.5) {}
-        robot.wobbler.grab();
     }
 }
