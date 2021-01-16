@@ -16,12 +16,14 @@ import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
 class IntakeConfig {
     public static double lift_speed = 0.85;
     public static double chopper_speed = 0.5;
+    public static double roller_speed = 1.0;
 }
 
 public class Intake extends Component {
 
     //// SERVOS ////
     private CRServoQUS chopper;
+    private CRServoQUS roller;
 
     //// MOTORS ////
     private DcMotorQUS front_lift;
@@ -41,6 +43,7 @@ public class Intake extends Component {
 
         //// SERVOS ////
         chopper    = new CRServoQUS(hwmap.get(CRServo.class, "chopper"));
+        roller     = new CRServoQUS(hwmap.get(CRServo.class, "roller"));
 
         //// MOTORS ////
         front_lift      = new DcMotorQUS(hwmap.get(DcMotorEx.class, "front_lift"));
@@ -54,6 +57,7 @@ public class Intake extends Component {
         front_lift.update();
         back_lift.update();
         chopper.update();
+        roller.update();
     }
 
     @Override
@@ -75,6 +79,7 @@ public class Intake extends Component {
     public void spin(int dir) {
         spin_lift(dir);
         chopper.queue_power(IntakeConfig.chopper_speed * dir);
+        roller.queue_power(IntakeConfig.roller_speed * dir);
     }
 
     public void stop_lift() {
@@ -85,6 +90,7 @@ public class Intake extends Component {
     public void stop() {
         stop_lift();
         chopper.queue_power(0);
+        roller.queue_power(0);
     }
 
     @Override
