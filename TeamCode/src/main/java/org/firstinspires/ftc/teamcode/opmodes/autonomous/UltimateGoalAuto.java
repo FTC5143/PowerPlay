@@ -18,19 +18,19 @@ public class UltimateGoalAuto extends LiveAutoBase {
     public void on_init() {
         robot.phone_camera.start_streaming();
 
-        while (!isStarted()) {
+        while (!isStarted() && !isStopRequested()) {
             pattern = robot.phone_camera.get_pattern();
         }
     }
 
     @Override
     public void on_start() {
-        robot.shooter.spin();
+        robot.shooter.aim(HIGH_GOAL);
 
         robot.drive_train.odo_move(0, 40, 0, 1.0, 1, 0.02, 6);
 
         if (shoot_preloaded_rings) {
-            robot.shooter.aim(HIGH_GOAL);
+            robot.shooter.spin();
 
             robot.drive_train.odo_move(-8, 57, 0, 1.0, 1, 0.02, 6);
 
@@ -48,6 +48,8 @@ public class UltimateGoalAuto extends LiveAutoBase {
                 }
             }
 
+            robot.shooter.stop();
+
             robot.shooter.aim(LOW_GOAL);
         }
 
@@ -63,7 +65,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
             drop_wobble_goal();
 
             if (pattern == 1) {
-                robot.drive_train.odo_move(-14, 68, 0, 1.0, 1, 0.02, 4);
+                robot.drive_train.odo_move(4, 54, 0, 1.0, 1, 0.02, 4);
             }
         }
 
@@ -82,7 +84,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
             if (pattern == 1) {
                 robot.drive_train.odo_move(4, 56, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 2) {
-                robot.drive_train.odo_move(-14, 79, 0, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(-18, 83, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
                 robot.drive_train.odo_move(4, 102, 0, 1.0, 1, 0.02, 6);
             }
@@ -90,9 +92,17 @@ public class UltimateGoalAuto extends LiveAutoBase {
             drop_wobble_goal();
         }
 
-        robot.wobbler.raise();
 
-        robot.drive_train.odo_move(-20, 72, 0, 1.0, -1, -1, 8);
+        robot.wobbler.raise();
+        resetStartTime();
+        while (getRuntime() <= 0.5) {
+        }
+
+        if (pattern == 1) {
+            robot.drive_train.odo_move(-18, 54, 0, 1.0, -1, -1, 3);
+        }
+
+        robot.drive_train.odo_move(-18, 72, 0, 1.0, -1, -1, 8);
     }
 
     @Override
