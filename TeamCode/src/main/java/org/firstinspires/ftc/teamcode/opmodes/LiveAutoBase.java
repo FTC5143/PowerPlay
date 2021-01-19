@@ -32,4 +32,9 @@ public abstract class LiveAutoBase extends LinearOpMode {
 
     // Called when stop is pressed, runs once
     public abstract void on_stop();
+
+    protected void halt(double seconds) {
+        resetStartTime();
+        while (getRuntime() < seconds && opModeIsActive()) {}
+    }
 }

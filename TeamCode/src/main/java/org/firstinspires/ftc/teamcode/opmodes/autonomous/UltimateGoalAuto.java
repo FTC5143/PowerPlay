@@ -18,7 +18,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
     public void on_init() {
         robot.phone_camera.start_streaming();
 
-        while (!isStarted() && !isStopRequested()) {
+        while (!isStarted() && opModeIsActive()) {
             pattern = robot.phone_camera.get_pattern();
         }
     }
@@ -35,17 +35,13 @@ public class UltimateGoalAuto extends LiveAutoBase {
             robot.drive_train.odo_move(-8, 57, 0, 1.0, 1, 0.02, 6);
 
             for (int i = 0; i < 4; i++) {
-                resetStartTime();
-
                 robot.shooter.shoot();
 
-                while (getRuntime() <= 0.5) {
-                }
+                halt(0.5);
 
                 robot.shooter.unshoot();
 
-                while (getRuntime() <= 1) {
-                }
+                halt(0.5);
             }
 
             robot.shooter.stop();
@@ -73,12 +69,9 @@ public class UltimateGoalAuto extends LiveAutoBase {
             robot.drive_train.odo_move(-34, 30, Math.PI, 1.0, 1, 0.02, 8);
             robot.drive_train.odo_move(-34, 24, Math.PI, 1.0, 1, 0.02, 4);
 
-            resetStartTime();
-            while (getRuntime() <= 1) {
-            }
+            halt(1);
             robot.wobbler.grab();
-            while (getRuntime() <= 1.5) {
-            }
+            halt(0.5);
             robot.wobbler.raise();
 
             if (pattern == 1) {
@@ -94,9 +87,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
 
         robot.wobbler.raise();
-        resetStartTime();
-        while (getRuntime() <= 0.5) {
-        }
+        halt(0.5);
 
         if (pattern == 1) {
             robot.drive_train.odo_move(-18, 54, 0, 1.0, -1, -1, 3);

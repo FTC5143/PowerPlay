@@ -242,9 +242,6 @@ public class DriveTrain extends Component {
                 double distance = Math.hypot(x - lcs.x, y - lcs.y);
                 double distance_a = Math.abs(a - lcs.a);
 
-                double progress = distance/original_distance;
-                double progress_a = distance_a/original_distance_a;
-
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
                 double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (7*speed)))/(7*speed)) * speed;
                 double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (7*speed)))/(7*speed)) * speed;
@@ -268,7 +265,6 @@ public class DriveTrain extends Component {
 
     public void odo_drive_towards(double x, double y, double a, double speed) {
         double distance = Math.hypot(x - lcs.x, y - lcs.y);
-        double distance_a = Math.abs(a - lcs.a);
 
         double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
         double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
