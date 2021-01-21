@@ -20,10 +20,9 @@ import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 class WobblerConfig {
     public static double grabbed = 0.63;
     public static double ungrabbed = 0.85;
-    public static double slightly_ungrabbed = 0.70;
 
-    public static double down_position = 0.0;
-    public static double up_position = 0.71;
+    public static double down_position = 0.04;
+    public static double up_position = 0.75;
 }
 
 public class Wobbler extends Component {
@@ -97,9 +96,4 @@ public class Wobbler extends Component {
         flopper.queue_position(WobblerConfig.down_position);
         raised = false;
     }
-
-    public void drop_wobble_goal() {
-        grabber.queue_position(WobblerConfig.slightly_ungrabbed);
-    }
-
 }

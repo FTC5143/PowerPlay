@@ -31,7 +31,7 @@ class ShooterConfig {
     public static int low_goal = 0;
     public static int mid_goal = 70;
     public static int high_goal = 1780;
-    public static int power_shot = 1512;
+    public static int power_shot = 1300;
 }
 
 public class Shooter extends Component {
