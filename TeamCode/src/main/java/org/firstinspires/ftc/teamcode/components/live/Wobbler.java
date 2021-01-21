@@ -23,7 +23,7 @@ class WobblerConfig {
     public static double slightly_ungrabbed = 0.54;
 
     public static double down_position = 0.0;
-    public static double up_position = 0.75;
+    public static double up_position = 0.71;
 }
 
 public class Wobbler extends Component {

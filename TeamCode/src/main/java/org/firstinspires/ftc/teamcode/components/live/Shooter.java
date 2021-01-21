@@ -22,7 +22,7 @@ class ShooterConfig {
 
     public static int target_speed = 1720; // counts per second
 
-    public static double shunter_unshot = 0.7;
+    public static double shunter_unshot = 0.8;
     public static double shunter_shot = 0.35;
 
 
