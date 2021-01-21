@@ -18,9 +18,9 @@ import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 
 @Config
 class WobblerConfig {
-    public static double grabbed = 0.44;
-    public static double ungrabbed = 0.7;
-    public static double slightly_ungrabbed = 0.54;
+    public static double grabbed = 0.63;
+    public static double ungrabbed = 0.85;
+    public static double slightly_ungrabbed = 0.70;
 
     public static double down_position = 0.0;
     public static double up_position = 0.71;
