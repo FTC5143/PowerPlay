@@ -79,7 +79,7 @@ public class LiveTeleop extends LiveTeleopBase {
                 }
             } else if (state == TeleopStates.UNJAM) {
 
-                if (getRuntime() < 0.5 /*seconds*/) {
+                if (getRuntime() < 0.75 /*seconds*/) {
                     robot.intake.spin(-1);
                 } else {
                     robot.intake.spin(1);

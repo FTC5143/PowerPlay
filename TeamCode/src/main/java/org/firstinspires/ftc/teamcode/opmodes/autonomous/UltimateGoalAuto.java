@@ -18,7 +18,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
     public void on_init() {
         robot.phone_camera.start_streaming();
 
-        while (!isStarted() && opModeIsActive()) {
+        while (!isStarted()) {
             pattern = robot.phone_camera.get_pattern();
         }
     }
@@ -32,16 +32,16 @@ public class UltimateGoalAuto extends LiveAutoBase {
         if (shoot_preloaded_rings) {
             robot.shooter.spin();
 
-            robot.drive_train.odo_move(-8, 57, 0, 1.0, 1, 0.02, 6);
+            robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
 
             for (int i = 0; i < 4; i++) {
                 robot.shooter.shoot();
 
-                halt(0.5);
+                halt(0.6);
 
                 robot.shooter.unshoot();
 
-                halt(0.5);
+                halt(0.7);
             }
 
             robot.shooter.stop();
@@ -55,7 +55,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
             } else if (pattern == 2) {
                 robot.drive_train.odo_move(-14, 87, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
-                robot.drive_train.odo_move(4, 110, 0, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(8, 110, 0, 1.0, 1, 0.02, 6);
             }
 
             drop_wobble_goal();
@@ -66,8 +66,20 @@ public class UltimateGoalAuto extends LiveAutoBase {
         }
 
         if (second_wobble_goal) {
-            robot.drive_train.odo_move(-34, 30, Math.PI, 1.0, 1, 0.02, 8);
-            robot.drive_train.odo_move(-34, 24, Math.PI, 1.0, 1, 0.02, 4);
+
+            if (pattern == 3) { // more stupid exceptions due to bad odo
+                robot.drive_train.odo_move(-49, 34, Math.PI, 1.0, 1, 0.02, 8, 0.5);
+                robot.drive_train.odo_move(-49, 29, Math.PI, 0.75, 1, 0.02, 4);
+            }
+            else {
+                robot.drive_train.odo_move(-37, 32, Math.PI, 1.0, 1, 0.02, 8, 0.5);
+
+                if (pattern == 2) { // Stupid exception changes due to bad odometry hardware that I hate to make
+                    robot.drive_train.odo_move(-37, 25, Math.PI, 0.75, 1, 0.02, 4);
+                } else {
+                    robot.drive_train.odo_move(-37, 26, Math.PI, 0.75, 1, 0.02, 4);
+                }
+            }
 
             halt(1);
             robot.wobbler.grab();
@@ -79,7 +91,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
             } else if (pattern == 2) {
                 robot.drive_train.odo_move(-18, 83, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
-                robot.drive_train.odo_move(4, 102, 0, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(4, 102, Math.PI/5, 1.0, 1, 0.02, 6);
             }
 
             drop_wobble_goal();
