@@ -49,7 +49,7 @@ public class LocalCoordinateSystem {
         double sc = (cd * INCHES_PER_COUNT_C) + (ph * LCSConfig.CENTER_WHEEL_OFFSET);
 
         // Calculate the new angle of the robot using the difference between the left and right encoder
-        a = (re * INCHES_PER_COUNT_R - le * INCHES_PER_COUNT_L) / LCSConfig.ROBOT_DIAMETER;
+        a += (rd * INCHES_PER_COUNT_R - ld * INCHES_PER_COUNT_L) / LCSConfig.ROBOT_DIAMETER;
 
         // Calculate the new position of the robot by adding the arc vector to the absolute pos
         double sinph = Math.sin(ph);

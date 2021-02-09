@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
 @Config
 class IntakeConfig {
     public static double lift_speed = 0.85;
-    public static double chopper_speed = 0.5;
+    public static double chopper_speed = 0.55;
     public static double roller_speed = -1.0;
 }
 

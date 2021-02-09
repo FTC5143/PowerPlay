@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.coyote.geometry.Pose;
 import org.firstinspires.ftc.teamcode.coyote.path.Path;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
+import org.firstinspires.ftc.teamcode.util.MathUtil;
 import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
@@ -114,6 +115,10 @@ public class DriveTrain extends Component {
         if (robot.cycle % 4 == 3) {
             drive_rb.update();
         }
+
+        if (robot.cycle % 500 == 0) {
+            read_from_imu();
+        }
     }
 
     @Override
@@ -186,6 +191,7 @@ public class DriveTrain extends Component {
 
     public void read_from_imu() {
         last_imu_orientation = imu.getAngularOrientation();
+        lcs.a = last_imu_orientation.firstAngle; // Will have to change based on the orientation of the rev hub
     }
 
     // An easy public setter for the drive variables

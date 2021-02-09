@@ -68,30 +68,33 @@ public class UltimateGoalAuto extends LiveAutoBase {
         if (second_wobble_goal) {
 
             if (pattern == 3) { // more stupid exceptions due to bad odo
-                robot.drive_train.odo_move(-49, 34, Math.PI, 1.0, 1, 0.02, 8, 0.5);
-                robot.drive_train.odo_move(-49, 29, Math.PI, 0.75, 1, 0.02, 4);
+                robot.drive_train.odo_move(-38, 34, Math.PI, 1.0, 1, 0.02, 8, 0.5);
+                robot.drive_train.odo_move(-38, 29, Math.PI, 0.75, 1, 0.02, 4);
             }
-            else {
+            else if (pattern == 2) {
+                robot.intake.spin(1);
+                robot.drive_train.odo_move(-17, 32, Math.PI, 1.0, 1, 0.02, 4);
                 robot.drive_train.odo_move(-37, 32, Math.PI, 1.0, 1, 0.02, 8, 0.5);
-
-                if (pattern == 2) { // Stupid exception changes due to bad odometry hardware that I hate to make
-                    robot.drive_train.odo_move(-37, 25, Math.PI, 0.75, 1, 0.02, 4);
-                } else {
-                    robot.drive_train.odo_move(-37, 26, Math.PI, 0.75, 1, 0.02, 4);
-                }
+                robot.drive_train.odo_move(-37, 25, Math.PI, 0.75, 1, 0.02, 4);
+            } else if (pattern == 1) {
+                robot.drive_train.odo_move(-34, 32, Math.PI, 1.0, 1, 0.02, 8, 0.5);
+                robot.drive_train.odo_move(-34, 25, Math.PI, 0.75, 1, 0.02, 4);
             }
+
 
             halt(1);
             robot.wobbler.grab();
             halt(0.5);
             robot.wobbler.raise();
 
+            robot.intake.stop(); // In case we were intaking rings from any of the earlier patterns
+
             if (pattern == 1) {
                 robot.drive_train.odo_move(4, 56, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 2) {
                 robot.drive_train.odo_move(-18, 83, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
-                robot.drive_train.odo_move(4, 102, Math.PI/5, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(0, 110, Math.PI/5, 1.0, 1, 0.02, 6);
             }
 
             drop_wobble_goal();

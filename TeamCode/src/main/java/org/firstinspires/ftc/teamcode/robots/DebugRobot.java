@@ -21,7 +21,7 @@ public class DebugRobot extends Robot {
     ArrayList<Point> robot_movement = new ArrayList<Point>();
 
     {
-        name = "Boris";
+        name = "Taurus";
     }
 
     public DebugRobot(LinearOpMode opmode) {
