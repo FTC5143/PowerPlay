@@ -21,7 +21,7 @@ class WobblerConfig {
     public static double grabbed = 0.63;
     public static double ungrabbed = 0.85;
 
-    public static double down_position = 0.04;
+    public static double down_position = 0.10;
     public static double up_position = 0.75;
 }
 

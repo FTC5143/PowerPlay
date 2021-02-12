@@ -25,12 +25,12 @@ import static org.opencv.core.CvType.CV_8UC1;
 
 @Config
 class OCVPhoneCameraConfig {
-    public static double top_rect_left = 46;
+    public static double top_rect_left = 40;
     public static double top_rect_top = 6;
     public static double top_rect_width = 9;
     public static double top_rect_height = 15;
 
-    public static double bot_rect_left = 43;
+    public static double bot_rect_left = 37;
     public static double bot_rect_top = 6;
     public static double bot_rect_width = 3;
     public static double bot_rect_height = 15;
