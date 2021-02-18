@@ -32,9 +32,20 @@ class ShooterConfig {
     public static int mid_goal = 70;
     public static int high_goal = 1780;
     public static int power_shot = 1200;
+
+    public static int limit_switch_offset = 70;
 }
 
 public class Shooter extends Component {
+
+    public enum ShooterStates {
+        NORMAL,
+        RESET
+    }
+
+    int shooter_offset = 0;
+
+    public ShooterStates state = ShooterStates.NORMAL;
 
     //// MOTORS ////
     private DcMotorEx flywheel;     // Flywheel
@@ -72,11 +83,13 @@ public class Shooter extends Component {
     public void update(OpMode opmode) {
         super.update(opmode);
 
-        if (!robot.bulk_data_2.getDigitalInputState(0)) {
-            angler_zero = robot.bulk_data_2.getMotorCurrentPosition(angler);
+        if (state == ShooterStates.NORMAL) {
+            shunter.update();
+        } else if (state == ShooterStates.RESET) {
+            if (!robot.bulk_data_2.getDigitalInputState(1)) {
+                stop_encoder_reset();
+            }
         }
-
-        shunter.update();
     }
 
     @Override
@@ -148,7 +161,22 @@ public class Shooter extends Component {
         targets[0] = ShooterConfig.low_goal; targets[1] = ShooterConfig.mid_goal; targets[2] = ShooterConfig.high_goal; targets[3] = ShooterConfig.power_shot;
         update_pid_coeffs();
         shot_target = target;
-        angler.setTargetPosition(targets[shot_target % targets.length]);
+        angler.setTargetPosition(targets[shot_target % targets.length] - shooter_offset);
         angler.setPower(1);
+    }
+
+    public void encoder_reset() {
+        angler.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        angler.setPower(-0.5);
+        state = ShooterStates.RESET;
+    }
+
+    public void stop_encoder_reset() {
+        angler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooter_offset = ShooterConfig.limit_switch_offset;
+
+        angler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        aim(0);
+        state = ShooterStates.NORMAL;
     }
 }

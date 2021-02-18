@@ -15,7 +15,6 @@ public class SensorDebug extends Component {
     RevTouchSensor touch_sensor;
     DistanceSensor distance_sensor;
 
-
     {
         name = "Sensor Debug";
     }

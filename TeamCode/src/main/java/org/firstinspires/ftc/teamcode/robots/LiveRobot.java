@@ -73,6 +73,18 @@ public class LiveRobot extends Robot {
                         " D27:"+(bulk_data_2.getDigitalInputState(7) ? 1 : 0)
         );
 
+        telemetry.addData("ANALOG",
+                "A10:"+(bulk_data_1.getAnalogInputValue(0))+
+                        " A11:"+(bulk_data_1.getAnalogInputValue(1))+
+                        " A12:"+(bulk_data_1.getAnalogInputValue(2))+
+                        " A13:"+(bulk_data_1.getAnalogInputValue(3))+
+                        " A20:"+(bulk_data_2.getAnalogInputValue(0))+
+                        " A21:"+(bulk_data_2.getAnalogInputValue(1))+
+                        " A22:"+(bulk_data_2.getAnalogInputValue(2))+
+                        " A23:"+(bulk_data_2.getAnalogInputValue(3))
+        );
+
+
         TelemetryPacket packet = new TelemetryPacket();
 
         Canvas canvas = packet.fieldOverlay();

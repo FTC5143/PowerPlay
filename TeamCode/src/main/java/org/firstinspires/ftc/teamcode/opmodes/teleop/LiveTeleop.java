@@ -13,7 +13,8 @@ public class LiveTeleop extends LiveTeleopBase {
 
     enum TeleopStates {
         NORMAL,
-        UNJAM
+        UNJAM,
+        RESET
     }
 
     TeleopStates state = TeleopStates.NORMAL;
@@ -37,7 +38,7 @@ public class LiveTeleop extends LiveTeleopBase {
             if (gamepad2.left_stick_button) {
                 robot.phone_camera.start_streaming();
             }
-            if (gamepad2.dpad_up) {
+            if (gamepad2.right_stick_button) {
                 robot.shooter.update_pid_coeffs();
             }
 
@@ -46,6 +47,13 @@ public class LiveTeleop extends LiveTeleopBase {
                 resetStartTime();
             }
 
+            if (gamepad2.dpad_up) {
+                robot.shooter.stop_encoder_reset();
+            }
+
+            if (gamepad2.dpad_down) {
+                robot.shooter.encoder_reset();
+            }
         } else {
             //// GAMEPAD ONE ////
             if (gamepad1.a) {

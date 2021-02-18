@@ -1,33 +1,41 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsAnalogOpticalDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.util.qus.CRServoQUS;
 import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
+import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 
 @Config
 class IntakeConfig {
     public static double lift_speed = 0.85;
     public static double chopper_speed = 0.55;
     public static double roller_speed = -1.0;
+
+    public static double chopper_chopped = 1;
+    public static double chopper_unchopped = 0;
 }
 
 public class Intake extends Component {
 
     //// SERVOS ////
-    private CRServoQUS chopper;
+    private ServoQUS chopper;
     private CRServoQUS roller;
 
     //// MOTORS ////
     private DcMotorQUS front_lift;
     private DcMotorQUS back_lift;
+
+    public int ring_detector_distance;
 
     {
         name = "Intake";
@@ -42,7 +50,7 @@ public class Intake extends Component {
         super.registerHardware(hwmap);
 
         //// SERVOS ////
-        chopper    = new CRServoQUS(hwmap.get(CRServo.class, "chopper"));
+        chopper    = new ServoQUS(hwmap.get(Servo.class, "chopper"));
         roller     = new CRServoQUS(hwmap.get(CRServo.class, "roller"));
 
         //// MOTORS ////
@@ -58,11 +66,21 @@ public class Intake extends Component {
         back_lift.update();
         chopper.update();
         roller.update();
+
+        ring_detector_distance = robot.bulk_data_1.getAnalogInputValue(1);
+
+        if (ring_detector_distance > 25) {
+            chop();
+        } else {
+            unchop();
+        }
     }
 
     @Override
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
+
+        telemetry.addData("RDT", ring_detector_distance);
     }
 
     @Override
@@ -70,6 +88,14 @@ public class Intake extends Component {
         super.startup();
     }
 
+    public void chop() {
+        chopper.queue_position(IntakeConfig.chopper_chopped);
+    }
+
+
+    public void unchop() {
+        chopper.queue_position(IntakeConfig.chopper_unchopped);
+    }
 
     public void spin_lift(int dir) {
         front_lift.queue_power(-1 * IntakeConfig.lift_speed * dir);
@@ -78,7 +104,6 @@ public class Intake extends Component {
 
     public void spin(int dir) {
         spin_lift(dir);
-        chopper.queue_power(IntakeConfig.chopper_speed * dir);
         roller.queue_power(IntakeConfig.roller_speed * dir);
     }
 
@@ -89,7 +114,6 @@ public class Intake extends Component {
 
     public void stop() {
         stop_lift();
-        chopper.queue_power(0);
         roller.queue_power(0);
     }
 
