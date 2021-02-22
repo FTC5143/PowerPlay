@@ -23,6 +23,10 @@ class IntakeConfig {
 
     public static double chopper_chopped = 1;
     public static double chopper_unchopped = 0;
+
+    public static double popout_in = 0.20;
+    public static double popout_out = 0.70;
+    public static double popout_speed = -1.0;
 }
 
 public class Intake extends Component {
@@ -30,6 +34,8 @@ public class Intake extends Component {
     //// SERVOS ////
     private ServoQUS chopper;
     private CRServoQUS roller;
+    private ServoQUS popout_joint;
+    private CRServoQUS popout_wheel;
 
     //// MOTORS ////
     private DcMotorQUS front_lift;
@@ -52,6 +58,8 @@ public class Intake extends Component {
         //// SERVOS ////
         chopper    = new ServoQUS(hwmap.get(Servo.class, "chopper"));
         roller     = new CRServoQUS(hwmap.get(CRServo.class, "roller"));
+        popout_joint = new ServoQUS(hwmap.get(Servo.class, "popout_joint"));
+        popout_wheel = new CRServoQUS(hwmap.get(CRServo.class, "popout_wheel"));
 
         //// MOTORS ////
         front_lift      = new DcMotorQUS(hwmap.get(DcMotorEx.class, "front_lift"));
@@ -66,6 +74,8 @@ public class Intake extends Component {
         back_lift.update();
         chopper.update();
         roller.update();
+        popout_joint.update();
+        popout_wheel.update();
 
         ring_detector_distance = robot.bulk_data_1.getAnalogInputValue(1);
 
@@ -86,6 +96,8 @@ public class Intake extends Component {
     @Override
     public void startup() {
         super.startup();
+        popin();
+        unchop();
     }
 
     public void chop() {
@@ -110,6 +122,16 @@ public class Intake extends Component {
     public void stop_lift() {
         front_lift.queue_power(0);
         back_lift.queue_power(0);
+    }
+
+    public void popout() {
+        popout_joint.queue_position(IntakeConfig.popout_out);
+        popout_wheel.queue_power(IntakeConfig.popout_speed);
+    }
+
+    public void popin() {
+        popout_joint.queue_position(IntakeConfig.popout_in);
+        popout_wheel.queue_power(0);
     }
 
     public void stop() {

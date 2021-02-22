@@ -32,6 +32,28 @@ public class LiveTeleop extends LiveTeleopBase {
     @Override
     public void on_loop() {
 
+        //// GAMEPAD ONE ////
+
+        // Wobbler control
+        if (gamepad1.a) {
+            robot.wobbler.grab();
+        } else if (gamepad1.b) {
+            robot.wobbler.ungrab();
+        }
+
+        if (gamepad1.x) {
+            robot.wobbler.raise();
+        } else if (gamepad1.y) {
+            robot.wobbler.lower();
+        }
+
+        // Popout intake
+        if (gamepad1.dpad_down) {
+            robot.intake.popout();
+        } else {
+            robot.intake.popin();
+        }
+
         /// GAMEPAD TWO BACK HOTKEYS ///
 
         if (gamepad2.back) {
@@ -55,20 +77,9 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.shooter.encoder_reset();
             }
         } else {
-            //// GAMEPAD ONE ////
-            if (gamepad1.a) {
-                robot.wobbler.grab();
-            } else if (gamepad1.b) {
-                robot.wobbler.ungrab();
-            }
-
-            if (gamepad1.x) {
-                robot.wobbler.raise();
-            } else if (gamepad1.y) {
-                robot.wobbler.lower();
-            }
-
             //// GAMEPAD TWO ////
+
+            // Flywheel control
             if (gamepad2.a) {
                 robot.shooter.spin();
             } else if (gamepad2.b) {
@@ -76,13 +87,14 @@ public class LiveTeleop extends LiveTeleopBase {
             }
 
             if (state == TeleopStates.NORMAL) {
+                // Normal intake control
                 if (gamepad2.x) {
                     robot.intake.spin(1);
                 } else if (gamepad2.y) {
                     robot.intake.stop();
                 }
             } else if (state == TeleopStates.UNJAM) {
-
+                // Intake unjam
                 if (getRuntime() < 0.75 /*seconds*/) {
                     robot.intake.spin(-1);
                 } else {
@@ -96,12 +108,14 @@ public class LiveTeleop extends LiveTeleopBase {
                 }
             }
 
+            // Shunter control
             if (gamepad2.right_bumper) {
                 robot.shooter.shoot();
             } else {
                 robot.shooter.unshoot();
             }
 
+            // Angler control
             if (gamepad2.dpad_up) {
                 robot.shooter.aim(3);
             } else if (gamepad2.dpad_down) {
