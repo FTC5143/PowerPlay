@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.util.MathUtil;
 import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
+import static org.firstinspires.ftc.teamcode.util.MathUtil.angle_difference;
 
 // Drive Train component
 // Includes: Drive Motors, IMU
@@ -191,7 +192,7 @@ public class DriveTrain extends Component {
 
     public void read_from_imu() {
         last_imu_orientation = imu.getAngularOrientation();
-        lcs.a = last_imu_orientation.firstAngle; // Will have to change based on the orientation of the rev hub
+        lcs.a = last_imu_orientation.firstAngle;
     }
 
     // An easy public setter for the drive variables
@@ -251,7 +252,7 @@ public class DriveTrain extends Component {
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
                 double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (7*speed)))/(7*speed)) * speed;
                 double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (7*speed)))/(7*speed)) * speed;
-                double mvmt_a = -Range.clip((a-lcs.a)*3, -1, 1) * speed;
+                double mvmt_a = -Range.clip((angle_difference(lcs.a, a))*3, -1, 1) * speed;
 
                 mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
 

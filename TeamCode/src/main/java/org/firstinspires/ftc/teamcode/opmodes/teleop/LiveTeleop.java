@@ -48,7 +48,7 @@ public class LiveTeleop extends LiveTeleopBase {
         }
 
         // Popout intake
-        if (gamepad1.dpad_down) {
+        if (gamepad1.right_trigger > 0.5) {
             robot.intake.popout();
         } else {
             robot.intake.popin();

@@ -11,4 +11,9 @@ public class MathUtil {
         if (n == 0) return 1.0;
         else return (double) Math.signum((float) n);
     }
+
+    public static double angle_difference(double angle1, double angle2) { // dont ask
+        double diff = (angle2 - angle1 + Math.PI) % (2*Math.PI) - Math.PI;
+        return diff < -Math.PI ? diff + (2*Math.PI) : diff;
+    }
 }

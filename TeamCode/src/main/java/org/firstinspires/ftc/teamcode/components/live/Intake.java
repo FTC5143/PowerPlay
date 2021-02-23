@@ -21,8 +21,9 @@ class IntakeConfig {
     public static double chopper_speed = 0.55;
     public static double roller_speed = -1.0;
 
-    public static double chopper_chopped = 1;
+    public static double chopper_chopped = 0.57;
     public static double chopper_unchopped = 0;
+    public static int chopper_delay = 125;
 
     public static double popout_in = 0.20;
     public static double popout_out = 0.70;
@@ -42,6 +43,8 @@ public class Intake extends Component {
     private DcMotorQUS back_lift;
 
     public int ring_detector_distance;
+
+    public long chopper_timer = 0;
 
     {
         name = "Intake";
@@ -79,10 +82,13 @@ public class Intake extends Component {
 
         ring_detector_distance = robot.bulk_data_1.getAnalogInputValue(1);
 
-        if (ring_detector_distance > 25) {
+        if (ring_detector_distance > 25 && (System.currentTimeMillis() - chopper_timer) > IntakeConfig.chopper_delay) {
             chop();
         } else {
             unchop();
+            if (ring_detector_distance <= 25) { // Bad code, will fix later
+                chopper_timer = System.currentTimeMillis();
+            }
         }
     }
 
@@ -91,6 +97,7 @@ public class Intake extends Component {
         super.updateTelemetry(telemetry);
 
         telemetry.addData("RDT", ring_detector_distance);
+        telemetry.addData("CT", chopper_timer);
     }
 
     @Override
