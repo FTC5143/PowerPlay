@@ -51,7 +51,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
             if (pattern == 1) {
                 robot.drive_train.odo_move(4, 64, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 2) {
-                robot.drive_train.odo_move(-14, 87, 0, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(-19, 87, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
                 robot.drive_train.odo_move(6, 110, 0, 1.0, 1, 0.02, 6);
             }
@@ -73,9 +73,9 @@ public class UltimateGoalAuto extends LiveAutoBase {
             else if (pattern == 2) {
                 robot.intake.spin(1);
                 robot.drive_train.odo_move(-17, 32, Math.PI, 1.0, 1, 0.02, 4);
-                robot.drive_train.odo_move(-38, 32, Math.PI, 1.0, 1, 0.02, 4, 0.5);
+                robot.drive_train.odo_move(-36, 32, Math.PI, 1.0, 1, 0.02, 4, 0.5);
                 robot.drive_train.read_from_imu();
-                robot.drive_train.odo_move(-38, 23, Math.PI, 0.33, 1, 0.02, 2);
+                robot.drive_train.odo_move(-36, 23, Math.PI, 0.33, 1, 0.02, 2);
             } else if (pattern == 1) {
                 robot.drive_train.odo_move(-34, 33, Math.PI, 1.0, 1, 0.02, 6, 0.5);
                 robot.drive_train.read_from_imu();

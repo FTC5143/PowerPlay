@@ -29,7 +29,7 @@ import static org.firstinspires.ftc.teamcode.util.MathUtil.angle_difference;
 
 @Config
 class DriveTrainConfig {
-
+    public static int gyro_update_interval = 200;
 }
 
 public class DriveTrain extends Component {
@@ -117,7 +117,7 @@ public class DriveTrain extends Component {
             drive_rb.update();
         }
 
-        if (robot.cycle % 500 == 0) {
+        if (robot.cycle % DriveTrainConfig.gyro_update_interval == 0) {
             read_from_imu();
         }
     }
