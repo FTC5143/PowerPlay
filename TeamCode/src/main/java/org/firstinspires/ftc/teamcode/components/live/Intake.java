@@ -17,13 +17,12 @@ import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 
 @Config
 class IntakeConfig {
-    public static double lift_speed = 0.85;
-    public static double chopper_speed = 0.55;
+    public static double lift_speed = 1.0;
     public static double roller_speed = -1.0;
 
     public static double chopper_chopped = 0.57;
     public static double chopper_unchopped = 0;
-    public static int chopper_delay = 125;
+    public static int chopper_delay = 20;
 
     public static double popout_in = 0.20;
     public static double popout_out = 0.70;

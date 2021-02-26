@@ -18,7 +18,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
     public void on_init() {
         robot.phone_camera.start_streaming();
 
-        while (!isStarted()) {
+        while (!isStarted() && !isStopRequested()) {
             pattern = robot.phone_camera.get_pattern();
         }
     }
@@ -27,12 +27,12 @@ public class UltimateGoalAuto extends LiveAutoBase {
     public void on_start() {
         robot.shooter.aim(HIGH_GOAL);
 
-        robot.drive_train.odo_move(0, 40, 0, 1.0, 1, 0.02, 6);
+        robot.drive_train.odo_move(0, 40, 0, 1.0, 1, 0.02, 4);
 
         if (shoot_preloaded_rings) {
             robot.shooter.spin();
 
-            robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
+            robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.5);
 
             for (int i = 0; i < 4; i++) {
                 robot.shooter.shoot();
@@ -66,16 +66,16 @@ public class UltimateGoalAuto extends LiveAutoBase {
         if (second_wobble_goal) {
 
             if (pattern == 3) { // more stupid exceptions due to bad odo
-                robot.drive_train.odo_move(-38, 56, Math.PI, 1.0, 1, 0.02, 6, 0.5);
+                robot.drive_train.odo_move(-34, 56, Math.PI, 1.0, 1, 0.02, 6, 0.5);
                 robot.drive_train.read_from_imu();
-                robot.drive_train.odo_move(-38, 27, Math.PI, 0.33, 1, 0.02, 4);
+                robot.drive_train.odo_move(-34, 25, Math.PI, 0.33, 1, 0.02, 4);
             }
             else if (pattern == 2) {
                 robot.intake.spin(1);
                 robot.drive_train.odo_move(-17, 32, Math.PI, 1.0, 1, 0.02, 4);
-                robot.drive_train.odo_move(-36, 32, Math.PI, 1.0, 1, 0.02, 4, 0.5);
+                robot.drive_train.odo_move(-34, 32, Math.PI, 1.0, 1, 0.02, 4, 0.5);
                 robot.drive_train.read_from_imu();
-                robot.drive_train.odo_move(-36, 23, Math.PI, 0.33, 1, 0.02, 2);
+                robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 2);
             } else if (pattern == 1) {
                 robot.drive_train.odo_move(-34, 33, Math.PI, 1.0, 1, 0.02, 6, 0.5);
                 robot.drive_train.read_from_imu();
@@ -95,14 +95,14 @@ public class UltimateGoalAuto extends LiveAutoBase {
             } else if (pattern == 2) {
                 // SHOOT ON THE WAY THERE
                 robot.shooter.spin();
-                robot.drive_train.odo_move(-16, 62, 0, 1.0, 1, 0.02, 6, 0.5);
+                robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
 
                 robot.shooter.shoot();
                 halt(0.6);
                 robot.shooter.unshoot();
                 robot.shooter.stop();
                 // After shooting go to the wobble goal drop spot
-                robot.drive_train.odo_move(-18, 83, 0, 1.0, 1, 0.02, 6);
+                robot.drive_train.odo_move(-12, 83, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
                 robot.drive_train.odo_move(-9, 106, Math.PI/4, 1.0, 1, 0.02, 6);
             }
@@ -128,10 +128,9 @@ public class UltimateGoalAuto extends LiveAutoBase {
     }
 
     private void drop_wobble_goal() {
-        resetStartTime();
         robot.wobbler.lower();
-        while (getRuntime() <= 1) {}
+        halt(1);
         robot.wobbler.ungrab();
-        while (getRuntime() <= 1.5) {}
+        halt(0.5);
     }
 }

@@ -8,8 +8,6 @@ public abstract class LiveAutoBase extends LinearOpMode {
 
     protected LiveRobot robot;
 
-    protected final int FEET = 12;
-
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new LiveRobot(this);

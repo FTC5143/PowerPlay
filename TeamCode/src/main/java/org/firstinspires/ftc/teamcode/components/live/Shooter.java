@@ -116,6 +116,8 @@ public class Shooter extends Component {
         angler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         angler.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        unshoot();
+
         update_pid_coeffs();
     }
 
