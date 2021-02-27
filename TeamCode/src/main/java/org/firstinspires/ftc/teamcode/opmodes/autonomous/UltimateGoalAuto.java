@@ -32,7 +32,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
         if (shoot_preloaded_rings) {
             robot.shooter.spin();
 
-            robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.5);
+            robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.3);
 
             for (int i = 0; i < 4; i++) {
                 robot.shooter.shoot();
@@ -66,24 +66,23 @@ public class UltimateGoalAuto extends LiveAutoBase {
         if (second_wobble_goal) {
 
             if (pattern == 3) { // more stupid exceptions due to bad odo
-                robot.drive_train.odo_move(-34, 56, Math.PI, 1.0, 1, 0.02, 6, 0.5);
+                robot.intake.spin(1);
+                robot.drive_train.odo_move(-34, 32, Math.PI, 1.0, 1, 0.02, 6, 0.3);
                 robot.drive_train.read_from_imu();
-                robot.drive_train.odo_move(-34, 25, Math.PI, 0.33, 1, 0.02, 4);
+                robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 4);
             }
             else if (pattern == 2) {
                 robot.intake.spin(1);
                 robot.drive_train.odo_move(-17, 32, Math.PI, 1.0, 1, 0.02, 4);
-                robot.drive_train.odo_move(-34, 32, Math.PI, 1.0, 1, 0.02, 4, 0.5);
+                robot.drive_train.odo_move(-34, 32, Math.PI, 1.0, 1, 0.02, 4, 0.3);
                 robot.drive_train.read_from_imu();
                 robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 2);
             } else if (pattern == 1) {
-                robot.drive_train.odo_move(-34, 33, Math.PI, 1.0, 1, 0.02, 6, 0.5);
+                robot.drive_train.odo_move(-34, 33, Math.PI, 1.0, 1, 0.02, 6, 0.3);
                 robot.drive_train.read_from_imu();
                 robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 2);
             }
 
-
-            halt(1);
             robot.wobbler.grab();
             halt(0.5);
             robot.wobbler.raise();
@@ -114,6 +113,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
         halt(0.5);
 
         robot.shooter.aim(LOW_GOAL);
+        robot.wobbler.grab();
 
         if (pattern == 1) {
             robot.drive_train.odo_move(-18, 54, 0, 1.0, -1, -1, 3);

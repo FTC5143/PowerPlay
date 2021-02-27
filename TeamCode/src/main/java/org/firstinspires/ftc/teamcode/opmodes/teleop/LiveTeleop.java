@@ -115,6 +115,8 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.shooter.unshoot();
             }
 
+            robot.intake.forced_chop = gamepad2.left_bumper;
+
             // Angler control
             if (gamepad2.dpad_up) {
                 robot.shooter.aim(3);

@@ -89,11 +89,10 @@ public class LiveRobot extends Robot {
 
         Canvas canvas = packet.fieldOverlay();
 
-        int offset_x = -33;
-        int offset_y = -63;
-        double offset_a = Math.PI/2;
+        int offset_x = 0;
+        int offset_y = 0;
 
-        DashboardUtil.drawRobot(canvas, new Pose2d(drive_train.lcs.x+offset_x, drive_train.lcs.y+offset_y, drive_train.lcs.a+offset_a));
+        DashboardUtil.drawRobot(canvas, new Pose2d(drive_train.lcs.y+offset_y, drive_train.lcs.x+offset_x, drive_train.lcs.a));
 
         canvas.setStrokeWidth(1);
         canvas.setStroke("#0000ff");
