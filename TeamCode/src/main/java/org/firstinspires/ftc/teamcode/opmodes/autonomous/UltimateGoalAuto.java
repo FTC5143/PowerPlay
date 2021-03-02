@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 
+import android.media.MediaPlayer;
+
 import org.firstinspires.ftc.teamcode.opmodes.LiveAutoBase;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.HIGH_GOAL;
@@ -17,6 +19,10 @@ public class UltimateGoalAuto extends LiveAutoBase {
     @Override
     public void on_init() {
         robot.phone_camera.start_streaming();
+
+        if (robot.expansion_hub_2.getBulkInputData().getDigitalInputState(1)) { // shooter is up; put it down
+            robot.addWarning("Put the shooter down!");
+        }
 
         while (!isStarted() && !isStopRequested()) {
             pattern = robot.phone_camera.get_pattern();

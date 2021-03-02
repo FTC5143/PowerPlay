@@ -32,10 +32,12 @@ public class Robot {
 
     public String name;
 
+    public ArrayList<String> warnings = new ArrayList<>();
+
     boolean running = false;
 
-    protected ExpansionHubEx expansion_hub_1;
-    protected ExpansionHubEx expansion_hub_2;
+    public ExpansionHubEx expansion_hub_1;
+    public ExpansionHubEx expansion_hub_2;
 
     Telemetry telemetry;
 
@@ -143,6 +145,13 @@ public class Robot {
 
     // For updating the telemetry on the phones
     public void updateTelemetry() {
+        if (warnings.size() > 0) {
+            telemetry.addData("[WARNINGS]","");
+            for (int i = 0; i < warnings.size(); i++) {
+                telemetry.addData(String.valueOf(i+1), warnings.get(i));
+            }
+        }
+
         telemetry.addData("[RBT "+name+"]", components.size()+" components");
         telemetry.addData("FREQ", update_freq);
     }
@@ -158,5 +167,9 @@ public class Robot {
     public void registerHardware(HardwareMap hwmap) {
         expansion_hub_1 = hwmap.get(ExpansionHubEx.class, "Expansion Hub 1");
         expansion_hub_2 = hwmap.get(ExpansionHubEx.class, "Expansion Hub 2");
+    }
+
+    public void addWarning(String warning) {
+        warnings.add(warning);
     }
 }
