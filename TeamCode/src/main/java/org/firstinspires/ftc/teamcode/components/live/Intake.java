@@ -20,9 +20,11 @@ class IntakeConfig {
     public static double lift_speed = 0.95;
     public static double roller_speed = -1.0;
 
-    public static double chopper_chopped = 0.57;
+    public static double chopper_chopped = 0.50;
     public static double chopper_unchopped = 0;
     public static int chopper_delay = 50;
+    public static int chopper_repeat_interval = 250;
+    public static int chopper_focal_length = 20;
 
     public static double popout_in = 0.20;
     public static double popout_out = 0.70;
@@ -83,11 +85,20 @@ public class Intake extends Component {
 
         ring_detector_distance = robot.bulk_data_1.getAnalogInputValue(1);
 
-        if ((ring_detector_distance > 25 && (System.currentTimeMillis() - chopper_timer) > IntakeConfig.chopper_delay) || forced_chop) {
-            chop();
+        long time_waited_to_chop = (System.currentTimeMillis() - chopper_timer);
+
+        if ((ring_detector_distance > IntakeConfig.chopper_focal_length && time_waited_to_chop > IntakeConfig.chopper_delay) || forced_chop) {
+            // alternate chopping and unchopping every chopper_repeat_interval milliseconds
+            boolean should_be_chopped = ((int) ((time_waited_to_chop - IntakeConfig.chopper_delay) / IntakeConfig.chopper_repeat_interval)) % 2 == 0;
+
+            if (should_be_chopped) {
+                chop();
+            } else {
+                unchop();
+            }
         } else {
             unchop();
-            if (ring_detector_distance <= 25) { // Bad code, will fix later
+            if (ring_detector_distance <= IntakeConfig.chopper_focal_length) { // Bad code, will fix later
                 chopper_timer = System.currentTimeMillis();
             }
         }

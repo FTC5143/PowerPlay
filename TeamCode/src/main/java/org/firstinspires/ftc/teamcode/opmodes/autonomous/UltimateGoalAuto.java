@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import android.media.MediaPlayer;
 
+import com.qualcomm.ftccommon.SoundPlayer;
+
 import org.firstinspires.ftc.teamcode.opmodes.LiveAutoBase;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.HIGH_GOAL;
@@ -22,6 +24,9 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
         if (robot.expansion_hub_2.getBulkInputData().getDigitalInputState(1)) { // shooter is up; put it down
             robot.addWarning("Put the shooter down!");
+            int ptsd_sound_id = hardwareMap.appContext.getResources().getIdentifier("ptsd","raw", hardwareMap.appContext.getPackageName());
+            SoundPlayer.getInstance().preload(hardwareMap.appContext, ptsd_sound_id);
+            SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, ptsd_sound_id);
         }
 
         while (!isStarted() && !isStopRequested()) {
