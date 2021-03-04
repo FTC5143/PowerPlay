@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.util.qus;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class ServoQUS extends QUS {
+    private boolean first_cache = false; // Have we cached a value yet
+
     private double queued_position;
 
     private boolean do_cache;
@@ -20,12 +22,13 @@ public class ServoQUS extends QUS {
     }
 
     public void queue_position(double speed) {
-        if (do_cache && speed == queued_position) {
+        if (do_cache && speed == queued_position && first_cache) {
             return;
         }
 
         queued_position = speed;
         needs_write = true;
+        first_cache = true;
     }
 
     @Override

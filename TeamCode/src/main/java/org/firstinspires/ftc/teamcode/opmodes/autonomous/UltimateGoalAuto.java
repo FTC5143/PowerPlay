@@ -45,14 +45,18 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.3);
 
-            for (int i = 0; i < 4; i++) {
+            int shots = pattern == 3 ? 3 : 4;
+
+            for (int i = 0; i < shots; i++) {
                 robot.shooter.shoot();
 
                 halt(0.6);
 
                 robot.shooter.unshoot();
 
-                halt(0.7);
+                if(i != (shots-1)) { // Don't wait for it to go back on the last shot
+                    halt(0.4);
+                }
             }
 
             robot.shooter.stop();
@@ -80,7 +84,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
                 robot.intake.spin(1);
                 robot.drive_train.odo_move(-34, 32, Math.PI, 1.0, 1, 0.02, 6, 0.3);
                 robot.drive_train.read_from_imu();
-                robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 4);
+                robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 2);
             }
             else if (pattern == 2) {
                 robot.intake.spin(1);
@@ -98,8 +102,6 @@ public class UltimateGoalAuto extends LiveAutoBase {
             halt(0.5);
             robot.wobbler.raise();
 
-            robot.intake.stop(); // In case we were intaking rings from any of the earlier patterns
-
             if (pattern == 1) {
                 robot.drive_train.odo_move(4, 56, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 2) {
@@ -114,11 +116,26 @@ public class UltimateGoalAuto extends LiveAutoBase {
                 // After shooting go to the wobble goal drop spot
                 robot.drive_train.odo_move(-12, 83, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
-                robot.drive_train.odo_move(-9, 106, Math.PI/4, 1.0, 1, 0.02, 6);
+                // SHOOT TWICE ON THE WAY THERE
+                robot.shooter.spin();
+                robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
+
+                robot.shooter.shoot();
+                halt(0.6);
+                robot.shooter.unshoot();
+                halt(0.4);
+                robot.shooter.shoot();
+                halt(0.6);
+                robot.shooter.unshoot();
+
+                robot.shooter.stop();
+                robot.drive_train.odo_move(-5, 104, Math.PI/4, 1.0, 1, 0.02, 6);
             }
 
             drop_wobble_goal();
         }
+
+        robot.intake.stop(); // In case we were intaking rings from any of the earlier patterns
 
         robot.wobbler.raise();
         halt(0.5);
