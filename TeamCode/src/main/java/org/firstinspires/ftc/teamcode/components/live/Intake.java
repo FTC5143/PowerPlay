@@ -24,10 +24,10 @@ class IntakeConfig {
     public static double chopper_unchopped = 0;
     public static int chopper_delay = 50;
     public static int chopper_repeat_interval = 250;
-    public static int chopper_focal_length = 20;
+    public static int chopper_focal_length = 30;
 
-    public static double popout_in = 0.20;
-    public static double popout_out = 0.70;
+    public static double popout_in = 0.28;
+    public static double popout_out = 0.77;
     public static double popout_speed = -1.0;
 }
 
