@@ -29,6 +29,10 @@ class IntakeConfig {
     public static double popout_in = 0.28;
     public static double popout_out = 0.77;
     public static double popout_speed = -1.0;
+
+    public static double knocker_in = 0.8;
+    public static double knocker_out = 0.3;
+    public static double knocker_repeat_interval = 300;
 }
 
 public class Intake extends Component {
@@ -38,6 +42,7 @@ public class Intake extends Component {
     private CRServoQUS roller;
     private ServoQUS popout_joint;
     private CRServoQUS popout_wheel;
+    private ServoQUS knocker;
 
     //// MOTORS ////
     private DcMotorQUS front_lift;
@@ -48,6 +53,9 @@ public class Intake extends Component {
     public boolean forced_chop = false;
 
     public long chopper_timer = 0;
+
+    public boolean knocking = false;
+    public long knocker_timer = 0;
 
     {
         name = "Intake";
@@ -66,6 +74,7 @@ public class Intake extends Component {
         roller     = new CRServoQUS(hwmap.get(CRServo.class, "roller"));
         popout_joint = new ServoQUS(hwmap.get(Servo.class, "popout_joint"));
         popout_wheel = new CRServoQUS(hwmap.get(CRServo.class, "popout_wheel"));
+        knocker = new ServoQUS(hwmap.get(Servo.class, "knocker"));
 
         //// MOTORS ////
         front_lift      = new DcMotorQUS(hwmap.get(DcMotorEx.class, "front_lift"));
@@ -75,13 +84,6 @@ public class Intake extends Component {
     @Override
     public void update(OpMode opmode) {
         super.update(opmode);
-
-        front_lift.update();
-        back_lift.update();
-        chopper.update();
-        roller.update();
-        popout_joint.update();
-        popout_wheel.update();
 
         ring_detector_distance = robot.bulk_data_1.getAnalogInputValue(1);
 
@@ -102,6 +104,31 @@ public class Intake extends Component {
                 chopper_timer = System.currentTimeMillis();
             }
         }
+
+        boolean should_be_knocked = false;
+        if (knocking) {
+            long time_knocking = (System.currentTimeMillis() - knocker_timer);
+
+            should_be_knocked = (((int) (time_knocking / IntakeConfig.knocker_repeat_interval)) % 2) == 0;
+        } else {
+            knocker_timer = System.currentTimeMillis();
+
+            should_be_knocked = false;
+        }
+
+        if (should_be_knocked) {
+            knocker.queue_position(IntakeConfig.knocker_out);
+        } else {
+            knocker.queue_position(IntakeConfig.knocker_in);
+        }
+
+        front_lift.update();
+        back_lift.update();
+        chopper.update();
+        roller.update();
+        popout_joint.update();
+        popout_wheel.update();
+        knocker.update();
     }
 
     @Override
@@ -136,6 +163,7 @@ public class Intake extends Component {
     public void spin(int dir) {
         spin_lift(dir);
         roller.queue_power(IntakeConfig.roller_speed * dir);
+        start_knocking();
     }
 
     public void stop_lift() {
@@ -153,9 +181,18 @@ public class Intake extends Component {
         popout_wheel.queue_power(0);
     }
 
+    public void start_knocking() {
+        knocking = true;
+    }
+
+    public void stop_knocking() {
+        knocking = false;
+    }
+
     public void stop() {
         stop_lift();
         roller.queue_power(0);
+        stop_knocking();
     }
 
     @Override
