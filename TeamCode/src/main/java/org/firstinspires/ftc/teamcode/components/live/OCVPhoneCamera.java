@@ -19,6 +19,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.BLUE;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 import static org.opencv.core.CvType.CV_8UC1;
@@ -40,7 +43,8 @@ public class OCVPhoneCamera extends Component {
 
     OpenCvCamera phone_camera;
 
-    SamplePipeline stone_pipeline;
+    public RingsPipeline rings_pipeline;
+    public WobblePipeline wobble_pipeline;
 
     private boolean streaming;
 
@@ -64,8 +68,10 @@ public class OCVPhoneCamera extends Component {
 
         phone_camera.openCameraDevice();
 
-        stone_pipeline = new SamplePipeline();
-        phone_camera.setPipeline(stone_pipeline);
+        rings_pipeline = new RingsPipeline();
+        wobble_pipeline = new WobblePipeline();
+
+        set_pipeline(rings_pipeline);
     }
 
     @Override
@@ -73,10 +79,16 @@ public class OCVPhoneCamera extends Component {
         super.updateTelemetry(telemetry);
         telemetry.addData("FRAME", phone_camera.getFrameCount());
         telemetry.addData("FPS", String.format("%.2f", phone_camera.getFps()));
-        telemetry.addData("TOP RECT", stone_pipeline.top_sat);
-        telemetry.addData("BOT RECT", stone_pipeline.bot_sat);
-        telemetry.addData("PATTERN", stone_pipeline.pattern);
+        telemetry.addData("TOP RECT", rings_pipeline.top_sat);
+        telemetry.addData("BOT RECT", rings_pipeline.bot_sat);
+        telemetry.addData("PATTERN", rings_pipeline.pattern);
 
+        telemetry.addData("REDNESS", Arrays.toString(wobble_pipeline.redness));
+        telemetry.addData("REDEST", wobble_pipeline.rectangle);
+    }
+
+    public void set_pipeline(OpenCvPipeline pl) {
+        phone_camera.setPipeline(pl);
     }
 
     public void start_streaming() {
@@ -87,7 +99,7 @@ public class OCVPhoneCamera extends Component {
     }
 
     public int get_pattern() {
-        return stone_pipeline.pattern;
+        return rings_pipeline.pattern;
     }
 
     public void stop_streaming() {
@@ -95,7 +107,7 @@ public class OCVPhoneCamera extends Component {
         streaming = false;
     }
 
-    class SamplePipeline extends OpenCvPipeline {
+    class RingsPipeline extends OpenCvPipeline {
         int top_sat;
         int bot_sat;
 
@@ -166,6 +178,64 @@ public class OCVPhoneCamera extends Component {
                             bot_rect[2],
                             bot_rect[3]),
                     new Scalar(0, 0, 255), 1);
+
+            return input;
+        }
+    }
+
+
+    class WobblePipeline extends OpenCvPipeline {
+        double[] redness;
+        int rectangle = 0;
+
+        int rect_count = 19;
+
+        @Override
+        public Mat processFrame(Mat input) {
+
+            input.convertTo(input, CV_8UC1, 1, 10);
+
+            Mat[] rects = new Mat[rect_count];
+
+            for (int i = 0; i < rects.length; i++) {
+                rects[i] = input.submat((int)(input.rows() * i * (1.0/rect_count)), (int)(input.rows() * (i+1) * (1.0/rect_count)), (int)(input.cols()*0.4), (int)(input.cols()*1.0));
+
+                Imgproc.rectangle(
+                        input,
+                        new Point(
+                                (int)(input.cols() * 0.4),
+                                (int)(input.rows() * i * (1.0/rect_count))
+                        ),
+
+                        new Point(
+                                (int)(input.cols() * 1.0),
+                                (int)(input.rows() * (i+1) * (1.0/rect_count))
+                        ),
+                        new Scalar(0, 255, 0), 1
+                );
+            }
+
+            Scalar[] means = new Scalar[rect_count];
+
+            for (int i = 0; i < means.length; i++) {
+                means[i] = Core.mean(rects[i]);
+            }
+
+            redness = new double[rect_count];
+
+            double max_redness = 0;
+            int max_redness_index = 0;
+
+            for (int i = 0; i < redness.length; i++) {
+                redness[i] = means[i].val[0] - ((means[i].val[1]+means[i].val[2])/2);
+
+                if (redness[i] > max_redness) {
+                    max_redness = redness[i];
+                    max_redness_index = i;
+                }
+            }
+
+            rectangle = max_redness_index;
 
             return input;
         }
