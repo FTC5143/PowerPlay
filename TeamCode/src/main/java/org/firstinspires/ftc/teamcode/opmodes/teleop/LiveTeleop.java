@@ -22,9 +22,6 @@ public class LiveTeleop extends LiveTeleopBase {
     @Override
     public void on_init() {
         robot.drive_train.odo_reset(-18, 72, 0);
-
-        robot.phone_camera.set_pipeline(robot.phone_camera.wobble_pipeline);
-        robot.phone_camera.start_streaming();
     }
 
     @Override
@@ -61,6 +58,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
         if (gamepad2.back) {
             if (gamepad2.left_stick_button) {
+                robot.phone_camera.set_pipeline(robot.phone_camera.wobble_pipeline);
                 robot.phone_camera.start_streaming();
             }
             if (gamepad2.right_stick_button) {

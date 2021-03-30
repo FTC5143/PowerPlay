@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
+import org.firstinspires.ftc.teamcode.util.MathUtil;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -100,6 +101,10 @@ public class OCVPhoneCamera extends Component {
 
     public int get_pattern() {
         return rings_pipeline.pattern;
+    }
+
+    public int get_wobble_goal_pos() {
+        return wobble_pipeline.rectangle;
     }
 
     public void stop_streaming() {
@@ -227,7 +232,7 @@ public class OCVPhoneCamera extends Component {
             int max_redness_index = 0;
 
             for (int i = 0; i < redness.length; i++) {
-                redness[i] = means[i].val[0] - ((means[i].val[1]+means[i].val[2])/2);
+                redness[i] = Math.sqrt(3 * Math.pow(255, 2)) - MathUtil.color_distance(means[i].val[0], means[i].val[1], means[i].val[2], 255, 0, 0);
 
                 if (redness[i] > max_redness) {
                     max_redness = redness[i];

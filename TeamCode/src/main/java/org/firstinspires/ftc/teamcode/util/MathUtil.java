@@ -16,4 +16,8 @@ public class MathUtil {
         double diff = (angle2 - angle1 + Math.PI) % (2*Math.PI) - Math.PI;
         return diff < -Math.PI ? diff + (2*Math.PI) : diff;
     }
+
+    public static double color_distance(double r1, double g1, double b1, double r2, double g2, double b2) {
+        return Math.sqrt(Math.pow(r2-r1, 2) + Math.pow(g2-g1, 2) + Math.pow(b2-b1, 2));
+    }
 }
