@@ -19,6 +19,9 @@ public class LiveTeleop extends LiveTeleopBase {
 
     TeleopStates state = TeleopStates.NORMAL;
 
+    boolean knocker_was_pressed = false;
+    boolean knocking = false;
+
     @Override
     public void on_init() {
         robot.drive_train.odo_reset(-18, 72, 0);
@@ -52,6 +55,21 @@ public class LiveTeleop extends LiveTeleopBase {
             robot.intake.popout();
         } else {
             robot.intake.popin();
+        }
+
+        // Knockers
+        if (gamepad1.left_trigger > 0.5 && !knocker_was_pressed) {
+            knocking = !knocking;
+
+            if (knocking) {
+                robot.intake.start_knocking();
+            } else {
+                robot.intake.stop_knocking();
+            }
+
+            knocker_was_pressed = true;
+        } else {
+            knocker_was_pressed = false;
         }
 
         /// GAMEPAD TWO BACK HOTKEYS ///

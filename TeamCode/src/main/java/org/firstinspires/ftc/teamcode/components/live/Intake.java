@@ -30,9 +30,10 @@ class IntakeConfig {
     public static double popout_out = 0.77;
     public static double popout_speed = -1.0;
 
-    public static double knocker_in = 0.8;
-    public static double knocker_out = 0.3;
-    public static double knocker_repeat_interval = 300;
+    public static double knocker_left_in = 0.475;
+    public static double knocker_left_out = 0.85;
+    public static double knocker_right_in = 0.5;
+    public static double knocker_right_out = 0.15;
 }
 
 public class Intake extends Component {
@@ -42,7 +43,8 @@ public class Intake extends Component {
     private CRServoQUS roller;
     private ServoQUS popout_joint;
     private CRServoQUS popout_wheel;
-    private ServoQUS knocker;
+    private ServoQUS knocker_left;
+    private ServoQUS knocker_right;
 
     //// MOTORS ////
     private DcMotorQUS front_lift;
@@ -53,9 +55,6 @@ public class Intake extends Component {
     public boolean forced_chop = false;
 
     public long chopper_timer = 0;
-
-    public boolean knocking = false;
-    public long knocker_timer = 0;
 
     {
         name = "Intake";
@@ -74,7 +73,8 @@ public class Intake extends Component {
         roller     = new CRServoQUS(hwmap.get(CRServo.class, "roller"));
         popout_joint = new ServoQUS(hwmap.get(Servo.class, "popout_joint"));
         popout_wheel = new CRServoQUS(hwmap.get(CRServo.class, "popout_wheel"));
-        knocker = new ServoQUS(hwmap.get(Servo.class, "knocker"));
+        knocker_left = new ServoQUS(hwmap.get(Servo.class, "knocker_left"));
+        knocker_right = new ServoQUS(hwmap.get(Servo.class, "knocker_right"));
 
         //// MOTORS ////
         front_lift      = new DcMotorQUS(hwmap.get(DcMotorEx.class, "front_lift"));
@@ -105,30 +105,14 @@ public class Intake extends Component {
             }
         }
 
-        boolean should_be_knocked = false;
-        if (knocking) {
-            long time_knocking = (System.currentTimeMillis() - knocker_timer);
-
-            should_be_knocked = (((int) (time_knocking / IntakeConfig.knocker_repeat_interval)) % 2) == 0;
-        } else {
-            knocker_timer = System.currentTimeMillis();
-
-            should_be_knocked = false;
-        }
-
-        if (should_be_knocked) {
-            knocker.queue_position(IntakeConfig.knocker_out);
-        } else {
-            knocker.queue_position(IntakeConfig.knocker_in);
-        }
-
         front_lift.update();
         back_lift.update();
         chopper.update();
         roller.update();
         popout_joint.update();
         popout_wheel.update();
-        knocker.update();
+        knocker_left.update();
+        knocker_right.update();
     }
 
     @Override
@@ -144,6 +128,7 @@ public class Intake extends Component {
         super.startup();
         popin();
         unchop();
+        stop_knocking();
     }
 
     public void chop() {
@@ -163,7 +148,6 @@ public class Intake extends Component {
     public void spin(int dir) {
         spin_lift(dir);
         roller.queue_power(IntakeConfig.roller_speed * dir);
-        start_knocking();
     }
 
     public void stop_lift() {
@@ -182,17 +166,18 @@ public class Intake extends Component {
     }
 
     public void start_knocking() {
-        knocking = true;
+        knocker_left.queue_position(IntakeConfig.knocker_left_out);
+        knocker_right.queue_position(IntakeConfig.knocker_right_out);
     }
 
     public void stop_knocking() {
-        knocking = false;
+        knocker_left.queue_position(IntakeConfig.knocker_left_in);
+        knocker_right.queue_position(IntakeConfig.knocker_right_in);
     }
 
     public void stop() {
         stop_lift();
         roller.queue_power(0);
-        stop_knocking();
     }
 
     @Override

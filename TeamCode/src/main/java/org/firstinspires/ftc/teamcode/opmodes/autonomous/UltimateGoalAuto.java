@@ -43,7 +43,10 @@ public class UltimateGoalAuto extends LiveAutoBase {
         if (shoot_preloaded_rings) {
             robot.shooter.spin();
 
+            robot.drive_train.read_from_imu();
+
             robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.3);
+
 
             int shots = pattern == 3 ? 3 : 4;
 
