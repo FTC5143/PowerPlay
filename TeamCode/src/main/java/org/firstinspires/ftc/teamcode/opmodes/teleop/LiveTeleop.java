@@ -57,21 +57,6 @@ public class LiveTeleop extends LiveTeleopBase {
             robot.intake.popin();
         }
 
-        // Knockers
-        if (gamepad1.left_trigger > 0.5 && !knocker_was_pressed) {
-            knocking = !knocking;
-
-            if (knocking) {
-                robot.intake.start_knocking();
-            } else {
-                robot.intake.stop_knocking();
-            }
-
-            knocker_was_pressed = true;
-        } else {
-            knocker_was_pressed = false;
-        }
-
         /// GAMEPAD TWO BACK HOTKEYS ///
 
         if (gamepad2.back) {
@@ -104,6 +89,14 @@ public class LiveTeleop extends LiveTeleopBase {
             } else if (gamepad2.b) {
                 robot.shooter.stop();
             }
+
+            // Knockers
+            if (gamepad2.left_stick_button) {
+                robot.intake.stop_knocking();
+            } else if (gamepad2.right_stick_button){
+                robot.intake.start_knocking();
+            }
+
 
             if (state == TeleopStates.NORMAL) {
                 // Normal intake control

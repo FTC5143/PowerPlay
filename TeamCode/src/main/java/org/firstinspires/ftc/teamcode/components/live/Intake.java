@@ -140,12 +140,12 @@ public class Intake extends Component {
         chopper.queue_position(IntakeConfig.chopper_unchopped);
     }
 
-    public void spin_lift(int dir) {
+    public void spin_lift(double dir) {
         front_lift.queue_power(-1 * IntakeConfig.lift_speed * dir);
         back_lift.queue_power(1 * IntakeConfig.lift_speed * dir);
     }
 
-    public void spin(int dir) {
+    public void spin(double dir) {
         spin_lift(dir);
         roller.queue_power(IntakeConfig.roller_speed * dir);
     }
