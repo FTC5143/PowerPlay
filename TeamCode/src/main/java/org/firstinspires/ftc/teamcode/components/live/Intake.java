@@ -26,14 +26,23 @@ class IntakeConfig {
     public static int chopper_repeat_interval = 250;
     public static int chopper_focal_length = 30;
 
+    public static int loaded_focal_length = 100;
+
     public static double popout_in = 0.28;
     public static double popout_out = 0.77;
     public static double popout_speed = -1.0;
 
+    /*
     public static double knocker_left_in = 0.475;
     public static double knocker_left_out = 0.85;
     public static double knocker_right_in = 0.5;
     public static double knocker_right_out = 0.15;
+    */
+
+    public static double locker_left_locked = 0.52;
+    public static double locker_left_unlocked = 0.7;
+    public static double locker_right_locked = 0.5;
+    public static double locker_right_unlocked = 0.6;
 }
 
 public class Intake extends Component {
@@ -43,14 +52,17 @@ public class Intake extends Component {
     private CRServoQUS roller;
     private ServoQUS popout_joint;
     private CRServoQUS popout_wheel;
-    private ServoQUS knocker_left;
-    private ServoQUS knocker_right;
+    private ServoQUS locker_left;
+    private ServoQUS locker_right;
 
     //// MOTORS ////
     private DcMotorQUS front_lift;
     private DcMotorQUS back_lift;
 
     public int ring_detector_distance;
+
+    public int loaded_distance;
+    public boolean loaded;
 
     public boolean forced_chop = false;
 
@@ -73,8 +85,8 @@ public class Intake extends Component {
         roller     = new CRServoQUS(hwmap.get(CRServo.class, "roller"));
         popout_joint = new ServoQUS(hwmap.get(Servo.class, "popout_joint"));
         popout_wheel = new CRServoQUS(hwmap.get(CRServo.class, "popout_wheel"));
-        knocker_left = new ServoQUS(hwmap.get(Servo.class, "knocker_left"));
-        knocker_right = new ServoQUS(hwmap.get(Servo.class, "knocker_right"));
+        locker_left = new ServoQUS(hwmap.get(Servo.class, "locker_left"));
+        locker_right = new ServoQUS(hwmap.get(Servo.class, "locker_right"));
 
         //// MOTORS ////
         front_lift      = new DcMotorQUS(hwmap.get(DcMotorEx.class, "front_lift"));
@@ -86,6 +98,9 @@ public class Intake extends Component {
         super.update(opmode);
 
         ring_detector_distance = robot.bulk_data_1.getAnalogInputValue(1);
+        loaded_distance = robot.bulk_data_2.getAnalogInputValue(1);
+
+        loaded = loaded_distance > IntakeConfig.loaded_focal_length;
 
         long time_waited_to_chop = (System.currentTimeMillis() - chopper_timer);
 
@@ -111,8 +126,8 @@ public class Intake extends Component {
         roller.update();
         popout_joint.update();
         popout_wheel.update();
-        knocker_left.update();
-        knocker_right.update();
+        locker_left.update();
+        locker_right.update();
     }
 
     @Override
@@ -121,6 +136,7 @@ public class Intake extends Component {
 
         telemetry.addData("RDT", ring_detector_distance);
         telemetry.addData("CT", chopper_timer);
+        telemetry.addData("LD", loaded);
     }
 
     @Override
@@ -128,7 +144,7 @@ public class Intake extends Component {
         super.startup();
         popin();
         unchop();
-        stop_knocking();
+        lock_lockers();
     }
 
     public void chop() {
@@ -165,14 +181,14 @@ public class Intake extends Component {
         popout_wheel.queue_power(0);
     }
 
-    public void start_knocking() {
-        knocker_left.queue_position(IntakeConfig.knocker_left_out);
-        knocker_right.queue_position(IntakeConfig.knocker_right_out);
+    public void lock_lockers() {
+        locker_left.queue_position(IntakeConfig.locker_left_locked);
+        locker_right.queue_position(IntakeConfig.locker_right_locked);
     }
 
-    public void stop_knocking() {
-        knocker_left.queue_position(IntakeConfig.knocker_left_in);
-        knocker_right.queue_position(IntakeConfig.knocker_right_in);
+    public void unlock_lockers() {
+        locker_left.queue_position(IntakeConfig.locker_left_unlocked);
+        locker_right.queue_position(IntakeConfig.locker_right_unlocked);
     }
 
     public void stop() {

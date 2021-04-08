@@ -47,20 +47,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.3);
 
-
-            int shots = pattern == 3 ? 3 : 4;
-
-            for (int i = 0; i < shots; i++) {
-                robot.shooter.shoot();
-
-                halt(0.6);
-
-                robot.shooter.unshoot();
-
-                if(i != (shots-1)) { // Don't wait for it to go back on the last shot
-                    halt(0.4);
-                }
-            }
+            shoot_until_empty();
 
             robot.shooter.stop();
         }
@@ -112,9 +99,8 @@ public class UltimateGoalAuto extends LiveAutoBase {
                 robot.shooter.spin();
                 robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
 
-                robot.shooter.shoot();
-                halt(0.6);
-                robot.shooter.unshoot();
+                shoot_until_empty();
+
                 robot.shooter.stop();
                 // After shooting go to the wobble goal drop spot
                 robot.drive_train.odo_move(-12, 83, 0, 1.0, 1, 0.02, 6);
@@ -123,13 +109,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
                 robot.shooter.spin();
                 robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
 
-                robot.shooter.shoot();
-                halt(0.6);
-                robot.shooter.unshoot();
-                halt(0.4);
-                robot.shooter.shoot();
-                halt(0.6);
-                robot.shooter.unshoot();
+                shoot_until_empty();
 
                 robot.shooter.stop();
                 robot.drive_train.odo_move(-5, 104, Math.PI/4, 1.0, 1, 0.02, 6);
@@ -163,5 +143,16 @@ public class UltimateGoalAuto extends LiveAutoBase {
         halt(1);
         robot.wobbler.ungrab();
         halt(0.5);
+    }
+
+    public void shoot_until_empty() {
+        while (robot.intake.loaded) {
+            robot.shooter.shoot();
+            halt(0.6);
+            robot.shooter.unshoot();
+            if (robot.intake.loaded) {
+                halt(0.4);
+            }
+        }
     }
 }

@@ -19,9 +19,6 @@ public class LiveTeleop extends LiveTeleopBase {
 
     TeleopStates state = TeleopStates.NORMAL;
 
-    boolean knocker_was_pressed = false;
-    boolean knocking = false;
-
     @Override
     public void on_init() {
         robot.drive_train.odo_reset(-18, 72, 0);
@@ -92,9 +89,9 @@ public class LiveTeleop extends LiveTeleopBase {
 
             // Knockers
             if (gamepad2.left_stick_button) {
-                robot.intake.stop_knocking();
+                robot.intake.unlock_lockers();
             } else if (gamepad2.right_stick_button){
-                robot.intake.start_knocking();
+                robot.intake.lock_lockers();
             }
 
 
