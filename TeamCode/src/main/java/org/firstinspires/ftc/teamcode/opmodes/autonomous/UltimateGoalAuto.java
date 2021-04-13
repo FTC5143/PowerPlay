@@ -85,6 +85,21 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             if (pattern == 3) { // more stupid exceptions due to bad odo
                 robot.intake.spin(0.7);
+                robot.drive_train.odo_move(-17, 62, 0, 1.0, 1, 0.02, 4); // Pick up two rings
+                robot.drive_train.odo_move(-17, 33, 0, 0.5, 1, 0.02, 4); // Pick up two rings
+
+                robot.shooter.spin();
+
+                robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.3);
+
+                robot.shooter.shoot();
+                halt(0.6);
+                robot.shooter.unshoot();
+                halt(0.4);
+                robot.shooter.shoot();
+                halt(0.6);
+                robot.shooter.unshoot();
+                robot.shooter.stop();
             }
             else if (pattern == 2) {
                 robot.intake.spin(0.7);
@@ -104,7 +119,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             double x = -34 - (((double) wobble_goal_offset) * (12.5 / 18));
 
-            robot.drive_train.odo_move(x, 33, Math.PI, 1.0, 1, 0.02, 2, 0.3);
+            robot.drive_train.odo_move(x, 33, Math.PI, 1.5, 1, 0.02, 2, 0.3);
 
             robot.drive_train.odo_move(x, 23, Math.PI, 0.33, 1, 0.02, 2);
 
