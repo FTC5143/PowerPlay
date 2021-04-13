@@ -47,7 +47,20 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.3);
 
-            shoot_until_empty();
+
+            int shots = pattern == 3 ? 3 : 4;
+
+            for (int i = 0; i < shots; i++) {
+                robot.shooter.shoot();
+
+                halt(0.6);
+
+                robot.shooter.unshoot();
+
+                if(i != (shots-1)) { // Don't wait for it to go back on the last shot
+                    halt(0.4);
+                }
+            }
 
             robot.shooter.stop();
         }
@@ -72,21 +85,28 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             if (pattern == 3) { // more stupid exceptions due to bad odo
                 robot.intake.spin(0.7);
-                robot.drive_train.odo_move(-34, 32, Math.PI, 1.0, 1, 0.02, 6, 0.3);
-                robot.drive_train.read_from_imu();
-                robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 2);
             }
             else if (pattern == 2) {
                 robot.intake.spin(0.7);
                 robot.drive_train.odo_move(-17, 32, Math.PI, 1.0, 1, 0.02, 4);
-                robot.drive_train.odo_move(-34, 32, Math.PI, 1.0, 1, 0.02, 4, 0.3);
-                robot.drive_train.read_from_imu();
-                robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 2);
             } else if (pattern == 1) {
-                robot.drive_train.odo_move(-34, 33, Math.PI, 1.0, 1, 0.02, 6, 0.3);
-                robot.drive_train.read_from_imu();
-                robot.drive_train.odo_move(-34, 23, Math.PI, 0.33, 1, 0.02, 2);
             }
+
+            /// AUTO WOBBLE ALIGNMENT
+            robot.phone_camera.set_pipeline(robot.phone_camera.wobble_pipeline);
+            robot.phone_camera.start_streaming();
+
+            robot.drive_train.odo_move(-34, 33, Math.PI, 1.0, 1, 0.02, 4, 0.3);
+            robot.drive_train.read_from_imu();
+
+            int wobble_goal_offset = robot.phone_camera.get_wobble_goal_pos() - 9;
+            robot.phone_camera.stop_streaming();
+
+            double x = -34 - (((double) wobble_goal_offset) * (12.5 / 18));
+
+            robot.drive_train.odo_move(x, 33, Math.PI, 1.0, 1, 0.02, 2, 0.3);
+
+            robot.drive_train.odo_move(x, 23, Math.PI, 0.33, 1, 0.02, 2);
 
             robot.wobbler.grab();
             halt(0.5);
@@ -99,8 +119,9 @@ public class UltimateGoalAuto extends LiveAutoBase {
                 robot.shooter.spin();
                 robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
 
-                shoot_until_empty();
-
+                robot.shooter.shoot();
+                halt(0.6);
+                robot.shooter.unshoot();
                 robot.shooter.stop();
                 // After shooting go to the wobble goal drop spot
                 robot.drive_train.odo_move(-12, 83, 0, 1.0, 1, 0.02, 6);
@@ -109,7 +130,13 @@ public class UltimateGoalAuto extends LiveAutoBase {
                 robot.shooter.spin();
                 robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
 
-                shoot_until_empty();
+                robot.shooter.shoot();
+                halt(0.6);
+                robot.shooter.unshoot();
+                halt(0.4);
+                robot.shooter.shoot();
+                halt(0.6);
+                robot.shooter.unshoot();
 
                 robot.shooter.stop();
                 robot.drive_train.odo_move(-5, 104, Math.PI/4, 1.0, 1, 0.02, 6);
@@ -117,7 +144,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             drop_wobble_goal();
         }
-
+//ha
         robot.intake.stop(); // In case we were intaking rings from any of the earlier patterns
 
         robot.wobbler.raise();

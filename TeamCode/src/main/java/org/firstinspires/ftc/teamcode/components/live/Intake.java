@@ -40,7 +40,7 @@ class IntakeConfig {
     */
 
     public static double locker_left_locked = 0.52;
-    public static double locker_left_unlocked = 0.7;
+    public static double locker_left_unlocked = 0.88;
     public static double locker_right_locked = 0.5;
     public static double locker_right_unlocked = 0.6;
 }
