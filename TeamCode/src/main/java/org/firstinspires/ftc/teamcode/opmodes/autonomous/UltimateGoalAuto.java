@@ -85,21 +85,6 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             if (pattern == 3) { // more stupid exceptions due to bad odo
                 robot.intake.spin(0.7);
-                robot.drive_train.odo_move(-17, 62, 0, 1.0, 1, 0.02, 4); // Pick up two rings
-                robot.drive_train.odo_move(-17, 33, 0, 0.3, 1, 0.02, 4); // Pick up two rings
-
-                robot.shooter.spin();
-
-                robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.3);
-
-                robot.shooter.shoot();
-                halt(0.6);
-                robot.shooter.unshoot();
-                halt(0.4);
-                robot.shooter.shoot();
-                halt(0.6);
-                robot.shooter.unshoot();
-                robot.shooter.stop();
             }
             else if (pattern == 2) {
                 robot.intake.spin(0.7);
@@ -111,25 +96,17 @@ public class UltimateGoalAuto extends LiveAutoBase {
             robot.phone_camera.set_pipeline(robot.phone_camera.wobble_pipeline);
             robot.phone_camera.start_streaming();
 
-            if (pattern == 3) {
-                robot.drive_train.odo_move(-8, 12, 3*Math.PI/2, 1.0, 1, 0.02, 4, 0.3);
-            } else {
-                robot.drive_train.odo_move(-34, 33, Math.PI, 1.0, 1, 0.02, 4, 0.3);
-            }
-
+            robot.drive_train.odo_move(-34, 33, Math.PI, 1.0, 1, 0.02, 4, 0.3);
             robot.drive_train.read_from_imu();
+
             int wobble_goal_offset = robot.phone_camera.get_wobble_goal_pos() - 9;
             robot.phone_camera.stop_streaming();
-            double offset = (((double) wobble_goal_offset) * (12.5 / 18));
 
-            if (pattern == 3) {
-                robot.drive_train.odo_move(-12, 17 + offset, -Math.PI/2, 2.0, 1, 0.02, 4, 0.3);
-                robot.drive_train.odo_move(-22, 17 + offset, -Math.PI/2, 2.0, 1, 0.02, 4, 0.3);
-            }
-            else {
-                robot.drive_train.odo_move(-34 - offset, 33, Math.PI, 2.0, 1, 0.02, 2, 0.3);
-                robot.drive_train.odo_move(-34 - offset, 23, Math.PI, 0.33, 1, 0.02, 2);
-            }
+            double x = -34 - (((double) wobble_goal_offset) * (12.5 / 18));
+
+            robot.drive_train.odo_move(x, 33, Math.PI, 1.0, 1, 0.02, 2, 0.3);
+
+            robot.drive_train.odo_move(x, 23, Math.PI, 0.33, 1, 0.02, 2);
 
             robot.wobbler.grab();
             halt(0.5);
