@@ -30,7 +30,7 @@ class ShooterConfig {
 
     public static int low_goal = 0;
     public static int mid_goal = 70;
-    public static int high_goal = 1780;
+    public static int high_goal = 1974;
     public static int power_shot = 1200;
 
     public static int limit_switch_offset = 70;

@@ -45,7 +45,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             robot.drive_train.read_from_imu();
 
-            robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 4, 0.3);
+            robot.drive_train.odo_move(-12, 62, 0, 1.0, 1, 0.02, 4, 0.3);
 
 
             int shots = pattern == 3 ? 3 : 4;
@@ -104,7 +104,7 @@ public class UltimateGoalAuto extends LiveAutoBase {
 
             double x = -34 - (((double) wobble_goal_offset) * (12.5 / 18));
 
-            robot.drive_train.odo_move(x, 33, Math.PI, 1.0, 1, 0.02, 2, 0.3);
+            robot.drive_train.odo_move(x, 33, Math.PI, 1.0, 1, 0.02, 2, 0.1);
 
             robot.drive_train.odo_move(x, 23, Math.PI, 0.33, 1, 0.02, 2);
 
@@ -117,18 +117,23 @@ public class UltimateGoalAuto extends LiveAutoBase {
             } else if (pattern == 2) {
                 // SHOOT ON THE WAY THERE
                 robot.shooter.spin();
-                robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
+                robot.drive_train.odo_move(-12, 62, 0, 1.0, 1, 0.02, 6, 0.5);
 
                 robot.shooter.shoot();
                 halt(0.6);
                 robot.shooter.unshoot();
+                halt(0.4);
+                robot.shooter.shoot();
+                halt(0.6);
+                robot.shooter.unshoot();
+
                 robot.shooter.stop();
                 // After shooting go to the wobble goal drop spot
                 robot.drive_train.odo_move(-12, 83, 0, 1.0, 1, 0.02, 6);
             } else if (pattern == 3) {
                 // SHOOT TWICE ON THE WAY THERE
                 robot.shooter.spin();
-                robot.drive_train.odo_move(-8, 62, 0, 1.0, 1, 0.02, 6, 0.5);
+                robot.drive_train.odo_move(-12, 62, 0, 1.0, 1, 0.02, 6, 0.5);
 
                 robot.shooter.shoot();
                 halt(0.6);
