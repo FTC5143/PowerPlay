@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.components.debug.MotorTest;
 import org.firstinspires.ftc.teamcode.components.live.DriveTrain;
 import org.firstinspires.ftc.teamcode.coyote.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class DebugRobot extends Robot {
 
     public DriveTrain       drive_train;
+    public MotorTest        motor_test;
 
     FtcDashboard            dashboard;
 
@@ -28,6 +30,7 @@ public class DebugRobot extends Robot {
         super(opmode);
 
         drive_train     = new DriveTrain(this);
+        motor_test      = new MotorTest(this);
 
         dashboard = FtcDashboard.getInstance();
     }
