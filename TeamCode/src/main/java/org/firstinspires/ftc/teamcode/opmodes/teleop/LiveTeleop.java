@@ -48,7 +48,7 @@ public class LiveTeleop extends LiveTeleopBase {
         }
 
         // Popout intake
-        if (gamepad1.right_trigger > 0.5) {
+        if ((gamepad1.right_trigger > 0.5) || (gamepad2.right_trigger > 0.5)) {
             robot.intake.popout();
         } else {
             robot.intake.popin();
@@ -68,6 +68,12 @@ public class LiveTeleop extends LiveTeleopBase {
             if (gamepad2.x && state == TeleopStates.NORMAL) {
                 state = TeleopStates.UNJAM;
                 resetStartTime();
+            }
+
+            if (gamepad2.dpad_right) {
+                robot.shooter.unlimit();
+            } else if (gamepad2.dpad_left) {
+                robot.shooter.limit();
             }
 
             if (gamepad2.dpad_up) {
@@ -155,7 +161,7 @@ public class LiveTeleop extends LiveTeleopBase {
                     1
             );
         } else {
-            robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
+            robot.drive_train.mechanum_drive((gamepad1.left_stick_x+gamepad2.left_stick_x) * speed_mod, (gamepad1.left_stick_y+gamepad2.left_stick_y) * speed_mod, (gamepad1.right_stick_x+gamepad2.right_stick_x) * speed_mod);
         }
     }
 

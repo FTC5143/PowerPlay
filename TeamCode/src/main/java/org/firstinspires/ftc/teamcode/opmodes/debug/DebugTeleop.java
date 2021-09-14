@@ -26,9 +26,9 @@ public class DebugTeleop extends DebugTeleopBase {
         double speed_mod = 1;
 
         if(gamepad1.left_bumper) {
-            speed_mod = 0.25;
+            speed_mod = 0.11;
         } else if(gamepad1.right_bumper) {
-            speed_mod = 0.5;
+            speed_mod = 0.33;
         }
 
         robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);

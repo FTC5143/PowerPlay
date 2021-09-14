@@ -30,7 +30,7 @@ class ShooterConfig {
 
     public static int low_goal = 0;
     public static int mid_goal = 70;
-    public static int high_goal = 1974;
+    public static int high_goal = 1874;
     public static int power_shot = 1200;
 
     public static int limit_switch_offset = 70;
@@ -157,6 +157,14 @@ public class Shooter extends Component {
 
     public void raise(int dir) {
         aim(shot_target + dir);
+    }
+
+    public void limit() {
+        ShooterConfig.target_speed = 1720;
+    }
+
+    public void unlimit() {
+        ShooterConfig.target_speed = 10000000;
     }
 
     public void aim(int target) {
