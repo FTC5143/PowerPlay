@@ -39,9 +39,4 @@ public class SensorDebug extends Component {
         telemetry.addData("touch", touch_sensor.isPressed());
 
     }
-
-
-    public boolean isSkystone() {
-        return (color_sensor.red() + color_sensor.green() + color_sensor.blue()) < 50;
-    }
 }

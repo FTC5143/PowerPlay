@@ -8,10 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.components.live.DriveTrain;
-import org.firstinspires.ftc.teamcode.components.live.Intake;
 import org.firstinspires.ftc.teamcode.components.live.OCVPhoneCamera;
-import org.firstinspires.ftc.teamcode.components.live.Shooter;
-import org.firstinspires.ftc.teamcode.components.live.Wobbler;
 import org.firstinspires.ftc.teamcode.coyote.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
@@ -20,10 +17,7 @@ import java.util.ArrayList;
 public class LiveRobot extends Robot {
 
     public DriveTrain       drive_train;
-    public Shooter          shooter;
-    public Intake           intake;
     public OCVPhoneCamera   phone_camera;
-    public Wobbler          wobbler;
 
     FtcDashboard            dashboard;
 
@@ -37,10 +31,7 @@ public class LiveRobot extends Robot {
         super(opmode);
 
         drive_train     = new DriveTrain(this);
-        shooter         = new Shooter(this);
-        intake          = new Intake(this);
         phone_camera    = new OCVPhoneCamera(this);
-        wobbler         = new Wobbler(this);
 
         dashboard = FtcDashboard.getInstance();
     }
