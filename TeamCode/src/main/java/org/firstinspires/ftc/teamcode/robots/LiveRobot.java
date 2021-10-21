@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.components.live.DriveTrain;
+import org.firstinspires.ftc.teamcode.components.live.Lift;
 import org.firstinspires.ftc.teamcode.components.live.OCVPhoneCamera;
 import org.firstinspires.ftc.teamcode.coyote.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
@@ -18,6 +19,7 @@ public class LiveRobot extends Robot {
 
     public DriveTrain       drive_train;
     public OCVPhoneCamera   phone_camera;
+    public Lift             lift;
 
     FtcDashboard            dashboard;
 
@@ -32,6 +34,7 @@ public class LiveRobot extends Robot {
 
         drive_train     = new DriveTrain(this);
         phone_camera    = new OCVPhoneCamera(this);
+        lift            = new Lift(this);
 
         dashboard = FtcDashboard.getInstance();
     }

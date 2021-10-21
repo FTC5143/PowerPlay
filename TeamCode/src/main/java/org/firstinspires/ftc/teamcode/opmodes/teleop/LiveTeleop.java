@@ -11,6 +11,11 @@ import static android.graphics.Typeface.NORMAL;
 //@Disabled
 public class LiveTeleop extends LiveTeleopBase {
 
+    boolean dpad_up_pressed = false;
+    boolean dpad_down_pressed = false;
+
+    int prepared_level = 1;
+
     @Override
     public void on_init() {
 
@@ -24,6 +29,36 @@ public class LiveTeleop extends LiveTeleopBase {
     @Override
     public void on_loop() {
 
+        if(gamepad2.left_bumper) {
+            robot.lift.elevate_to(prepared_level);
+        }
+
+        if(gamepad2.right_bumper) {
+            robot.lift.elevate_to(2);
+        }
+
+        if(gamepad2.dpad_up && !dpad_up_pressed) {
+            prepared_level = Range.clip(prepared_level + 1, 0, 12);
+            dpad_up_pressed = true;
+        } else if (!gamepad2.dpad_up) {
+            dpad_up_pressed = false;
+        }
+
+        if(gamepad2.dpad_down && !dpad_down_pressed) {
+            prepared_level = Range.clip(prepared_level - 1, 0, 12);
+            dpad_down_pressed = true;
+        } else if (!gamepad2.dpad_down) {
+            dpad_down_pressed = false;
+        }
+
+        if(gamepad2.back) {
+            if(gamepad2.dpad_up) {
+                robot.lift.max_lift();
+            }
+            else {
+                robot.lift.min_lift();
+            }
+        }
 
         /// GAMEPAD TWO BACK HOTKEYS ///
 
