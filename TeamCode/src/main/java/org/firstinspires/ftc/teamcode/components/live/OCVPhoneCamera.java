@@ -32,8 +32,8 @@ import static org.opencv.core.CvType.CV_8UC1;
 
 @Config
 class OCVPhoneCameraConfig {
-    public static double rect_offset_x = 0.0;
-    public static double rect_offset_y = 0.0;
+    public static double rect_offset_x = 0.50;
+    public static double rect_offset_y = 0.50;
     public static double rect_separation = 0.25;
     public static double rect_size = 0.05;
 }

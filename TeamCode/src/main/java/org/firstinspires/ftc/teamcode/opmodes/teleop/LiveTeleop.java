@@ -29,28 +29,7 @@ public class LiveTeleop extends LiveTeleopBase {
     @Override
     public void on_loop() {
 
-        if(gamepad2.left_bumper) {
-            robot.lift.elevate_to(prepared_level);
-        }
-
-        if(gamepad2.right_bumper) {
-            robot.lift.elevate_to(2);
-        }
-
-        if(gamepad2.dpad_up && !dpad_up_pressed) {
-            prepared_level = Range.clip(prepared_level + 1, 0, 12);
-            dpad_up_pressed = true;
-        } else if (!gamepad2.dpad_up) {
-            dpad_up_pressed = false;
-        }
-
-        if(gamepad2.dpad_down && !dpad_down_pressed) {
-            prepared_level = Range.clip(prepared_level - 1, 0, 12);
-            dpad_down_pressed = true;
-        } else if (!gamepad2.dpad_down) {
-            dpad_down_pressed = false;
-        }
-
+        /// GAMEPAD TWO BACK HOTKEYS ///
         if(gamepad2.back) {
             if(gamepad2.dpad_up) {
                 robot.lift.max_lift();
@@ -58,18 +37,43 @@ public class LiveTeleop extends LiveTeleopBase {
             else {
                 robot.lift.min_lift();
             }
-        }
 
-        /// GAMEPAD TWO BACK HOTKEYS ///
-
-        if (gamepad2.back) {
             if (gamepad2.left_stick_button) {
                 robot.phone_camera.start_streaming();
+            }
+        } else {
+            if(gamepad2.left_bumper) {
+                robot.lift.elevate_to(prepared_level);
+            }
+
+            if(gamepad2.right_bumper) {
+                robot.lift.elevate_to(2);
+            }
+
+            if(gamepad2.dpad_up && !dpad_up_pressed) {
+                prepared_level = Range.clip(prepared_level + 1, 0, 12);
+                dpad_up_pressed = true;
+            } else if (!gamepad2.dpad_up) {
+                dpad_up_pressed = false;
+            }
+
+            if(gamepad2.dpad_down && !dpad_down_pressed) {
+                prepared_level = Range.clip(prepared_level - 1, 0, 12);
+                dpad_down_pressed = true;
+            } else if (!gamepad2.dpad_down) {
+                dpad_down_pressed = false;
+            }
+
+            if(gamepad2.a) {
+                robot.intake.spin(1);
+            } else if (gamepad2.b) {
+                robot.intake.spin(-1);
+            } else {
+                robot.intake.spin(0);
             }
         }
 
         /// DRIVE CONTROLS ///
-
         double speed_mod = 1;
 
         if(gamepad1.left_bumper) {
