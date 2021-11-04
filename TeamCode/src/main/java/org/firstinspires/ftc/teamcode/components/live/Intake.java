@@ -5,20 +5,28 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
+import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 
 @Config
 class IntakeConfig {
+    public static double GRABBER_OPEN = 0;
+    public static double GRABBER_CLOSED = 1;
 }
 
 public class Intake extends Component {
 
     //// MOTORS ////
     public DcMotorQUS spinner;
+
+
+    //// SERVOS ////
+    public ServoQUS grabber;
 
     {
         name = "Intake";
@@ -36,6 +44,9 @@ public class Intake extends Component {
 
         //// MOTORS ////
         spinner     = new DcMotorQUS(hwmap.get(DcMotorEx.class, "spinner"));
+
+        //// SERVOS ////
+        grabber     = new ServoQUS(hwmap.get(Servo.class, "grabber"));
     }
 
     @Override
@@ -43,6 +54,7 @@ public class Intake extends Component {
         super.update(opmode);
 
         spinner.update();
+        grabber.update();
     }
 
     @Override
@@ -64,5 +76,13 @@ public class Intake extends Component {
 
     public void spin(double speed) {
         spinner.queue_power(speed);
+    }
+
+    public void grab() {
+        grabber.queue_position(IntakeConfig.GRABBER_CLOSED);
+    }
+
+    public void ungrab() {
+        grabber.queue_position(IntakeConfig.GRABBER_OPEN);
     }
 }

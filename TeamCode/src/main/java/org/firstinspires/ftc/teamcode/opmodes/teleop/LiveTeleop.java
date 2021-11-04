@@ -71,6 +71,14 @@ public class LiveTeleop extends LiveTeleopBase {
             } else {
                 robot.intake.spin(0);
             }
+
+            if(gamepad2.x) {
+                robot.intake.grab();
+            } else if (gamepad2.y) {
+                robot.intake.ungrab();
+            }
+
+            robot.wheeler.spin(gamepad2.right_trigger);
         }
 
         /// DRIVE CONTROLS ///
