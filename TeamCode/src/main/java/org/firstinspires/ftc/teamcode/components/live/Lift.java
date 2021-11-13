@@ -79,26 +79,28 @@ public class Lift extends Component {
 
         if (starting_move) {
 
-            if (level == 0) {
-                if(robot.bulk_data_1.getDigitalInputState(3) && robot.bulk_data_1.getDigitalInputState(5)) {
-                    lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    set_power(-1);
-                }
-            } else {
+            //if (level == 0) {
+            //    if(robot.bulk_data_1.getDigitalInputState(3) && robot.bulk_data_1.getDigitalInputState(5)) {
+            //        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //        set_power(-1);
+            //    }
+            //} else {
                 lift.setTargetPosition(lift_target+lift_offset);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 set_power(1);
-            }
+            //}
 
             starting_move = false;
         }
 
+        /*
         if (level == 0 && (lift.getPower() == -1)) {
             if ((!robot.bulk_data_1.getDigitalInputState(5)) && (lift.getPower() != 0)) {
                 lift_offset = robot.bulk_data_2.getMotorCurrentPosition(lift);
                 lift.setPower(0);
             }
         }
+        */
 
 
         if (tweak != tweak_cache) {

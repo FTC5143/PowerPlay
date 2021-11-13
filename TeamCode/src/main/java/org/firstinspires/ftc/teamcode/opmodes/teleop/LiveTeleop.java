@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
@@ -16,9 +17,9 @@ public class LiveTeleop extends LiveTeleopBase {
 
     int prepared_level = 1;
 
+
     @Override
     public void on_init() {
-
     }
 
     @Override
@@ -44,10 +45,6 @@ public class LiveTeleop extends LiveTeleopBase {
         } else {
             if(gamepad2.left_bumper) {
                 robot.lift.elevate_to(prepared_level);
-            }
-
-            if(gamepad2.right_bumper) {
-                robot.lift.elevate_to(2);
             }
 
             if(gamepad2.dpad_up && !dpad_up_pressed) {
@@ -78,8 +75,14 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.intake.ungrab();
             }
 
-            robot.wheeler.spin(gamepad2.right_trigger);
+            robot.wheeler.spin(-gamepad2.right_trigger);
         }
+
+        /*if (gamepad1.a) {
+            int vineboom_sound_id = hardwareMap.appContext.getResources().getIdentifier("vineboom","raw", hardwareMap.appContext.getPackageName());
+            SoundPlayer.getInstance().preload(hardwareMap.appContext, vineboom_sound_id);
+            SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, vineboom_sound_id);
+        }*/
 
         /// DRIVE CONTROLS ///
         double speed_mod = 1;
