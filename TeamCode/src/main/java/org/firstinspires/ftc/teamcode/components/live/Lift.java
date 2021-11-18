@@ -30,10 +30,10 @@ class LiftConfig {
     public static int LIFT_OFFSET = 0;
 
     public static int INTAKE_LEVEL_COUNTS = 0;
-    public static int LOW_LEVEL_COUNTS = 300;
-    public static int MID_LEVEL_COUNTS = 600;
-    public static int HIGH_LEVEL_COUNTS = 900;
-    public static int CAP_LEVEL_COUNTS = 1200;
+    public static int LOW_LEVEL_COUNTS = 450;
+    public static int MID_LEVEL_COUNTS = 850;
+    public static int HIGH_LEVEL_COUNTS = 1350;
+    public static int CAP_LEVEL_COUNTS = 1950;
 
     public static double PID_P = 15;
     public static double PID_I = 0.1;
@@ -144,6 +144,7 @@ public class Lift extends Component {
         lift.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pid_coeffs);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void shutdown() {
