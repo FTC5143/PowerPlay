@@ -17,17 +17,23 @@ import org.firstinspires.ftc.teamcode.components.Component;
 
 import static org.firstinspires.ftc.teamcode.components.live.LiftConfig.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 // Elevator lifts the stone and extender up
 // Extender extends over the tower, and the grabber releases the stone
 
 
 @Config
 class LiftConfig {
-
-    public static int BLOCK_HEIGHT = 240; //In encoder counts
     public static int LIFT_OFFSET = 0;
-    public static int MAX_LEVEL = 8;
-    public static int MIN_LEVEL = 0;
+
+    public static int INTAKE_LEVEL_COUNTS = 0;
+    public static int LOW_LEVEL_COUNTS = 300;
+    public static int MID_LEVEL_COUNTS = 600;
+    public static int HIGH_LEVEL_COUNTS = 900;
+    public static int CAP_LEVEL_COUNTS = 1200;
 
     public static double PID_P = 15;
     public static double PID_I = 0.1;
@@ -55,6 +61,10 @@ public class Lift extends Component {
     static double tweak = 0;
     static double tweak_cache = 0;
 
+    static List<Integer> level_positions;
+
+    public int max_level;
+
     {
         name = "Lift";
     }
@@ -62,6 +72,16 @@ public class Lift extends Component {
     public Lift(Robot robot)
     {
         super(robot);
+
+        level_positions = Arrays.asList(
+                INTAKE_LEVEL_COUNTS,
+                LOW_LEVEL_COUNTS,
+                MID_LEVEL_COUNTS,
+                HIGH_LEVEL_COUNTS,
+                CAP_LEVEL_COUNTS
+        );
+
+        max_level = level_positions.size() - 1;
     }
 
     @Override
@@ -85,9 +105,9 @@ public class Lift extends Component {
             //        set_power(-1);
             //    }
             //} else {
-                lift.setTargetPosition(lift_target+lift_offset);
-                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                set_power(1);
+            lift.setTargetPosition(lift_target+lift_offset);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            set_power(1);
             //}
 
             starting_move = false;
@@ -106,11 +126,11 @@ public class Lift extends Component {
         if (tweak != tweak_cache) {
             tweak_cache = tweak;
             lift.setTargetPosition(
-                    Range.clip(
-                            lift_target + lift_offset + (int) (tweak * BLOCK_HEIGHT / 2),
-                            MIN_LEVEL*BLOCK_HEIGHT,
-                            MAX_LEVEL*BLOCK_HEIGHT+TWEAK_MAX_ADD
-                    )
+                Range.clip(
+                    lift_target + lift_offset + (int) (tweak * TWEAK_MAX_ADD),
+                    0,
+                    level_positions.get(max_level)+TWEAK_MAX_ADD
+                )
             );
         }
     }
@@ -120,13 +140,9 @@ public class Lift extends Component {
         super.startup();
 
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         PIDCoefficients pid_coeffs = new PIDCoefficients(PID_P, PID_I, PID_D);
-
         lift.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pid_coeffs);
-
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -140,19 +156,13 @@ public class Lift extends Component {
         super.updateTelemetry(telemetry);
 
         telemetry.addData("LL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift)));
-
         telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_target));
-
         telemetry.addData("LL OFFSET", TELEMETRY_DECIMAL.format(lift_offset));
-
         telemetry.addData("LIFT BUSY",robot.bulk_data_2.isMotorAtTargetPosition(lift));
-
         telemetry.addData("LIFT RUNNING", running_lift());
-
         telemetry.addData("LEVEL", level);
-
+        telemetry.addData("MAX LEVEL", max_level);
         telemetry.addData("BD", robot.bulk_data_1.getDigitalInputState(1));
-
     }
 
     public void set_power(double speed) {
@@ -167,28 +177,18 @@ public class Lift extends Component {
         lift_target = pos;
     }
 
-    public void elevate(int amt) {
-        elevate_to(level + amt);
-    }
-
     public void elevate_to(int target) {
-        level = Math.max(Math.min(target, MAX_LEVEL), MIN_LEVEL);
-        set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
+        level = Math.max(Math.min(target, max_level), 0);
+        set_target_position(level_positions.get(level) + LIFT_OFFSET);
         starting_move = true;
     }
 
     public void min_lift() {
-        elevate(MIN_LEVEL - level);
+        elevate_to(0);
     }
 
     public void max_lift() {
-        elevate(MAX_LEVEL - level);
-    }
-
-    public void elevate_without_stops(int amt) {
-        level = level + amt;
-        set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
-        starting_move = true;
+        elevate_to(max_level);
     }
 
     public void tweak(double tweak) {

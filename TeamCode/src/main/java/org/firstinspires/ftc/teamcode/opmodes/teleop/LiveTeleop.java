@@ -17,7 +17,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
     boolean gp1_a_pressed = false;
 
-    int prepared_level = 1;
+    int prepared_level = 3;
 
     int vineboom_sound_id;
 
@@ -101,8 +101,11 @@ public class LiveTeleop extends LiveTeleopBase {
             speed_mod = 0.5;
         }
 
-        robot.drive_train.mechanum_drive((gamepad1.left_stick_x+gamepad2.left_stick_x) * speed_mod, (gamepad1.left_stick_y+gamepad2.left_stick_y) * speed_mod, (gamepad1.right_stick_x+gamepad2.right_stick_x) * speed_mod);
-
+        robot.drive_train.mechanum_drive(
+                (gamepad1.left_stick_x+gamepad2.left_stick_x) * speed_mod,
+                (gamepad1.left_stick_y+gamepad2.left_stick_y) * speed_mod,
+                (gamepad1.right_stick_x+gamepad2.right_stick_x) * speed_mod
+        );
     }
 
     @Override
