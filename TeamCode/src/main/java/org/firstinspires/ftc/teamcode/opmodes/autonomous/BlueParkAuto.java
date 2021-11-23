@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.robots.LiveRobot;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
-@Autonomous(name="FF Park", group="autonomous")
+@Autonomous(name="FF B Park", group="autonomous")
 //@Disabled
-public class ParkAuto extends LiveAutoBase {
+public class BlueParkAuto extends LiveAutoBase {
     @Override
     public void on_init() {
 
@@ -18,7 +18,10 @@ public class ParkAuto extends LiveAutoBase {
 
     @Override
     public void on_start() {
-        robot.drive_train.odo_move(1, -28, 0, 1, -1, -1, 6);
+        robot.lift.elevate_to(0);
+        robot.lift.tweak(1);
+        robot.drive_train.odo_move(24, 28, 0, 1, -1, -1, 5);
+        robot.lift.tweak(0);
     }
 
     @Override

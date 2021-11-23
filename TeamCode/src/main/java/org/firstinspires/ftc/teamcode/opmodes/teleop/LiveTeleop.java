@@ -70,7 +70,7 @@ public class LiveTeleop extends LiveTeleopBase {
             if(gamepad2.a) {
                 robot.intake.spin(1);
             } else if (gamepad2.b) {
-                robot.intake.spin(-1);
+                robot.intake.spin(-0.5);
             } else {
                 robot.intake.spin(0);
             }
@@ -81,7 +81,20 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.intake.ungrab();
             }
 
-            robot.wheeler.spin(-gamepad2.right_trigger);
+            if (gamepad2.dpad_left) {
+                robot.wheeler.spin(-1);
+            } else if (gamepad2.dpad_right) {
+                robot.wheeler.spin(1);
+            } else {
+                robot.wheeler.spin(0);
+            }
+
+            if (robot.lift.level == 0) {
+                robot.lift.tweak(1 - gamepad2.left_trigger);
+            } else {
+                robot.lift.tweak(- gamepad2.left_trigger);
+            }
+
         }
 
         // Nothing to see here
