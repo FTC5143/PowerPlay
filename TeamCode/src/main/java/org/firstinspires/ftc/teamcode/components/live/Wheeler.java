@@ -15,6 +15,7 @@ class WheelerConfig {
 
 public class Wheeler extends Component {
 
+    //// SERVOS ////
     private CRServoQUS wheeler;
 
     {
@@ -28,6 +29,8 @@ public class Wheeler extends Component {
     @Override
     public void registerHardware(HardwareMap hwmap) {
         super.registerHardware(hwmap);
+
+        //// SERVOS ////
         wheeler = new CRServoQUS(hwmap.get(CRServo.class, "wheeler"));
     }
 
@@ -38,6 +41,9 @@ public class Wheeler extends Component {
     }
 
     public void spin(double speed) {
+        /**
+         * Spin the wheeler wheel at a given speed
+         */
         wheeler.queue_power(speed);
     }
 }

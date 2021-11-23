@@ -23,42 +23,38 @@ import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 import static org.firstinspires.ftc.teamcode.util.MathUtil.angle_difference;
 
-// Drive Train component
-// Includes: Drive Motors, IMU
-// I hate it also
-
 @Config
 class DriveTrainConfig {
-    public static int gyro_update_interval = 200;
+    public static int GYRO_READ_INTERVAL = 200;
 }
 
 public class DriveTrain extends Component {
+    /**
+     * Component that controls all of the drive motors, localization (odometers / gyro), and autonomous movement
+     */
 
     //// MOTORS ////
-    private DcMotorQUS drive_lf;   // Left-Front drive motor
-    private DcMotorQUS drive_rf;   // Right-Front drive motor
-    private DcMotorQUS drive_lb;   // Left-Back drive motor
-    private DcMotorQUS drive_rb;   // Right-Back drive motor
+    private DcMotorQUS drive_lf; // Left-Front drive motor
+    private DcMotorQUS drive_rf; // Right-Front drive motor
+    private DcMotorQUS drive_lb; // Left-Back drive motor
+    private DcMotorQUS drive_rb; // Right-Back drive motor
 
     //// SENSORS ////
-    private BNO055IMU imu;          // For recalibrating odometry angle periodically
+    private BNO055IMU imu; // For recalibrating odometry angle periodically
 
+    // The cached last read IMU orientation
     private Orientation last_imu_orientation = new Orientation();
 
+    // The odometry math system used for calculating position from encoder count updates from the odometers
     public LocalCoordinateSystem lcs = new LocalCoordinateSystem();
 
     // Drive train moves according to these. Update them, it moves
-    private double drive_x = 0;
-    private double drive_y = 0;
-    private double drive_a = 0;
+    private double drive_x = 0; // X-pos intent
+    private double drive_y = 0; // Y-pos intent
+    private double drive_a = 0; // Angle intent
 
+    // The current coyote path the drive train is running
     public Path current_path;
-
-    private PIDCoefficients drive_pos_coeffs = new PIDCoefficients(10, 0.1, 2);
-    private PIDCoefficients drive_ang_coeffs = new PIDCoefficients(10, 0.1, 2);
-
-    private PIDFController drive_pos_controller = new PIDFController(drive_pos_coeffs);
-    private PIDFController drive_ang_controller = new PIDFController(drive_ang_coeffs);
 
     {
         name = "Drive Train";
@@ -73,21 +69,20 @@ public class DriveTrain extends Component {
         super.registerHardware(hwmap);
 
         //// MOTORS ////
-        drive_lf    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_lf"));
-        drive_rf    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_rf"));
-        drive_lb    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_lb"));
-        drive_rb    = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_rb"));
+        drive_lf = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_lf"));
+        drive_rf = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_rf"));
+        drive_lb = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_lb"));
+        drive_rb = new DcMotorQUS(hwmap.get(DcMotorEx.class, "drive_rb"));
 
         //// SENSORS ////
         imu = hwmap.get(BNO055IMU.class, "imu");
-
     }
 
     @Override
     public void update(OpMode opmode) {
         super.update(opmode);
 
-        // Updating the localizer with the new odometry encoder counts
+        // Updating the localizer with the new odometer encoder counts
         lcs.update(
                 robot.bulk_data_1.getMotorCurrentPosition(drive_lf.motor),
                 robot.bulk_data_1.getMotorCurrentPosition(drive_rf.motor),
@@ -97,27 +92,30 @@ public class DriveTrain extends Component {
         // Finding new motors powers from the drive variables
         double[] motor_powers = mecanum_math(drive_x, drive_y, drive_a);
 
+
+        // Set one motor power per cycle. We do this to maintain a good odometry update speed
+        // We should be doing a full drive train update at about 40hz with this configuration, which is more than enough
         drive_lf.queue_power(motor_powers[0]);
         drive_rf.queue_power(motor_powers[1]);
         drive_lb.queue_power(motor_powers[2]);
         drive_rb.queue_power(motor_powers[3]);
 
-        // Set one motor power per cycle. We do this to maintain a good odometry update speed
-        // We should be doing a full drive train update at about 40hz with this configuration, which is more than enough
         if (robot.cycle % 4 == 0) {
             drive_lf.update();
         }
-        if (robot.cycle % 4 == 1) {
+        else if (robot.cycle % 4 == 1) {
             drive_rf.update();
         }
-        if (robot.cycle % 4 == 2) {
+        else if (robot.cycle % 4 == 2) {
             drive_lb.update();
         }
-        if (robot.cycle % 4 == 3) {
+        else if (robot.cycle % 4 == 3) {
             drive_rb.update();
         }
 
-        if (robot.cycle % DriveTrainConfig.gyro_update_interval == 0) {
+        // Periodically read from the IMU in order to realign the angle to counteract drift
+        // IMU angle is generally more accurate than odometry angle near the end of the match
+        if (robot.cycle % DriveTrainConfig.GYRO_READ_INTERVAL == 0) {
             read_from_imu();
         }
     }
@@ -143,12 +141,12 @@ public class DriveTrain extends Component {
     public void startup() {
         super.startup();
 
+        // IMU setup and parameters
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode                = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled      = false;
-
         imu.initialize(parameters);
 
         // Set all the zero power behaviors to brake on startup, to prevent slippage as much as possible
@@ -162,6 +160,7 @@ public class DriveTrain extends Component {
         drive_rb.motor.setDirection(DcMotor.Direction.REVERSE);
         
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         // We run without encoder because we do not have motor encoders, we have odometry instead
         set_mode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -170,12 +169,13 @@ public class DriveTrain extends Component {
     @Override
     public void shutdown() {
         super.shutdown();
-        // Cut all motor powers on robot shutdown
         stop();
     }
 
-    // Return the motor powers needed to move in the given travel vector. Should give optimal speeds
     private double[] mecanum_math(double x, double y, double a) {
+        /**
+         * Return the motor powers needed to move in the given travel vector. Should give optimal speeds (not sqrt(2)/2 for 45% angles)
+         */
         double[] power = new double[]{- x + y - a, + x + y + a, + x + y - a, - x + y + a};
 
         double max = Math.max(Math.max(Math.abs(power[0]),Math.abs(power[1])),Math.max(Math.abs(power[2]),Math.abs(power[3])));
@@ -191,36 +191,45 @@ public class DriveTrain extends Component {
     }
 
     public void read_from_imu() {
+        /**
+         * Read the angular orientation from the IMU, takes about 6ms
+         */
         last_imu_orientation = imu.getAngularOrientation();
         lcs.a = last_imu_orientation.firstAngle;
     }
 
-    // An easy public setter for the drive variables
     public void mechanum_drive(double x, double y, double a) {
+        /**
+         * Public setter for the drive variables, used for teleop drive
+         * Can basically plug controller joystick inputs directly into it
+         */
         drive_x = x;
         drive_y = y;
         drive_a = a;
     }
 
-    // Stop all motors, and reset drive variables
     public void stop() {
+        /**
+         * Stop all motors and reset all drive variables
+         */
         mechanum_drive(0, 0, 0);
         drive_lf.motor.setPower(0);
         drive_rf.motor.setPower(0);
         drive_lb.motor.setPower(0);
         drive_rb.motor.setPower(0);
     }
-    
-    // Bulk motor set mode
+
     private void set_mode(DcMotor.RunMode mode) {
+        /**
+         * Set the mode of all drive motors in bulk
+         */
         drive_lf.motor.setMode(mode);
         drive_rf.motor.setMode(mode);
         drive_lb.motor.setMode(mode);
         drive_rb.motor.setMode(mode);
     }
 
-    
-    // Basic run to pose with odometry
+
     public void odo_move(double x, double y, double a, double speed) {
         odo_move(x, y, a, speed, 1, 0.02, 0, 0);
     }
@@ -232,7 +241,6 @@ public class DriveTrain extends Component {
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc, double timeout) {
         odo_move(x, y, a, speed, pos_acc, angle_acc, timeout, 0);
     }
-
 
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc, double timeout, double time_at_target) {
         a = -a;
@@ -271,6 +279,9 @@ public class DriveTrain extends Component {
     }
 
     public void odo_drive_towards(double x, double y, double a, double speed) {
+        /**
+         * Set drive variables to drive towards a pose
+         */
         double distance = Math.hypot(x - lcs.x, y - lcs.y);
 
         double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
@@ -283,13 +294,18 @@ public class DriveTrain extends Component {
 
 
     public void odo_reset(double x, double y, double a) {
+        /**
+         * Reset odometry to an arbitrary pose
+         */
         this.lcs.x = x;
         this.lcs.y = y;
         this.lcs.a = a;
     }
-    
-    // Following a pure pursuit path with odometry
+
     public void follow_curve_path(Path path) {
+        /**
+         * Follow a coyote curve path with odometry
+         */
         
         // Update our current path, for telemetry
         this.current_path = path;
@@ -320,8 +336,10 @@ public class DriveTrain extends Component {
 
     }
 
-    // Set motor powers to drive to a position and angle
     public void drive_to_pose(Pose pose, double drive_speed, double turn_speed) {
+        /**
+         * Set drive variables to drive towards a pose
+         */
 
         // Find the angle to the pose
         double drive_angle = Math.atan2(pose.y-lcs.y, pose.x-lcs.x);

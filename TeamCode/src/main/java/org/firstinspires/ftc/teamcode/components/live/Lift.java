@@ -21,48 +21,67 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-// Elevator lifts the stone and extender up
-// Extender extends over the tower, and the grabber releases the stone
-
-
 @Config
 class LiftConfig {
+    // Basic value to add to any lift position, the effective zero
     public static int LIFT_OFFSET = 0;
 
+    // The encoder counts for the intake level, AKA ground level
     public static int INTAKE_LEVEL_COUNTS = 0;
+    // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
     public static int LOW_LEVEL_COUNTS = 450;
+    // The encoder counts lift position for the middle level, the second level of the alliance shipping hub
     public static int MID_LEVEL_COUNTS = 850;
+    // The encoder counts lift position for the high level, the third level of the alliance shipping hub
     public static int HIGH_LEVEL_COUNTS = 1350;
+    // The encoder counts lift position for the elevation needed to place the team marker on top of the shipping hub
     public static int CAP_LEVEL_COUNTS = 1950;
 
+    // Lift PID proportion coefficient
     public static double PID_P = 15;
+    // Lift PID integral coefficient
     public static double PID_I = 0.1;
+    // Lift PID derivative coefficient
     public static double PID_D = 4;
 
+    // How many encoder counts to overshoot by when going to the minimum lift level, to ensue the limit switch is hit
     public static int LIFT_DOWN_OVERSHOOT = 100;
 
+    // The amount of encoder accounts corresponding to how much the lift should be offset by a maximum tweak
     public static int TWEAK_MAX_ADD = 100;
 
 }
 
 public class Lift extends Component {
+    /**
+     * Component for the linear slide lift that raises the intake up and down
+     * Includes the lift motor, controlled by a PID loop
+     */
 
     //// MOTORS ////
     public DcMotorEx lift;
 
+    // The current level the lift should be holding
     public int level;
 
+    // Should be set to true when the lift level changes so the update loop knows to set new encoder positions
     private boolean starting_move = false;
 
+    // The current encoder target for the lift
     public int lift_target = 0;
 
+    // The offset of the lift as set by the limit switch re-zeroing
     public int lift_offset = 0;
 
+    // Normalized amount of tweak (-1 to 1), will be multiplied by the maximum tweak amount to calculate total tweak offset counts
     static double tweak = 0;
+    // The cached amount of tweak so we don't reapply it multiple times
     static double tweak_cache = 0;
 
+    // A list of all of the level positions so encoder counts can be retrieved from level indices
     static List<Integer> level_positions;
 
+    // The maximum level index the lift can safely raise to
     public int max_level;
 
     {
@@ -90,7 +109,7 @@ public class Lift extends Component {
         super.registerHardware(hwmap);
 
         //// MOTORS ////
-        lift     = hwmap.get(DcMotorEx.class, "lift");
+        lift = hwmap.get(DcMotorEx.class, "lift");
     }
 
     @Override
@@ -98,34 +117,20 @@ public class Lift extends Component {
         super.update(opmode);
 
         if (starting_move) {
-
-            //if (level == 0) {
-            //    if(robot.bulk_data_1.getDigitalInputState(3) && robot.bulk_data_1.getDigitalInputState(5)) {
-            //        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //        set_power(-1);
-            //    }
-            //} else {
+            // If we just changed our level, set the new target to the new lift counts as per the level index
+            // If the motor wasn't already running, start running it
             lift.setTargetPosition(lift_target+lift_offset);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             set_power(1);
-            //}
 
             starting_move = false;
         }
 
-        /*
-        if (level == 0 && (lift.getPower() == -1)) {
-            if ((!robot.bulk_data_1.getDigitalInputState(5)) && (lift.getPower() != 0)) {
-                lift_offset = robot.bulk_data_2.getMotorCurrentPosition(lift);
-                lift.setPower(0);
-            }
-        }
-        */
-
-
         if (tweak != tweak_cache) {
+            // If the tweak has changed from last time, adjust the target position to account for it
             tweak_cache = tweak;
             lift.setTargetPosition(
+                // Ensure that the tweak does not drive the lift past its maximum safe level
                 Range.clip(
                     lift_target + lift_offset + (int) (tweak * TWEAK_MAX_ADD),
                     0,
@@ -139,11 +144,17 @@ public class Lift extends Component {
     public void startup() {
         super.startup();
 
+        // Ensure that we brake to hold position on zero power
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Apply the PID coefficients as per the config
         PIDCoefficients pid_coeffs = new PIDCoefficients(PID_P, PID_I, PID_D);
         lift.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pid_coeffs);
+
+        // Reset the zero position of the encoders to the current position on startup
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
@@ -166,33 +177,49 @@ public class Lift extends Component {
         telemetry.addData("BD", robot.bulk_data_1.getDigitalInputState(1));
     }
 
-    public void set_power(double speed) {
-        lift.setPower(speed);
-    }
-
-    public boolean running_lift() {
-        return lift.getPower() != 0;
-    }
 
     private void set_target_position(int pos) {
         lift_target = pos;
     }
 
+    private void set_power(double speed) {
+        lift.setPower(speed);
+    }
+
+    public boolean running_lift() {
+        /**
+         * Get whether the lift is currently holding position, or if it is resting at the bottom
+         */
+        return lift.getPower() != 0;
+    }
+
     public void elevate_to(int target) {
+        /**
+         * Elevate to an arbitrary lift index level
+         */
         level = Math.max(Math.min(target, max_level), 0);
         set_target_position(level_positions.get(level) + LIFT_OFFSET);
         starting_move = true;
     }
 
     public void min_lift() {
+        /**
+         * Bring the lift back to its minimum level index
+         */
         elevate_to(0);
     }
 
     public void max_lift() {
+        /**
+         * Elevate to the maximum safe lift level index
+         */
         elevate_to(max_level);
     }
 
     public void tweak(double tweak) {
+        /**
+         * Apply an arbitrary tweak amount to the lift level, used for fine tuning elevation between levels, -1 to 1
+         */
         this.tweak = tweak;
     }
 }

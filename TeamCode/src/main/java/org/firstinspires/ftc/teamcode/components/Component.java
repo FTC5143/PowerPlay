@@ -23,33 +23,41 @@ public abstract class Component {
 
     protected final DecimalFormat TELEMETRY_DECIMAL = new DecimalFormat("##.00");
 
-    // Trying to stray away from using the constructors at all in child classes
     public Component(Robot robot) {
         this.robot = robot;
         robot.registerComponent(this);
     }
 
-    // Where all hardware used in the component is registered to its respective variable
     public void registerHardware(HardwareMap hwmap) {
-
+        /**
+         * Where all hardware used in the component is registered to its respective variable
+         */
     }
 
-    // Called every time the robot update method is called
     public void update(OpMode opmode) {
+        /**
+         * Called every time the robot update method is called
+         */
     }
 
-    // Called when robot.startup() is called, which should be called when an opmode is started
     public void startup() {
+        /**
+         * Called when robot.startup() is called, which should be called when an opmode is started
+         */
         status = STATUS_ONLINE;
     }
 
-    // Called when robot.shutdown() is called, which should be called when an opmode is stopped
     public void shutdown() {
+        /**
+         * Called when robot.shutdown() is called, which should be called when an opmode is stopped
+         */
         status = STATUS_OFFLINE;
     }
 
-    // Called on every update. Modify statusString here to update telemetry on the phone
     public void updateTelemetry(Telemetry telemetry) {
+        /**
+         * Called on every update. Used for outputting information about the component to the phone for debug purposes
+         */
         telemetry.addData("[CMP "+name+"]", status == STATUS_ONLINE ? "ONLINE": "OFFLINE");
     }
 }

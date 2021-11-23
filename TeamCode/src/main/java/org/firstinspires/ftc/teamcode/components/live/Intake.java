@@ -15,15 +15,19 @@ import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 
 @Config
 class IntakeConfig {
+    // Servo position for the grabber in the open state
     public static double GRABBER_OPEN = 0;
+    // Servo position for the grabber in the closed state
     public static double GRABBER_CLOSED = 1;
 }
 
 public class Intake extends Component {
+    /**
+     * Component for retrieving elements (blocks, balls, ducks, and the team marker) from the ground, and depositing them into their scoring positions
+     */
 
     //// MOTORS ////
     public DcMotorQUS spinner;
-
 
     //// SERVOS ////
     public ServoQUS grabber;
@@ -43,10 +47,10 @@ public class Intake extends Component {
         super.registerHardware(hwmap);
 
         //// MOTORS ////
-        spinner     = new DcMotorQUS(hwmap.get(DcMotorEx.class, "spinner"));
+        spinner = new DcMotorQUS(hwmap.get(DcMotorEx.class, "spinner"));
 
         //// SERVOS ////
-        grabber     = new ServoQUS(hwmap.get(Servo.class, "grabber"));
+        grabber = new ServoQUS(hwmap.get(Servo.class, "grabber"));
     }
 
     @Override
@@ -75,14 +79,23 @@ public class Intake extends Component {
     }
 
     public void spin(double speed) {
+        /**
+         * Spin the spinner motor at a specific speed
+         */
         spinner.queue_power(speed);
     }
 
     public void grab() {
+        /**
+         * Set the grabber servo to its grabbed position
+         */
         grabber.queue_position(IntakeConfig.GRABBER_CLOSED);
     }
 
     public void ungrab() {
+        /**
+         * Set the grabber servo to its ungrabbed position
+         */
         grabber.queue_position(IntakeConfig.GRABBER_OPEN);
     }
 }
