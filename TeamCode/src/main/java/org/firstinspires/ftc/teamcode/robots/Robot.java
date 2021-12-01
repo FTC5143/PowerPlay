@@ -141,7 +141,7 @@ public class Robot {
         // Recalculate our update thread frequency
         if (cycle % FREQ_CHECK_CYCLE == 0) {
             long update_duration = System.nanoTime()-last_update;
-            update_freq = ((update_duration/(double)1000000000) * 20) != 0 ? (int)((1/(update_duration/(double)1000000000)) * 20) : Integer.MAX_VALUE;
+            update_freq = ((update_duration/(double)1000000000) * FREQ_CHECK_CYCLE) != 0 ? (int)((1/(update_duration/(double)1000000000)) * FREQ_CHECK_CYCLE) : Integer.MAX_VALUE;
 
             last_update = System.nanoTime();
         }
