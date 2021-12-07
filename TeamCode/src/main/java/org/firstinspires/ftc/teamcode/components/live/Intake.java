@@ -19,6 +19,10 @@ class IntakeConfig {
     public static double GRABBER_OPEN = 0;
     // Servo position for the grabber in the closed state
     public static double GRABBER_CLOSED = 1;
+
+    public static double CRADLE_INTAKE_POSITION = 0;
+    public static double CRADLE_LIFT_POSITION = 0.5;
+    public static double CRADLE_DUMP_POSITION = 1.0;
 }
 
 public class Intake extends Component {
@@ -31,6 +35,7 @@ public class Intake extends Component {
 
     //// SERVOS ////
     public ServoQUS grabber;
+    public ServoQUS cradle;
 
     {
         name = "Intake";
@@ -51,6 +56,7 @@ public class Intake extends Component {
 
         //// SERVOS ////
         grabber = new ServoQUS(hwmap.get(Servo.class, "grabber"));
+        cradle = new ServoQUS(hwmap.get(Servo.class, "cradle"));
     }
 
     @Override
@@ -59,6 +65,7 @@ public class Intake extends Component {
 
         spinner.update();
         grabber.update();
+        cradle.update();
     }
 
     @Override
@@ -97,5 +104,17 @@ public class Intake extends Component {
          * Set the grabber servo to its ungrabbed position
          */
         grabber.queue_position(IntakeConfig.GRABBER_OPEN);
+    }
+
+    public void cradle_intake() {
+        cradle.queue_position(IntakeConfig.CRADLE_INTAKE_POSITION);
+    }
+
+    public void cradle_lift() {
+        cradle.queue_position(IntakeConfig.CRADLE_LIFT_POSITION);
+    }
+
+    public void cradle_dump() {
+        cradle.queue_position(IntakeConfig.CRADLE_DUMP_POSITION);
     }
 }

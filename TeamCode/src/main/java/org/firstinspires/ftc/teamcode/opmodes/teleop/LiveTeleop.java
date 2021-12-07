@@ -94,7 +94,16 @@ public class LiveTeleop extends LiveTeleopBase {
             } else {
                 robot.lift.tweak(- gamepad2.left_trigger);
             }
+        }
 
+        if (robot.lift.level == 0) {
+            robot.intake.cradle_intake();
+        } else {
+            if (gamepad2.right_bumper) {
+                robot.intake.cradle_dump();
+            } else {
+                robot.intake.cradle_lift();
+            }
         }
 
         // Nothing to see here
@@ -115,9 +124,9 @@ public class LiveTeleop extends LiveTeleopBase {
         }
 
         robot.drive_train.mechanum_drive(
-                (gamepad1.left_stick_x+gamepad2.left_stick_x) * speed_mod,
-                (gamepad1.left_stick_y+gamepad2.left_stick_y) * speed_mod,
-                (gamepad1.right_stick_x+gamepad2.right_stick_x) * speed_mod
+            (gamepad1.left_stick_x+gamepad2.left_stick_x) * speed_mod,
+            (gamepad1.left_stick_y+gamepad2.left_stick_y) * speed_mod,
+            (gamepad1.right_stick_x+gamepad2.right_stick_x) * speed_mod
         );
     }
 

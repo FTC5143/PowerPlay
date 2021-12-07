@@ -12,7 +12,7 @@ class LCSConfig {
 
     public static double WHEEL_DIAMETER_L     = -1.860489715;
     public static double WHEEL_DIAMETER_R     = -1.863390974;
-    public static double WHEEL_DIAMETER_C     = -1.872223339;
+    public static double WHEEL_DIAMETER_C     = 1.872223339;
 
 }
 
