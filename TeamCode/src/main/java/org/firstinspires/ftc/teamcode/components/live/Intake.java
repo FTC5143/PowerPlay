@@ -20,9 +20,9 @@ class IntakeConfig {
     // Servo position for the grabber in the closed state
     public static double GRABBER_CLOSED = 1;
 
-    public static double CRADLE_INTAKE_POSITION = 0;
-    public static double CRADLE_LIFT_POSITION = 0.5;
-    public static double CRADLE_DUMP_POSITION = 1.0;
+    public static double CRADLE_INTAKE_POSITION = 0.2;
+    public static double CRADLE_LIFT_POSITION = 0.3;
+    public static double CRADLE_DUMP_POSITION = 0.5;
 }
 
 public class Intake extends Component {
