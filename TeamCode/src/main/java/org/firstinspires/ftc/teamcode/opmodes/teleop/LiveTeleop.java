@@ -17,7 +17,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
     boolean gp1_a_pressed = false;
 
-    int prepared_level = 3;
+    int prepared_level = 1;
 
     int vineboom_sound_id;
 
@@ -54,14 +54,14 @@ public class LiveTeleop extends LiveTeleopBase {
             }
 
             if(gamepad2.dpad_up && !dpad_up_pressed) {
-                prepared_level = Range.clip(prepared_level + 1, 0, 12);
+                prepared_level = Range.clip(prepared_level + 1, 0, robot.lift.max_level);
                 dpad_up_pressed = true;
             } else if (!gamepad2.dpad_up) {
                 dpad_up_pressed = false;
             }
 
             if(gamepad2.dpad_down && !dpad_down_pressed) {
-                prepared_level = Range.clip(prepared_level - 1, 0, 12);
+                prepared_level = Range.clip(prepared_level - 1, 0, robot.lift.max_level);
                 dpad_down_pressed = true;
             } else if (!gamepad2.dpad_down) {
                 dpad_down_pressed = false;
@@ -89,11 +89,7 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.wheeler.spin(0);
             }
 
-            if (robot.lift.level == 0) {
-                robot.lift.tweak(1 - gamepad2.left_trigger);
-            } else {
-                robot.lift.tweak(- gamepad2.left_trigger);
-            }
+            robot.lift.tweak(- gamepad2.left_trigger);
         }
 
         if (robot.lift.level == 0) {

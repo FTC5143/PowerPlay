@@ -134,10 +134,10 @@ public class OCVPhoneCamera extends Component {
 
             // Denormalize positions and sizes of the 3 rects
             int[] l_rect = {
-                    (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x - OCVPhoneCameraConfig.rect_separation - OCVPhoneCameraConfig.rect_size/2)),
-                    (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y - OCVPhoneCameraConfig.rect_size/2)),
-                    (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x - OCVPhoneCameraConfig.rect_separation + OCVPhoneCameraConfig.rect_size/2)),
-                    (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y + OCVPhoneCameraConfig.rect_size/2))
+                    (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x - OCVPhoneCameraConfig.rect_size/2)),
+                    (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y - OCVPhoneCameraConfig.rect_size/2 - OCVPhoneCameraConfig.rect_separation)),
+                    (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x + OCVPhoneCameraConfig.rect_size/2)),
+                    (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y + OCVPhoneCameraConfig.rect_size/2 - OCVPhoneCameraConfig.rect_separation))
             };
 
             int[] m_rect = {
@@ -148,10 +148,10 @@ public class OCVPhoneCamera extends Component {
             };
 
             int[] r_rect = {
-                    (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x + OCVPhoneCameraConfig.rect_separation - OCVPhoneCameraConfig.rect_size/2)),
-                    (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y - OCVPhoneCameraConfig.rect_size/2)),
-                    (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x + OCVPhoneCameraConfig.rect_separation + OCVPhoneCameraConfig.rect_size/2)),
-                    (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y + OCVPhoneCameraConfig.rect_size/2))
+                    (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x - OCVPhoneCameraConfig.rect_size/2)),
+                    (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y - OCVPhoneCameraConfig.rect_size/2 + OCVPhoneCameraConfig.rect_separation)),
+                    (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x + OCVPhoneCameraConfig.rect_size/2)),
+                    (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y + OCVPhoneCameraConfig.rect_size/2 + OCVPhoneCameraConfig.rect_separation))
             };
 
             // Load the rects into matrices
@@ -177,14 +177,14 @@ public class OCVPhoneCamera extends Component {
             sat[1] = (int)(100.0 * m_hsv[1]);
             sat[2] = (int)(100.0 * r_hsv[1]);
 
-            // Find which rect has the greatest saturation
-            int maximum_index = 0;
+            // Find which rect has the least saturation
+            int min_index = 0;
             for (int i = 0; i < sat.length; i++) {
-                maximum_index = sat[i] > sat[maximum_index] ? i : maximum_index;
+                min_index = sat[i] < sat[min_index] ? i : min_index;
             }
 
             // The pattern is the index of the rect + 1, as 0 is reserved for a null output
-            pattern = maximum_index + 1;
+            pattern = min_index + 1;
 
             // Draw the rects on he image for visualization and lineup purposess
             Imgproc.rectangle(input, new Point(l_rect[0], l_rect[1]), new Point(l_rect[2], l_rect[3]), new Scalar(0, 0, 255), 1);

@@ -29,13 +29,11 @@ class LiftConfig {
     // The encoder counts for the intake level, AKA ground level
     public static int INTAKE_LEVEL_COUNTS = 0;
     // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
-    public static int LOW_LEVEL_COUNTS = 450;
+    public static int LOW_LEVEL_COUNTS = 850;
     // The encoder counts lift position for the middle level, the second level of the alliance shipping hub
-    public static int MID_LEVEL_COUNTS = 850;
+    public static int MID_LEVEL_COUNTS = 1350;
     // The encoder counts lift position for the high level, the third level of the alliance shipping hub
-    public static int HIGH_LEVEL_COUNTS = 1350;
-    // The encoder counts lift position for the elevation needed to place the team marker on top of the shipping hub
-    public static int CAP_LEVEL_COUNTS = 1950;
+    public static int HIGH_LEVEL_COUNTS = 1800;
 
     // Lift PID proportion coefficient
     public static double PID_P = 15;
@@ -96,8 +94,7 @@ public class Lift extends Component {
                 INTAKE_LEVEL_COUNTS,
                 LOW_LEVEL_COUNTS,
                 MID_LEVEL_COUNTS,
-                HIGH_LEVEL_COUNTS,
-                CAP_LEVEL_COUNTS
+                HIGH_LEVEL_COUNTS
         );
 
         max_level = level_positions.size() - 1;
