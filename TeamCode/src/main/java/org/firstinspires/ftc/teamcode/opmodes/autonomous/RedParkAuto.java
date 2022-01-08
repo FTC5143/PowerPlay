@@ -14,10 +14,7 @@ public class RedParkAuto extends LiveAutoBase {
 
     @Override
     public void on_start() {
-        robot.lift.elevate_to(0);
-        robot.lift.tweak(1);
         robot.drive_train.odo_move(-24, 28, 0, 1, -1, -1, 5);
-        robot.lift.tweak(0);
     }
 
     @Override

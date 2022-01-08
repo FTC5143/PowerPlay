@@ -89,11 +89,7 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.wheeler.spin(0);
             }
 
-            if (robot.lift.level == 0) {
-                robot.lift.tweak(1 - gamepad2.left_trigger);
-            } else {
-                robot.lift.tweak(- gamepad2.left_trigger);
-            }
+            robot.lift.tweak(- gamepad2.left_trigger);
         }
 
         if (robot.lift.level == 0) {
