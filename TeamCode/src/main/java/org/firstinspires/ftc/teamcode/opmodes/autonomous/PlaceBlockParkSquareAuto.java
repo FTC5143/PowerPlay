@@ -15,9 +15,9 @@ public class PlaceBlockParkSquareAuto extends LiveAutoBase {
     @Override
     public void on_init() {
         if (side == AutonomousConst.LEFT) {
-            robot.drive_train.odo_reset(24, 0, 0);
+            robot.drive_train.odo_reset(24, 0, color == AutonomousConst.BLUE ? -Math.PI/2 : Math.PI/2);
         } else if (side == AutonomousConst.RIGHT) {
-            robot.drive_train.odo_reset(-24, 0, 0);
+            robot.drive_train.odo_reset(-24, 0, color == AutonomousConst.BLUE ? -Math.PI/2 : Math.PI/2);
         }
 
         robot.phone_camera.start_streaming();
@@ -55,6 +55,5 @@ public class PlaceBlockParkSquareAuto extends LiveAutoBase {
 
     @Override
     public void on_stop() {
-        robot.sound_player.vineboom();
     }
 }
