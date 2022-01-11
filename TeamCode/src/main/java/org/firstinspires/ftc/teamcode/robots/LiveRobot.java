@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.components.live.DriveTrain;
 import org.firstinspires.ftc.teamcode.components.live.Intake;
 import org.firstinspires.ftc.teamcode.components.live.Lift;
 import org.firstinspires.ftc.teamcode.components.live.OCVPhoneCamera;
+import org.firstinspires.ftc.teamcode.components.live.SoundPlayer;
 import org.firstinspires.ftc.teamcode.components.live.Wheeler;
 import org.firstinspires.ftc.teamcode.coyote.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
@@ -24,6 +25,7 @@ public class LiveRobot extends Robot {
     public Lift             lift;
     public Intake           intake;
     public Wheeler          wheeler;
+    public SoundPlayer      sound_player;
 
     FtcDashboard            dashboard;
 
@@ -41,6 +43,7 @@ public class LiveRobot extends Robot {
         lift            = new Lift(this);
         intake          = new Intake(this);
         wheeler         = new Wheeler(this);
+        sound_player    = new SoundPlayer(this);
 
         dashboard = FtcDashboard.getInstance();
     }

@@ -19,13 +19,9 @@ public class LiveTeleop extends LiveTeleopBase {
 
     int prepared_level = 1;
 
-    int vineboom_sound_id;
 
     @Override
     public void on_init() {
-        // Move along
-        vineboom_sound_id = hardwareMap.appContext.getResources().getIdentifier("vineboom","raw", hardwareMap.appContext.getPackageName());
-        SoundPlayer.getInstance().preload(hardwareMap.appContext, vineboom_sound_id);
     }
 
     @Override
@@ -104,7 +100,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
         // Nothing to see here
         if ((gamepad1.back && gamepad1.a) && !gp1_a_pressed) {
-            SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, vineboom_sound_id);
+            robot.sound_player.vineboom();
             gp1_a_pressed = true;
         } else if (!gamepad1.a) {
             gp1_a_pressed = false;
