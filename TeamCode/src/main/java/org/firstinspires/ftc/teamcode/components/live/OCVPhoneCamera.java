@@ -33,11 +33,11 @@ import static org.opencv.core.CvType.CV_8UC1;
 @Config
 class OCVPhoneCameraConfig {
     // Normalized offset of center rect x from left of image
-    public static double rect_offset_x = 0.10;
+    public static double rect_offset_x = 0.55;
     // Normalized offset of center rect y from top of image
     public static double rect_offset_y = 0.50;
     // Normalized x distance from left rect / right rect to center rect
-    public static double rect_separation = 0.26;
+    public static double rect_separation = 0.25;
     // Width of all rects
     public static double rect_size = 0.05;
 }
@@ -133,7 +133,7 @@ public class OCVPhoneCamera extends Component {
             input.convertTo(input, CV_8UC1, 1, 10);
 
             // Denormalize positions and sizes of the 3 rects
-            int[] l_rect = {
+            int[] r_rect = {
                     (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x - OCVPhoneCameraConfig.rect_size/2)),
                     (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y - OCVPhoneCameraConfig.rect_size/2 + OCVPhoneCameraConfig.rect_separation)),
                     (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x + OCVPhoneCameraConfig.rect_size/2)),
@@ -147,7 +147,7 @@ public class OCVPhoneCamera extends Component {
                     (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y + OCVPhoneCameraConfig.rect_size/2))
             };
 
-            int[] r_rect = {
+            int[] l_rect = {
                     (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x - OCVPhoneCameraConfig.rect_size/2)),
                     (int) (input.rows() * (OCVPhoneCameraConfig.rect_offset_y - OCVPhoneCameraConfig.rect_size/2 - OCVPhoneCameraConfig.rect_separation)),
                     (int) (input.cols() * (OCVPhoneCameraConfig.rect_offset_x + OCVPhoneCameraConfig.rect_size/2)),

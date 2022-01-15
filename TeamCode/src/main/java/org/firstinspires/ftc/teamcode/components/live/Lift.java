@@ -31,9 +31,9 @@ class LiftConfig {
     // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
     public static int LOW_LEVEL_COUNTS = 850;
     // The encoder counts lift position for the middle level, the second level of the alliance shipping hub
-    public static int MID_LEVEL_COUNTS = 1350;
+    public static int MID_LEVEL_COUNTS = 1050;
     // The encoder counts lift position for the high level, the third level of the alliance shipping hub
-    public static int HIGH_LEVEL_COUNTS = 1800;
+    public static int HIGH_LEVEL_COUNTS = 1850;
 
     // Lift PID proportion coefficient
     public static double PID_P = 15;

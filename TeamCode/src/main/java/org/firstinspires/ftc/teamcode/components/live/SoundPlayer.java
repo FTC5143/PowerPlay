@@ -40,6 +40,6 @@ public class SoundPlayer extends Component {
         /**
          * Plays vine boom sound effect, move along nothing to see here
          */
-        com.qualcomm.ftccommon.SoundPlayer.getInstance().startPlaying(opMode.hardwareMap.appContext, vineboom_sound_id);
+        com.qualcomm.ftccommon.SoundPlayer.getInstance().startPlaying(robot.opmode.hardwareMap.appContext, vineboom_sound_id);
     }
 }

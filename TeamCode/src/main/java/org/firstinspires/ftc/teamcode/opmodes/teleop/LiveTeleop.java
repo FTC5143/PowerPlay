@@ -92,7 +92,12 @@ public class LiveTeleop extends LiveTeleopBase {
             robot.intake.cradle_intake();
         } else {
             if (gamepad2.right_bumper) {
-                robot.intake.cradle_dump();
+                if (robot.lift.level == 2) {
+                    robot.intake.cradle_half_dump();
+                }
+                else {
+                    robot.intake.cradle_dump();
+                }
             } else {
                 robot.intake.cradle_lift();
             }

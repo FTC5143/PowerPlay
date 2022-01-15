@@ -23,6 +23,7 @@ class IntakeConfig {
     public static double CRADLE_INTAKE_POSITION = 0.2;
     public static double CRADLE_LIFT_POSITION = 0.3;
     public static double CRADLE_DUMP_POSITION = 0.5;
+    public static double CRADLE_HALF_DUMP_POSITION = 0.43;
 }
 
 public class Intake extends Component {
@@ -117,4 +118,6 @@ public class Intake extends Component {
     public void cradle_dump() {
         cradle.queue_position(IntakeConfig.CRADLE_DUMP_POSITION);
     }
+
+    public void cradle_half_dump() { cradle.queue_position(IntakeConfig.CRADLE_HALF_DUMP_POSITION); }
 }
