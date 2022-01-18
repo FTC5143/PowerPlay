@@ -34,7 +34,11 @@ public class PlaceBlockParkSquareAuto extends LiveAutoBase {
     public void on_start() {
         robot.intake.cradle_intake();
 
-        robot.drive_train.odo_move(32, 12, -Math.PI/2, 0.3, -1, -1, 5);
+        if (side == AutonomousConst.LEFT && color == AutonomousConst.RED) {
+            robot.drive_train.odo_move(40, 20, 0, 0.5, -1, -1, 5);
+        } else {
+            robot.drive_train.odo_move(32, 12, -Math.PI/2, 0.3, -1, -1, 5);
+        }
 
         robot.intake.cradle_lift();
 
@@ -53,22 +57,31 @@ public class PlaceBlockParkSquareAuto extends LiveAutoBase {
         robot.intake.cradle_intake();
         robot.lift.min_lift();
 
+        robot.intake.spin(-1);
+
         if (duck) {
             if (color == AutonomousConst.RED) {
-
                 robot.drive_train.odo_move(16, 56, -Math.PI/4, 0.4, -1, -1, 3);
+                robot.wheeler.spin(-1);
             }
-            robot.wheeler.spin(-1);
+
+            else if (color == AutonomousConst.BLUE) {
+                // Todo, correctly position
+                robot.drive_train.odo_move(-4, -70, -Math.PI/4, 0.4, -1, -1, 5);
+                robot.wheeler.spin(1);
+            }
 
             halt(5);
 
             robot.wheeler.spin(0);
         }
 
+        robot.intake.spin(0);
+
         if (color == AutonomousConst.RED) {
-            robot.drive_train.odo_move(36, 58, -Math.PI/2, 0.6, -1, -1, 5);
+            robot.drive_train.odo_move(36, 58, -Math.PI/2, 0.5, -1, -1, 5);
         } else if (color == AutonomousConst.BLUE) {
-            robot.drive_train.odo_move(36, -40, -Math.PI/2, 0.6, -1, -1, 5);
+            robot.drive_train.odo_move(34, -40, -Math.PI/2, 0.5, -1, -1, 5);
         }
     }
 

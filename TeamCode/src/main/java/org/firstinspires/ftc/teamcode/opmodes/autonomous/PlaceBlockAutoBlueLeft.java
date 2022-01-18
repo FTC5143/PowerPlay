@@ -10,5 +10,6 @@ public class PlaceBlockAutoBlueLeft extends PlaceBlockParkSquareAuto {
     {
         color = AutonomousConst.BLUE;
         side = AutonomousConst.LEFT;
+        duck = true;
     }
 }

@@ -22,7 +22,7 @@ public class OdoMove8Test extends LinearOpMode {
 
         waitForStart();
 
-        robot.drive_train.odo_move(8*12, 0, 0, 1, -1, -1);
+        robot.drive_train.odo_move(0, 48, 0, 1, -1, -1, 3);
 
         robot.shutdown();
     }

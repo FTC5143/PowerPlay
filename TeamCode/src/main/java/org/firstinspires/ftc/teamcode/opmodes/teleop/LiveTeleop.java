@@ -66,7 +66,7 @@ public class LiveTeleop extends LiveTeleopBase {
             if(gamepad2.a) {
                 robot.intake.spin(1);
             } else if (gamepad2.b) {
-                robot.intake.spin(-0.5);
+                robot.intake.spin(-1);
             } else {
                 robot.intake.spin(0);
             }
