@@ -16,8 +16,11 @@ public class LiveTeleop extends LiveTeleopBase {
     boolean dpad_down_pressed = false;
 
     boolean gp1_a_pressed = false;
+    boolean gp1_b_pressed = false;
 
     int prepared_level = 1;
+
+    int drive_mul = -1;
 
 
     @Override
@@ -111,6 +114,15 @@ public class LiveTeleop extends LiveTeleopBase {
             gp1_a_pressed = false;
         }
 
+
+        // Driver 1 movement reversal
+        if ((gamepad1.back && gamepad1.b) && !gp1_b_pressed) {
+            drive_mul *= -1;
+            gp1_b_pressed = true;
+        } else if (!gamepad1.a) {
+            gp1_b_pressed = false;
+        }
+
         /// DRIVE CONTROLS ///
         double speed_mod = 1;
 
@@ -121,8 +133,8 @@ public class LiveTeleop extends LiveTeleopBase {
         }
 
         robot.drive_train.mechanum_drive(
-            (gamepad1.left_stick_x+gamepad2.left_stick_x) * speed_mod,
-            (gamepad1.left_stick_y+gamepad2.left_stick_y) * speed_mod,
+            (gamepad1.left_stick_x+gamepad2.left_stick_x) * speed_mod * drive_mul,
+            (gamepad1.left_stick_y+gamepad2.left_stick_y) * speed_mod * drive_mul,
             (gamepad1.right_stick_x+gamepad2.right_stick_x) * speed_mod
         );
     }

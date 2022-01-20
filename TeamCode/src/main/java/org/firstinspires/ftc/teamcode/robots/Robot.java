@@ -163,6 +163,36 @@ public class Robot {
 
         telemetry.addData("[RBT "+name+"]", components.size()+" components");
         telemetry.addData("FREQ", update_freq);
+
+        telemetry.addData("DIGITAL",
+                "D10:"+(bulk_data_1.getDigitalInputState(0) ? 1 : 0)+
+                        " D11:"+(bulk_data_1.getDigitalInputState(1) ? 1 : 0)+
+                        " D12:"+(bulk_data_1.getDigitalInputState(2) ? 1 : 0)+
+                        " D13:"+(bulk_data_1.getDigitalInputState(3) ? 1 : 0)+
+                        " D14:"+(bulk_data_1.getDigitalInputState(4) ? 1 : 0)+
+                        " D15:"+(bulk_data_1.getDigitalInputState(5) ? 1 : 0)+
+                        " D16:"+(bulk_data_1.getDigitalInputState(6) ? 1 : 0)+
+                        " D17:"+(bulk_data_1.getDigitalInputState(7) ? 1 : 0)+
+                        " D20:"+(bulk_data_2.getDigitalInputState(0) ? 1 : 0)+
+                        " D21:"+(bulk_data_2.getDigitalInputState(1) ? 1 : 0)+
+                        " D22:"+(bulk_data_2.getDigitalInputState(2) ? 1 : 0)+
+                        " D23:"+(bulk_data_2.getDigitalInputState(3) ? 1 : 0)+
+                        " D24:"+(bulk_data_2.getDigitalInputState(4) ? 1 : 0)+
+                        " D25:"+(bulk_data_2.getDigitalInputState(5) ? 1 : 0)+
+                        " D26:"+(bulk_data_2.getDigitalInputState(6) ? 1 : 0)+
+                        " D27:"+(bulk_data_2.getDigitalInputState(7) ? 1 : 0)
+        );
+
+        telemetry.addData("ANALOG",
+                "A10:"+(bulk_data_1.getAnalogInputValue(0))+
+                        " A11:"+(bulk_data_1.getAnalogInputValue(1))+
+                        " A12:"+(bulk_data_1.getAnalogInputValue(2))+
+                        " A13:"+(bulk_data_1.getAnalogInputValue(3))+
+                        " A20:"+(bulk_data_2.getAnalogInputValue(0))+
+                        " A21:"+(bulk_data_2.getAnalogInputValue(1))+
+                        " A22:"+(bulk_data_2.getAnalogInputValue(2))+
+                        " A23:"+(bulk_data_2.getAnalogInputValue(3))
+        );
     }
 
 
