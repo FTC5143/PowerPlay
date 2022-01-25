@@ -1,6 +1,6 @@
 # Welcome!
 
-This is the 2021-2022 repository for FTC team 5143. All of our code is available for use by any team.
+This is the 2021-2022 repository for FTC team 5143. All of our code is available for use by any team!
 
 There are also multiple other respositories in this organization such as tools and simulators.
 
