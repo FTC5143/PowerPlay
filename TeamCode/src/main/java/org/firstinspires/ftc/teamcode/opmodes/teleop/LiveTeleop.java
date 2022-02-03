@@ -117,7 +117,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
         // Nothing to see here
         if ((gamepad1.back && gamepad1.b) && !gp1_b_pressed) {
-            robot.sound_player.skypecall();
+            //robot.sound_player.skypecall();
             gp1_b_pressed = true;
         } else if (!gamepad1.b) {
             gp1_b_pressed = false;
@@ -130,6 +130,27 @@ public class LiveTeleop extends LiveTeleopBase {
         } else if (!gamepad1.a) {
             gp1_y_pressed = false;
         }
+
+
+        // Driver 1 capper controls
+        if (gamepad1.dpad_up) {
+            robot.capper.extend(1);
+        } else if (gamepad1.dpad_down) {
+            robot.capper.extend(-1);
+        } else {
+            robot.capper.extend(0);
+        }
+
+        if (gamepad1.dpad_left) {
+            robot.capper.spin(1);
+        } else if (gamepad1.dpad_right) {
+            robot.capper.spin(-1);
+        } else {
+            robot.capper.spin(0);
+        }
+
+        robot.capper.rise(gamepad1.right_trigger - gamepad1.left_trigger);
+
 
         /// DRIVE CONTROLS ///
         double speed_mod = 1;

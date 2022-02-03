@@ -17,6 +17,10 @@ public class SoundPlayer extends Component {
     int vineboom_sound_id;
     int skypecall_sound_id;
 
+    {
+        name = "SoundPlayer";
+    }
+
     public SoundPlayer(Robot robot) {
         super(robot);
     }
@@ -27,9 +31,11 @@ public class SoundPlayer extends Component {
 
         vineboom_sound_id = hwmap.appContext.getResources().getIdentifier("vineboom","raw", hwmap.appContext.getPackageName());
         com.qualcomm.ftccommon.SoundPlayer.getInstance().preload(hwmap.appContext, vineboom_sound_id);
-
+        /*
         skypecall_sound_id = hwmap.appContext.getResources().getIdentifier("skypecall","raw", hwmap.appContext.getPackageName());
         com.qualcomm.ftccommon.SoundPlayer.getInstance().preload(hwmap.appContext, skypecall_sound_id);
+
+         */
 
     }
 
@@ -47,11 +53,10 @@ public class SoundPlayer extends Component {
          */
         com.qualcomm.ftccommon.SoundPlayer.getInstance().startPlaying(robot.opmode.hardwareMap.appContext, vineboom_sound_id);
     }
-
+    /*
     public void skypecall() {
-        /**
-         * Plays skype call sound effect, move along nothing to see here
-         */
+
         com.qualcomm.ftccommon.SoundPlayer.getInstance().startPlaying(robot.opmode.hardwareMap.appContext, skypecall_sound_id);
     }
+    */
 }
