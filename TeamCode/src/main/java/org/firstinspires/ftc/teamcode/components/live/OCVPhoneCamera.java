@@ -37,7 +37,7 @@ class OCVPhoneCameraConfig {
     // Normalized offset of center rect y from top of image
     public static double rect_offset_y = 0.50;
     // Normalized x distance from left rect / right rect to center rect
-    public static double rect_separation = 0.27;
+    public static double rect_separation = 0.25;
     // Width of all rects
     public static double rect_size = 0.05;
 }

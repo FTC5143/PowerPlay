@@ -117,7 +117,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
         // Nothing to see here
         if ((gamepad1.back && gamepad1.b) && !gp1_b_pressed) {
-            //robot.sound_player.skypecall();
+            robot.sound_player.skypecall();
             gp1_b_pressed = true;
         } else if (!gamepad1.b) {
             gp1_b_pressed = false;
@@ -127,7 +127,7 @@ public class LiveTeleop extends LiveTeleopBase {
         if ((gamepad1.back && gamepad1.y) && !gp1_y_pressed) {
             drive_mul *= -1;
             gp1_y_pressed = true;
-        } else if (!gamepad1.a) {
+        } else if (!gamepad1.y) {
             gp1_y_pressed = false;
         }
 

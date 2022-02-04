@@ -31,12 +31,9 @@ public class SoundPlayer extends Component {
 
         vineboom_sound_id = hwmap.appContext.getResources().getIdentifier("vineboom","raw", hwmap.appContext.getPackageName());
         com.qualcomm.ftccommon.SoundPlayer.getInstance().preload(hwmap.appContext, vineboom_sound_id);
-        /*
-        skypecall_sound_id = hwmap.appContext.getResources().getIdentifier("skypecall","raw", hwmap.appContext.getPackageName());
+
+        skypecall_sound_id = hwmap.appContext.getResources().getIdentifier("skype","raw", hwmap.appContext.getPackageName());
         com.qualcomm.ftccommon.SoundPlayer.getInstance().preload(hwmap.appContext, skypecall_sound_id);
-
-         */
-
     }
 
     @Override
@@ -53,10 +50,9 @@ public class SoundPlayer extends Component {
          */
         com.qualcomm.ftccommon.SoundPlayer.getInstance().startPlaying(robot.opmode.hardwareMap.appContext, vineboom_sound_id);
     }
-    /*
-    public void skypecall() {
 
+    public void skypecall() {
+        //yknow?
         com.qualcomm.ftccommon.SoundPlayer.getInstance().startPlaying(robot.opmode.hardwareMap.appContext, skypecall_sound_id);
     }
-    */
 }
