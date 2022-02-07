@@ -37,7 +37,7 @@ public class LocalCoordinateSystem {
         // Calculate encoder deltas
         double ld = le - prev_le;
         double rd = re - prev_re;
-        double cd = ce - prev_ce;
+        double cd = ce - prev_ce;//RADICAL code, bro
 
         // Calculate phi, or the delta of our angle
         double ph = (rd * INCHES_PER_COUNT_R - ld * INCHES_PER_COUNT_L) / LCSConfig.ROBOT_DIAMETER;

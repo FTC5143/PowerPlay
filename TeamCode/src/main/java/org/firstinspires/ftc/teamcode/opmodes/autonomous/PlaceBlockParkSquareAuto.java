@@ -10,6 +10,7 @@ public class PlaceBlockParkSquareAuto extends LiveAutoBase {
     int color = AutonomousConst.RED;
     int side = AutonomousConst.LEFT;
     boolean duck = false;
+    boolean park = true;
 
     int pattern = 1;
 
@@ -35,9 +36,9 @@ public class PlaceBlockParkSquareAuto extends LiveAutoBase {
         robot.intake.cradle_intake();
 
         if (side == AutonomousConst.LEFT && color == AutonomousConst.RED) {
-            robot.drive_train.odo_move(40, 19, 0, 0.5, -1, -1, 5);
+            robot.drive_train.odo_move(40, 18, 0, 0.5, -1, -1, 5);
         } else {
-            robot.drive_train.odo_move(32, 8, -Math.PI/2, 0.3, -1, -1, 5);
+            robot.drive_train.odo_move(31, 8, -Math.PI/2, 0.3, -1, -1, 5);
         }
 
         robot.intake.cradle_lift();
@@ -64,7 +65,7 @@ public class PlaceBlockParkSquareAuto extends LiveAutoBase {
                 if (side == AutonomousConst.LEFT) {
                     robot.drive_train.odo_move(16, 54, -Math.PI / 4, 0.4, -1, -1, 5);
                 } else if (side == AutonomousConst.RIGHT) {
-                    robot.drive_train.odo_move(16, 54, -Math.PI / 4, 0.4, -1, -1, 5);
+                    robot.drive_train.odo_move(16, 50, -Math.PI / 4, 0.4, -1, -1, 5);
                 }
                 robot.wheeler.spin(-1);
             }
@@ -82,10 +83,14 @@ public class PlaceBlockParkSquareAuto extends LiveAutoBase {
 
         robot.intake.spin(0);
 
-        if (color == AutonomousConst.RED) {
-            robot.drive_train.odo_move(38, 58, -Math.PI/2, 0.5, -1, -1, 5);
-        } else if (color == AutonomousConst.BLUE) {
-            robot.drive_train.odo_move(34, -40, -Math.PI/2, 0.5, -1, -1, 5);
+        if (park) {
+            if (color == AutonomousConst.RED) {
+                robot.drive_train.odo_move(36, 58, -Math.PI / 2, 0.5, -1, -1, 5);
+            } else if (color == AutonomousConst.BLUE) {
+                robot.drive_train.odo_move(36, -40, -Math.PI / 2, 0.5, -1, -1, 5);
+            }
+        } else {
+            halt(5);
         }
     }
 
