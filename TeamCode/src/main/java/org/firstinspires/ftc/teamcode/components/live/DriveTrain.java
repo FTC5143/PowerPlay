@@ -135,6 +135,11 @@ public class DriveTrain extends Component {
         telemetry.addData("PID", drive_lf.motor.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
 
         telemetry.addData("IMU", last_imu_orientation.firstAngle+" "+last_imu_orientation.secondAngle+" "+last_imu_orientation.thirdAngle);
+
+        if (current_path != null) {
+            Pose cfp = current_path.getFollowPose();
+            telemetry.addData("PP FP", cfp.x+" "+cfp.y+" "+cfp.angle);
+        }
     }
 
     @Override
@@ -285,9 +290,9 @@ public class DriveTrain extends Component {
         double distance = Math.hypot(x - lcs.x, y - lcs.y);
 
         double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
-        double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
-        double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
-        double mvmt_a = -Range.clip((a-lcs.a)*3, -1, 1) * speed;
+        double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (5*speed)))/(5*speed)) * speed;
+        double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (5*speed)))/(5*speed)) * speed;
+        double mvmt_a = -Range.clip((angle_difference(lcs.a, a))*3, -1, 1) * speed;
 
         mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
     }
@@ -310,6 +315,10 @@ public class DriveTrain extends Component {
         // Update our current path, for telemetry
         this.current_path = path;
 
+        robot.opmode.resetStartTime();
+
+        double time_at_goal = 0;
+
         while (robot.opmode.opModeIsActive()) {
             
             // Get our lookahead point
@@ -319,19 +328,28 @@ public class DriveTrain extends Component {
             // Get the distance to our lookahead point
             double distance = Math.hypot(lookahead_pose.x-lcs.x, lookahead_pose.y-lcs.y);
 
-            double speed;
+            double translational_speed;
             // Find our drive speed based on distance
             if (distance < current_path.getFollowCircle().radius) {
-                speed = Range.clip((distance / 8) + 0.1, 0, 1);
+                translational_speed = Range.clip((distance / (8 * path.getSpeed())), 0, 1) * path.getSpeed();
             } else {
-                speed = 1;
+                translational_speed = path.getSpeed();
             }
 
             // Find our turn speed based on angle difference
-            double turn_speed = Range.clip(Math.abs(lcs.a-lookahead_pose.angle) / (Math.PI/4) + 0.1, 0, 1);
+            double turn_speed = Range.clip(Math.abs((angle_difference(lcs.a, lookahead_pose.angle-(Math.PI/2))) * 3), 0, 1) * path.getSpeed();
 
             // Drive towards the lookahead point
-            drive_to_pose(lookahead_pose, speed, turn_speed);
+            drive_to_pose(lookahead_pose, translational_speed, turn_speed);
+
+            if (path.isComplete() || (path.getTimeout() > 0 && robot.opmode.getRuntime() > path.getTimeout())) {
+                if (robot.opmode.getRuntime()-time_at_goal >= 0 /* TODO: make this configurable */) {
+                    stop();
+                    break;
+                }
+            } else {
+                time_at_goal = robot.opmode.getRuntime();
+            }
         }
 
     }
@@ -348,7 +366,7 @@ public class DriveTrain extends Component {
         double mvmt_x = Math.cos(drive_angle - lcs.a) * drive_speed;
         double mvmt_y = -Math.sin(drive_angle - lcs.a) * drive_speed;
         // Find angle speed to turn towards the desired angle
-        double mvmt_a = -Math.signum(Range.clip((pose.angle - lcs.a - (Math.PI/2)), -1, 1)) * turn_speed;
+        double mvmt_a = -((angle_difference(lcs.a, pose.angle-(Math.PI/2) /* robot treats forward as 0deg*/) > 0 ? 1.0 : -1.0) * turn_speed);
 
         // Update actual motor powers with our movement vector
         mechanum_drive(mvmt_x, mvmt_y, mvmt_a);

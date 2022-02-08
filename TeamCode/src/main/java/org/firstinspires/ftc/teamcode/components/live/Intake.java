@@ -75,6 +75,8 @@ public class Intake extends Component {
 
         spinner.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spinner.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        cradle_intake();
     }
 
     public void shutdown() {

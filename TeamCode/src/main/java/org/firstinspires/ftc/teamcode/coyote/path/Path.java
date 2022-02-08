@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.coyote.path;
 
+import static org.firstinspires.ftc.teamcode.util.MathUtil.angle_difference;
+
 import com.acmerobotics.dashboard.canvas.Canvas;
 
 import org.firstinspires.ftc.teamcode.coyote.geometry.Circle;
@@ -39,6 +41,10 @@ public class Path {
     double position_precision = 1;
 
     double heading_precision = 0.035;
+
+    double timeout = 0;
+
+    double speed = 1;
 
     RecoveryMethod recovery_method = RecoveryMethod.FIRST_UNPASSED_POINT;
 
@@ -85,6 +91,16 @@ public class Path {
 
     public Path headingPrecision(double precision) {
         this.heading_precision = precision;
+        return this;
+    }
+
+    public Path timeout(double timeout) {
+        this.timeout = timeout;
+        return this;
+    }
+
+    public Path speed(double speed) {
+        this.speed = speed;
         return this;
     }
 
@@ -251,7 +267,7 @@ public class Path {
     public boolean isComplete() {
         return
                 robot_pose.distance(getLastPoint()) < position_precision &&
-                Math.abs(robot_pose.angle - getHeadingGoal(heading_method, getFollowPose())) < heading_precision;
+                Math.abs(angle_difference(robot_pose.angle, getHeadingGoal(heading_method, getFollowPose()))) < heading_precision;
     }
 
     public PathPoint getFirstUnpassedPoint() {
@@ -278,6 +294,14 @@ public class Path {
 
     public PathPoint getSecondLastPoint() {
         return points.get(points.size() - 2);
+    }
+
+    public double getTimeout() {
+        return this.timeout;
+    }
+
+    public double getSpeed() {
+        return this.speed;
     }
 
     public void dashboard_draw(Canvas canvas) {
