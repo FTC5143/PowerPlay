@@ -26,6 +26,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
     @Override
     public void on_init() {
+        robot.intake.enable_color_sensor(true);
     }
 
     @Override

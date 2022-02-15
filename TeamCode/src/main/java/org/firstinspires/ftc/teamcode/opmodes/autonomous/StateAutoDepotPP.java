@@ -54,10 +54,10 @@ public class StateAutoDepotPP extends StateBaseAuto {
             else if (color == AutonomousConst.RED) {
                 robot.drive_train.follow_curve_path(
                     new Path()
-                            .addPoint(new PathPoint(8, 8).addAction(() -> {
+                            .addPoint(new PathPoint(4, 8).addAction(() -> {
                                 robot.intake.spin(1);
                             }))
-                            .addPoint(new PathPoint(-1, -12*5))
+                            .addPoint(new PathPoint(-6, -12*4.5))
                             .positionPrecision(5)
                             .headingPrecision(0.04)
                             .timeout(5)
@@ -65,7 +65,7 @@ public class StateAutoDepotPP extends StateBaseAuto {
 
                 robot.drive_train.follow_curve_path(
                     new Path()
-                            .addPoint(new PathPoint(-3, 8).addAction(() -> {
+                            .addPoint(new PathPoint(-6, 8).addAction(() -> {
                                 robot.intake.spin(0);
                             }))
                             .addPoint(new PathPoint(31, 11))

@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import android.graphics.Color;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -24,6 +28,8 @@ class IntakeConfig {
     public static double CRADLE_LIFT_POSITION = 0.3;
     public static double CRADLE_DUMP_POSITION = 0.5;
     public static double CRADLE_HALF_DUMP_POSITION = 0.43;
+
+    public static int COLOR_SENSOR_UPDATE_INTERVAL = 10;
 }
 
 public class Intake extends Component {
@@ -37,6 +43,11 @@ public class Intake extends Component {
     //// SERVOS ////
     public ServoQUS grabber;
     public ServoQUS cradle;
+
+    //// SENSORS ////
+    public ColorRangeSensor color_sensor;
+    public boolean color_sensor_enabled = false;
+    public int last_color = 0;
 
     {
         name = "Intake";
@@ -58,6 +69,9 @@ public class Intake extends Component {
         //// SERVOS ////
         grabber = new ServoQUS(hwmap.get(Servo.class, "grabber"));
         cradle = new ServoQUS(hwmap.get(Servo.class, "cradle"));
+
+        //// SENSORS ////
+        color_sensor = hwmap.get(ColorRangeSensor.class, "color_sensor");
     }
 
     @Override
@@ -67,6 +81,10 @@ public class Intake extends Component {
         spinner.update();
         grabber.update();
         cradle.update();
+
+        if (color_sensor_enabled && robot.cycle % IntakeConfig.COLOR_SENSOR_UPDATE_INTERVAL == 0) {
+            last_color = 0x00FFFFFF & color_sensor.argb();
+        }
     }
 
     @Override
@@ -86,6 +104,9 @@ public class Intake extends Component {
     @Override
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
+
+        telemetry.addData("COLOR", last_color);
+        telemetry.addData("UBN", unblueness());
     }
 
     public void spin(double speed) {
@@ -122,4 +143,12 @@ public class Intake extends Component {
     }
 
     public void cradle_half_dump() { cradle.queue_position(IntakeConfig.CRADLE_HALF_DUMP_POSITION); }
+
+    public void enable_color_sensor(boolean enabled) {
+        color_sensor_enabled = enabled;
+    }
+
+    public double unblueness() {
+        return Math.sqrt(Math.pow((0 - Color.red(last_color)), 2) + Math.pow((0 - Color.green(last_color)), 2) + Math.pow((255 - Color.blue(last_color)), 2));
+    }
 }
