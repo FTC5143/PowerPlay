@@ -26,7 +26,6 @@ public class LiveTeleop extends LiveTeleopBase {
 
     @Override
     public void on_init() {
-        robot.intake.enable_color_sensor(true);
     }
 
     @Override
@@ -94,7 +93,11 @@ public class LiveTeleop extends LiveTeleopBase {
         }
 
         if (robot.lift.level == 0) {
-            robot.intake.cradle_intake();
+            if(gamepad2.a || gamepad2.b) {
+                robot.intake.cradle_intake();
+            } else {
+                robot.intake.cradle_move();
+            }
         } else {
             if (gamepad2.right_bumper) {
                 if (robot.lift.level == 2) {
@@ -143,15 +146,20 @@ public class LiveTeleop extends LiveTeleopBase {
         }
 
         if (gamepad1.dpad_left) {
-            robot.capper.spin(1);
+            robot.capper.spin(-0.1);
         } else if (gamepad1.dpad_right) {
-            robot.capper.spin(-1);
+            robot.capper.spin(0.1);
         } else {
             robot.capper.spin(0);
         }
 
-        robot.capper.rise(gamepad1.right_trigger - gamepad1.left_trigger);
-
+        if (gamepad1.x) {
+            robot.capper.rise(-0.0005);
+        } else if (gamepad1.y) {
+            robot.capper.rise(0.0005);
+        } else {
+            robot.capper.rise(0);
+        }
 
         /// DRIVE CONTROLS ///
         double speed_mod = 1;

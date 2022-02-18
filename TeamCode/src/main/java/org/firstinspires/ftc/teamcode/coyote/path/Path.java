@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.coyote.geometry.Segment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class Path {
 
@@ -45,6 +46,8 @@ public class Path {
     double timeout = 0;
 
     double speed = 1;
+
+    Callable<Boolean> stop_condition;
 
     RecoveryMethod recovery_method = RecoveryMethod.FIRST_UNPASSED_POINT;
 
@@ -101,6 +104,11 @@ public class Path {
 
     public Path speed(double speed) {
         this.speed = speed;
+        return this;
+    }
+
+    public Path until(Callable<Boolean> condition) {
+        this.stop_condition = condition;
         return this;
     }
 
@@ -265,9 +273,14 @@ public class Path {
     }
 
     public boolean isComplete() {
-        return
-                robot_pose.distance(getLastPoint()) < position_precision &&
-                Math.abs(angle_difference(robot_pose.angle, getHeadingGoal(heading_method, getFollowPose()))) < heading_precision;
+        try {
+            return
+                    (robot_pose.distance(getLastPoint()) < position_precision &&
+                    Math.abs(angle_difference(robot_pose.angle, getHeadingGoal(heading_method, getFollowPose()))) < heading_precision) ||
+                            (stop_condition != null && stop_condition.call());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public PathPoint getFirstUnpassedPoint() {

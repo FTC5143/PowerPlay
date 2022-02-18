@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.util.qus.DcMotorQUS;
@@ -24,12 +25,14 @@ class IntakeConfig {
     // Servo position for the grabber in the closed state
     public static double GRABBER_CLOSED = 1;
 
-    public static double CRADLE_INTAKE_POSITION = 0.2;
-    public static double CRADLE_LIFT_POSITION = 0.3;
-    public static double CRADLE_DUMP_POSITION = 0.5;
-    public static double CRADLE_HALF_DUMP_POSITION = 0.43;
+    public static double CRADLE_INTAKE_POSITION = 0.1;
+    public static double CRADLE_MOVE_POSITION = 0.15;
+    public static double CRADLE_LIFT_POSITION = 0.25;
+    public static double CRADLE_DUMP_POSITION = 0.4;
+    public static double CRADLE_HALF_DUMP_POSITION = 0.33;
 
-    public static int COLOR_SENSOR_UPDATE_INTERVAL = 10;
+    public static int COLOR_SENSOR_UPDATE_INTERVAL = 5;
+    public static int COLOR_SENSOR_DISTANCE_CUTOFF = 75; // mm
 }
 
 public class Intake extends Component {
@@ -47,7 +50,7 @@ public class Intake extends Component {
     //// SENSORS ////
     public ColorRangeSensor color_sensor;
     public boolean color_sensor_enabled = false;
-    public int last_color = 0;
+    public double last_distance = 0;
 
     {
         name = "Intake";
@@ -83,7 +86,7 @@ public class Intake extends Component {
         cradle.update();
 
         if (color_sensor_enabled && robot.cycle % IntakeConfig.COLOR_SENSOR_UPDATE_INTERVAL == 0) {
-            last_color = 0x00FFFFFF & color_sensor.argb();
+            last_distance = color_sensor.getDistance(DistanceUnit.MM);
         }
     }
 
@@ -94,7 +97,7 @@ public class Intake extends Component {
         spinner.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spinner.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        cradle_intake();
+        cradle_move();
     }
 
     public void shutdown() {
@@ -105,8 +108,8 @@ public class Intake extends Component {
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
-        telemetry.addData("COLOR", last_color);
-        telemetry.addData("UBN", unblueness());
+        telemetry.addData("PROX", last_distance);
+        telemetry.addData("HAS", has_element());
     }
 
     public void spin(double speed) {
@@ -134,6 +137,10 @@ public class Intake extends Component {
         cradle.queue_position(IntakeConfig.CRADLE_INTAKE_POSITION);
     }
 
+    public void cradle_move() {
+        cradle.queue_position(IntakeConfig.CRADLE_MOVE_POSITION);
+    }
+
     public void cradle_lift() {
         cradle.queue_position(IntakeConfig.CRADLE_LIFT_POSITION);
     }
@@ -145,10 +152,13 @@ public class Intake extends Component {
     public void cradle_half_dump() { cradle.queue_position(IntakeConfig.CRADLE_HALF_DUMP_POSITION); }
 
     public void enable_color_sensor(boolean enabled) {
+        if (enabled) {
+            last_distance = color_sensor.getDistance(DistanceUnit.MM);
+        }
         color_sensor_enabled = enabled;
     }
 
-    public double unblueness() {
-        return Math.sqrt(Math.pow((0 - Color.red(last_color)), 2) + Math.pow((0 - Color.green(last_color)), 2) + Math.pow((255 - Color.blue(last_color)), 2));
+    public boolean has_element() {
+        return last_distance <= IntakeConfig.COLOR_SENSOR_DISTANCE_CUTOFF;
     }
 }

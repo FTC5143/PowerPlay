@@ -29,6 +29,12 @@ public abstract class StateBaseAuto extends LiveAutoBase {
 
         halt(1);
 
+        dump_freight(level);
+
+        robot.lift.min_lift();
+    }
+
+    public void dump_freight(int level) {
         if (robot.lift.level == 2) {
             robot.intake.cradle_half_dump();
         } else {
@@ -41,8 +47,7 @@ public abstract class StateBaseAuto extends LiveAutoBase {
             halt(1);
         }
 
-        robot.intake.cradle_intake();
-        robot.lift.min_lift();
+        robot.intake.cradle_move();
     }
 
     public void goto_shipping_hub(double speed, double timeout) {

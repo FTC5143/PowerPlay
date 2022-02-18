@@ -337,7 +337,7 @@ public class DriveTrain extends Component {
             }
 
             // Find our turn speed based on angle difference
-            double turn_speed = Range.clip(Math.abs((angle_difference(lcs.a, lookahead_pose.angle-(Math.PI/2))) * 3), 0, 1) * path.getSpeed();
+            double turn_speed = Range.clip(Math.abs((angle_difference(lcs.a, lookahead_pose.angle-(Math.PI/2))) * 2), 0, 1) * path.getSpeed();
 
             // Drive towards the lookahead point
             drive_to_pose(lookahead_pose, translational_speed, turn_speed);

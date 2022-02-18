@@ -20,8 +20,10 @@ public class Capper extends Component {
 
     CRServoQUS extender;
     CRServoQUS anglerh;
-    CRServoQUS anglerv;
+    ServoQUS anglerv;
 
+    double anglerv_angle = 0.3;
+    double anglerv_speed = 0;
 
     public Capper(Robot robot) {
         super(robot);
@@ -36,12 +38,16 @@ public class Capper extends Component {
         //// SERVOS ////
         extender = new CRServoQUS(hwmap.get(CRServo.class, "extender"));
         anglerh = new CRServoQUS(hwmap.get(CRServo.class, "anglerh"));
-        anglerv = new CRServoQUS(hwmap.get(CRServo.class, "anglerv"));
+        anglerv = new ServoQUS(hwmap.get(Servo.class, "anglerv"));
     }
 
     @Override
     public void update(OpMode opmode) {
         super.update(opmode);
+
+        anglerv_angle += anglerv_speed;
+
+        anglerv.queue_position(anglerv_angle);
 
         extender.update();
         anglerh.update();
@@ -57,6 +63,6 @@ public class Capper extends Component {
     }
 
     public void rise(double speed) {
-        anglerv.queue_power(speed);
+        anglerv_speed = speed;
     }
 }
