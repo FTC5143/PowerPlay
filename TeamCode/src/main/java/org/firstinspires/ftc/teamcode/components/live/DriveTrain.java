@@ -90,7 +90,7 @@ public class DriveTrain extends Component {
         );
 
         // Finding new motors powers from the drive variables
-        double[] motor_powers = mecanum_math(drive_x, drive_y, drive_a);
+        double[] motor_powers = omni_math(drive_x, drive_y, drive_a);
 
 
         // Set one motor power per cycle. We do this to maintain a good odometry update speed
@@ -177,11 +177,11 @@ public class DriveTrain extends Component {
         stop();
     }
 
-    private double[] mecanum_math(double x, double y, double a) {
+    private double[] omni_math(double x, double y, double a) {
         /**
          * Return the motor powers needed to move in the given travel vector. Should give optimal speeds (not sqrt(2)/2 for 45% angles)
          */
-        double[] power = new double[]{- x + y - a, + x + y + a, + x + y - a, - x + y + a};
+        double[] power = new double[]{a + y + x, a - y + x, a + y - x, a - y - x};
 
         double max = Math.max(Math.max(Math.abs(power[0]),Math.abs(power[1])),Math.max(Math.abs(power[2]),Math.abs(power[3])));
 
@@ -203,7 +203,7 @@ public class DriveTrain extends Component {
         lcs.a = last_imu_orientation.firstAngle;
     }
 
-    public void mechanum_drive(double x, double y, double a) {
+    public void omni_drive(double x, double y, double a) {
         /**
          * Public setter for the drive variables, used for teleop drive
          * Can basically plug controller joystick inputs directly into it
@@ -217,7 +217,7 @@ public class DriveTrain extends Component {
         /**
          * Stop all motors and reset all drive variables
          */
-        mechanum_drive(0, 0, 0);
+        omni_drive(0, 0, 0);
         drive_lf.motor.setPower(0);
         drive_rf.motor.setPower(0);
         drive_lb.motor.setPower(0);
@@ -267,7 +267,7 @@ public class DriveTrain extends Component {
                 double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (5*speed)))/(5*speed)) * speed;
                 double mvmt_a = -Range.clip((angle_difference(lcs.a, a))*3, -1, 1) * speed;
 
-                mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
+                omni_drive(mvmt_x, mvmt_y, mvmt_a);
 
 
 
@@ -294,7 +294,7 @@ public class DriveTrain extends Component {
         double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (5*speed)))/(5*speed)) * speed;
         double mvmt_a = -Range.clip((angle_difference(lcs.a, a))*3, -1, 1) * speed;
 
-        mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
+        omni_drive(mvmt_x, mvmt_y, mvmt_a);
     }
 
 
@@ -369,7 +369,7 @@ public class DriveTrain extends Component {
         double mvmt_a = -((angle_difference(lcs.a, pose.angle-(Math.PI/2) /* robot treats forward as 0deg*/) > 0 ? 1.0 : -1.0) * turn_speed);
 
         // Update actual motor powers with our movement vector
-        mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
+        omni_drive(mvmt_x, mvmt_y, mvmt_a);
 
     }
 

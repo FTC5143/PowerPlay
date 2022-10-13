@@ -45,9 +45,7 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.lift.min_lift();
             }
 
-            if (gamepad2.left_stick_button) {
-                robot.phone_camera.start_streaming();
-            }
+
         } else {
             if(gamepad2.left_bumper) {
                 robot.lift.elevate_to(prepared_level);
@@ -67,49 +65,11 @@ public class LiveTeleop extends LiveTeleopBase {
                 dpad_down_pressed = false;
             }
 
-            if(gamepad2.a) {
-                robot.intake.spin(1);
-            } else if (gamepad2.b) {
-                robot.intake.spin(-1);
-            } else {
-                robot.intake.spin(0);
-            }
-
-            if(gamepad2.x) {
-                robot.intake.grab();
-            } else if (gamepad2.y) {
-                robot.intake.ungrab();
-            }
-
-            if (gamepad2.dpad_left) {
-                robot.wheeler.spin(-1);
-            } else if (gamepad2.dpad_right) {
-                robot.wheeler.spin(1);
-            } else {
-                robot.wheeler.spin(0);
-            }
 
             robot.lift.tweak(- gamepad2.left_trigger);
         }
 
-        if (robot.lift.level == 0) {
-            if(gamepad2.a || gamepad2.b) {
-                robot.intake.cradle_intake();
-            } else {
-                robot.intake.cradle_move();
-            }
-        } else {
-            if (gamepad2.right_bumper) {
-                if (robot.lift.level == 2) {
-                    robot.intake.cradle_half_dump();
-                }
-                else {
-                    robot.intake.cradle_dump();
-                }
-            } else {
-                robot.intake.cradle_lift();
-            }
-        }
+
 
         // Nothing to see here
         if ((gamepad1.back && gamepad1.a) && !gp1_a_pressed) {
@@ -127,39 +87,8 @@ public class LiveTeleop extends LiveTeleopBase {
             gp1_b_pressed = false;
         }
 
-        // Driver 1 movement reversal
-        if ((gamepad1.back && gamepad1.y) && !gp1_y_pressed) {
-            drive_mul *= -1;
-            gp1_y_pressed = true;
-        } else if (!gamepad1.y) {
-            gp1_y_pressed = false;
-        }
 
 
-        // Driver 1 capper controls
-        if (gamepad1.dpad_up) {
-            robot.capper.extend(1);
-        } else if (gamepad1.dpad_down) {
-            robot.capper.extend(-1);
-        } else {
-            robot.capper.extend(0);
-        }
-
-        if (gamepad1.dpad_left) {
-            robot.capper.spin(-0.1);
-        } else if (gamepad1.dpad_right) {
-            robot.capper.spin(0.1);
-        } else {
-            robot.capper.spin(0);
-        }
-
-        if (gamepad1.x) {
-            robot.capper.rise(-0.0005);
-        } else if (gamepad1.y) {
-            robot.capper.rise(0.0005);
-        } else {
-            robot.capper.rise(0);
-        }
 
         /// DRIVE CONTROLS ///
         double speed_mod = 1;
@@ -170,7 +99,7 @@ public class LiveTeleop extends LiveTeleopBase {
             speed_mod = 0.5;
         }
 
-        robot.drive_train.mechanum_drive(
+        robot.drive_train.omni_drive(
             (gamepad1.left_stick_x+gamepad2.left_stick_x) * speed_mod * drive_mul,
             (gamepad1.left_stick_y+gamepad2.left_stick_y) * speed_mod * drive_mul,
             (gamepad1.right_stick_x+gamepad2.right_stick_x) * speed_mod

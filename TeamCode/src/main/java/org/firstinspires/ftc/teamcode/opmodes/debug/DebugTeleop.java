@@ -31,7 +31,7 @@ public class DebugTeleop extends DebugTeleopBase {
             speed_mod = 0.5;
         }
 
-        robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
+        robot.drive_train.omni_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
     }
 
     @Override

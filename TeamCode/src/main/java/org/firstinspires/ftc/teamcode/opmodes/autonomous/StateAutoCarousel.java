@@ -19,32 +19,7 @@ public class StateAutoCarousel extends StateBaseAuto {
 
     @Override
     public void on_start() {
-        goto_shipping_hub(0.5, 5);
 
-        deposit_freight(pattern);
-
-        robot.intake.spin(-1);
-
-        if (duck) {
-            if (color == AutonomousConst.RED) {
-                robot.drive_train.odo_move(16, 54, -Math.PI / 4, 0.4, -1, -1, 5);
-                robot.wheeler.spin(-1);
-            }
-            else if (color == AutonomousConst.BLUE) {
-                robot.drive_train.odo_move(-4, -70, -Math.PI/4, 0.4, -1, -1, 5);
-                robot.wheeler.spin(1);
-            }
-
-            halt(5);
-
-            robot.wheeler.spin(0);
-        }
-
-        robot.intake.spin(0);
-
-        if (park) {
-            park_depot(1, 5);
-        }
     }
 
     @Override
