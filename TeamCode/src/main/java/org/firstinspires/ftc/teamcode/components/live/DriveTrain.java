@@ -253,7 +253,7 @@ public class DriveTrain extends Component {
         double original_distance = Math.hypot(x-lcs.x, y-lcs.y);
         double original_distance_a = Math.abs(a - lcs.a);
 
-        robot.opmode.resetStartTime();
+        robot.opmode.resetRuntime();
 
         double time_at_goal = 0;
 
@@ -315,7 +315,7 @@ public class DriveTrain extends Component {
         // Update our current path, for telemetry
         this.current_path = path;
 
-        robot.opmode.resetStartTime();
+        robot.opmode.resetRuntime();
 
         double time_at_goal = 0;
 
