@@ -82,13 +82,6 @@ public class DriveTrain extends Component {
     public void update(OpMode opmode) {
         super.update(opmode);
 
-        // Updating the localizer with the new odometer encoder counts
-        lcs.update(
-                robot.bulk_data_1.getMotorCurrentPosition(drive_lf.motor),
-                robot.bulk_data_1.getMotorCurrentPosition(drive_rf.motor),
-                robot.bulk_data_1.getMotorCurrentPosition(drive_lb.motor)
-        );
-
         // Finding new motors powers from the drive variables
         double[] motor_powers = omni_math(drive_x, drive_y, drive_a);
 
@@ -123,10 +116,6 @@ public class DriveTrain extends Component {
     @Override
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
-
-        telemetry.addData("LE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lf.motor));
-        telemetry.addData("RE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_rf.motor));
-        telemetry.addData("CE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lb.motor));
 
         telemetry.addData("X", lcs.x);
         telemetry.addData("Y", lcs.y);

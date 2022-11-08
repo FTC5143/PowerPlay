@@ -164,14 +164,11 @@ public class Lift extends Component {
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
-        telemetry.addData("LL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift)));
         telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_target));
         telemetry.addData("LL OFFSET", TELEMETRY_DECIMAL.format(lift_offset));
-        telemetry.addData("LIFT BUSY",robot.bulk_data_2.isMotorAtTargetPosition(lift));
         telemetry.addData("LIFT RUNNING", running_lift());
         telemetry.addData("LEVEL", level);
         telemetry.addData("MAX LEVEL", max_level);
-        telemetry.addData("BD", robot.bulk_data_1.getDigitalInputState(1));
     }
 
 
