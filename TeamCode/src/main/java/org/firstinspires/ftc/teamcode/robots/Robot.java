@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robots;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,6 +12,7 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.robots.RobotConfig.*;
 
@@ -50,6 +52,8 @@ public class Robot {
 
     Runnable update_thread;
 
+    List<LynxModule> expansion_hubs;
+
     // The Update Thread
     // Should be called as fast as possible. Does all reads and writes to the rev hub
     class UpdateThread implements Runnable {
@@ -82,6 +86,10 @@ public class Robot {
     public void startup() {
         running = true;
 
+        for (LynxModule hub : expansion_hubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         for (Component component : components) {
             component.startup();
         }
@@ -103,7 +111,14 @@ public class Robot {
         /**
          * This method is called as fast as possible by the update thread
          */
+        if(cycle % BULK_READ_1_CYCLE == 0) {
+            expansion_hubs.get(0).clearBulkCache();
+        }
 
+        // Bulk read from rev hub 2
+        if(cycle % BULK_READ_2_CYCLE == 0) {
+            expansion_hubs.get(1).clearBulkCache();
+        }
 
         // Call update on every single component
         if(cycle % COMPONENT_UPDATE_CYCLE == 0) {
@@ -164,6 +179,7 @@ public class Robot {
         /**
          * Called on robot startup, registers all hardware the robot instance needs to use, in this case both the rev hubs
          */
+        expansion_hubs = hwmap.getAll(LynxModule.class);
     }
 
     public void addWarning(String warning) {

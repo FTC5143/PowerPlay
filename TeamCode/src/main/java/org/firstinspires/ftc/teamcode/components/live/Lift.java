@@ -176,6 +176,8 @@ public class Lift extends Component {
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
+        telemetry.addData("LL TURNS", TELEMETRY_DECIMAL.format(lift.getCurrentPosition()));
+        telemetry.addData("LIFT BUSY", lift.isBusy());
         telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_target));
         telemetry.addData("LL OFFSET", TELEMETRY_DECIMAL.format(lift_offset));
         telemetry.addData("LIFT RUNNING", running_lift());
