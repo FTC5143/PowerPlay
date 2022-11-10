@@ -87,7 +87,11 @@ public class LiveTeleop extends LiveTeleopBase {
             gp1_b_pressed = false;
         }
 
-
+        if (gamepad2.a) {
+            robot.lift.open_claw();
+        } else if (gamepad2.b) {
+            robot.lift.close_claw();
+        }
 
 
         /// DRIVE CONTROLS ///

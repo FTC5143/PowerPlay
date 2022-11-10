@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 
 import static org.firstinspires.ftc.teamcode.components.live.LiftConfig.*;
 
@@ -48,6 +49,9 @@ class LiftConfig {
     // The amount of encoder accounts corresponding to how much the lift should be offset by a maximum tweak
     public static int TWEAK_MAX_ADD = 100;
 
+    public static double CLAW_OPEN_POSITION = 0;
+    public static double CLAW_CLOSE_POSITION = 1;
+
 }
 
 public class Lift extends Component {
@@ -58,6 +62,9 @@ public class Lift extends Component {
 
     //// MOTORS ////
     public DcMotorEx lift;
+
+    //// SERVOS ////
+    public ServoQUS claw;
 
     // The current level the lift should be holding
     public int level;
@@ -107,11 +114,16 @@ public class Lift extends Component {
 
         //// MOTORS ////
         lift = hwmap.get(DcMotorEx.class, "lift");
+
+        //// SERVOS ////
+        claw = new ServoQUS(hwmap.get(Servo.class, "claw"));
     }
 
     @Override
     public void update(OpMode opmode) {
         super.update(opmode);
+
+        claw.update();
 
         if (starting_move) {
             // If we just changed our level, set the new target to the new lift counts as per the level index
@@ -216,4 +228,13 @@ public class Lift extends Component {
          */
         this.tweak = tweak;
     }
+
+    public void open_claw() {
+        claw.queue_position(CLAW_OPEN_POSITION);
+    }
+
+    public void close_claw() {
+        claw.queue_position(CLAW_CLOSE_POSITION);
+    }
+
 }
