@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.robotcontroller.internal;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -427,19 +428,7 @@ public class FtcRobotControllerActivity extends Activity
     return result;
   }
 
-  @Override
-  protected void onStart() {
-    super.onStart();
-    RobotLog.vv(TAG, "onStart()");
 
-    entireScreenLayout.setOnTouchListener(new View.OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        dimmer.handleDimTimer();
-        return false;
-      }
-    });
-  }
 
   @Override
   protected void onResume() {

@@ -181,7 +181,7 @@ public class DriveTrain extends Component {
         /**
          * Return the motor powers needed to move in the given travel vector. Should give optimal speeds (not sqrt(2)/2 for 45% angles)
          */
-        double[] power = new double[]{a + y + x, a - y + x, a + y - x, a - y - x};
+        double[] power = new double[]{-a - y + x, a - y - x, -a - y - x, a - y + x};
 
         double max = Math.max(Math.max(Math.abs(power[0]),Math.abs(power[1])),Math.max(Math.abs(power[2]),Math.abs(power[3])));
 

@@ -95,12 +95,12 @@ public class LiveTeleop extends LiveTeleopBase {
 
 
         /// DRIVE CONTROLS ///
-        double speed_mod = 1;
+        double speed_mod = 0.5;
 
         if(gamepad1.left_bumper) {
             speed_mod = 0.25;
         } else if(gamepad1.right_bumper) {
-            speed_mod = 0.5;
+            speed_mod = 1;
         }
 
         robot.drive_train.omni_drive(

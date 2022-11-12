@@ -30,11 +30,11 @@ class LiftConfig {
     // The encoder counts for the intake level, AKA ground level
     public static int INTAKE_LEVEL_COUNTS = 0;
     // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
-    public static int LOW_LEVEL_COUNTS = 850;
+    public static int LOW_LEVEL_COUNTS = 1700;
     // The encoder counts lift position for the middle level, the second level of the alliance shipping hub
-    public static int MID_LEVEL_COUNTS = 1050;
+    public static int MID_LEVEL_COUNTS = 2800;
     // The encoder counts lift position for the high level, the third level of the alliance shipping hub
-    public static int HIGH_LEVEL_COUNTS = 1850;
+    public static int HIGH_LEVEL_COUNTS = 3950;
 
     // Lift PID proportion coefficient
     public static double PID_P = 15;
@@ -49,8 +49,8 @@ class LiftConfig {
     // The amount of encoder accounts corresponding to how much the lift should be offset by a maximum tweak
     public static int TWEAK_MAX_ADD = 100;
 
-    public static double CLAW_OPEN_POSITION = 0;
-    public static double CLAW_CLOSE_POSITION = 1;
+    public static double CLAW_OPEN_POSITION = 1;
+    public static double CLAW_CLOSE_POSITION = 0;
 
 }
 
@@ -164,7 +164,6 @@ public class Lift extends Component {
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void shutdown() {
