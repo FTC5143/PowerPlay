@@ -36,6 +36,9 @@ class LiftConfig {
     // The encoder counts lift position for the high level, the third level of the alliance shipping hub
     public static int HIGH_LEVEL_COUNTS = 3950;
 
+    // The height between each cone in the stack
+    public static int CONE_HEIGHT_COUNTS = 300;
+
     // Lift PID proportion coefficient
     public static double PID_P = 15;
     // Lift PID integral coefficient
@@ -49,6 +52,7 @@ class LiftConfig {
     // The amount of encoder accounts corresponding to how much the lift should be offset by a maximum tweak
     public static int TWEAK_MAX_ADD = 100;
 
+    // The claw on the lift
     public static double CLAW_OPEN_POSITION = 1;
     public static double CLAW_CLOSE_POSITION = 0;
 
@@ -67,7 +71,8 @@ public class Lift extends Component {
     public ServoQUS claw;
 
     // The current level the lift should be holding
-    public int level;
+    public int level = 0;
+    public int cone = 0;
 
     // Should be set to true when the lift level changes so the update loop knows to set new encoder positions
     private boolean starting_move = false;
@@ -88,6 +93,9 @@ public class Lift extends Component {
 
     // The maximum level index the lift can safely raise to
     public int max_level;
+
+    // The max height of the cone
+    public int max_cone = 4;
 
     {
         name = "Lift";
@@ -206,6 +214,15 @@ public class Lift extends Component {
          */
         level = Math.max(Math.min(target, max_level), 0);
         set_target_position(level_positions.get(level) + LIFT_OFFSET);
+        starting_move = true;
+    }
+
+    public void cone_level(int cone) {
+        /**
+         * Elevate to the level of a cone in the stack
+         */
+        this.cone = Math.max(Math.min(cone, max_cone), 0);
+        set_target_position(this.cone * CONE_HEIGHT_COUNTS + LIFT_OFFSET);
         starting_move = true;
     }
 

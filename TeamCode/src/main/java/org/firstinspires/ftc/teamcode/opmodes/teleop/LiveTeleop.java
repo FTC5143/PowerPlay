@@ -14,12 +14,14 @@ public class LiveTeleop extends LiveTeleopBase {
 
     boolean dpad_up_pressed = false;
     boolean dpad_down_pressed = false;
+    boolean dpad_left_pressed = false;
+    boolean dpad_right_pressed = false;
 
     boolean gp1_a_pressed = false;
     boolean gp1_b_pressed = false;
-    boolean gp1_y_pressed = false;
 
     int prepared_level = 1;
+    int prepared_cone = 4;
 
     int drive_mul = -1;
 
@@ -51,6 +53,10 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.lift.elevate_to(prepared_level);
             }
 
+            if(gamepad2.right_bumper) {
+                robot.lift.cone_level(prepared_cone);
+            }
+
             if(gamepad2.dpad_up && !dpad_up_pressed) {
                 prepared_level = Range.clip(prepared_level + 1, 0, robot.lift.max_level);
                 dpad_up_pressed = true;
@@ -65,9 +71,23 @@ public class LiveTeleop extends LiveTeleopBase {
                 dpad_down_pressed = false;
             }
 
+            if(gamepad2.dpad_right && !dpad_right_pressed) {
+                prepared_cone = Range.clip(prepared_cone + 1, 0, robot.lift.max_cone);
+                dpad_right_pressed = true;
+            } else if (!gamepad2.dpad_right) {
+                dpad_right_pressed = false;
+            }
+
+            if(gamepad2.dpad_left && !dpad_left_pressed) {
+                prepared_cone = Range.clip(prepared_cone - 1, 0, robot.lift.max_cone);
+                dpad_left_pressed = true;
+            } else if (!gamepad2.dpad_left) {
+                dpad_left_pressed = false;
+            }
 
             robot.lift.tweak(- gamepad2.left_trigger);
         }
+
 
 
 
@@ -95,7 +115,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
 
         /// DRIVE CONTROLS ///
-        double speed_mod = 0.5;
+        double speed_mod = 0.6;
 
         if(gamepad1.left_bumper) {
             speed_mod = 0.25;
