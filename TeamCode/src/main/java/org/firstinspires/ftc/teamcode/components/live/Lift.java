@@ -37,7 +37,7 @@ class LiftConfig {
     public static int HIGH_LEVEL_COUNTS = 3950;
 
     // The height between each cone in the stack
-    public static int CONE_HEIGHT_COUNTS = 300;
+    public static int CONE_HEIGHT_COUNTS = 150;
 
     // Lift PID proportion coefficient
     public static double PID_P = 15;
