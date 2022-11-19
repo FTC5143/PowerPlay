@@ -5,53 +5,56 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.opmodes.LiveAutoBase;
 
-@Autonomous(name = "Move Sideways", group = "autonomous")
-public class MoveSideways extends LiveAutoBase {
+@Autonomous(name = "Blue Corners", group = "autonomous")
+public class BlueCorners extends LiveAutoBase {
 
     int pattern = 1;
 
     @Override
     public void on_init() {
+        robot.lift.close_claw();
         robot.phone_camera.start_streaming();
         while (!isStarted() && !isStopRequested()) {
             pattern = robot.phone_camera.get_randomization_pattern();
         }
         robot.phone_camera.stop_streaming();
-
-        robot.lift.close_claw();
     }
 
     @Override
     public void on_start() {
         robot.lift.elevate_to(1);
-        robot.drive_train.odo_move(42,0,0,0.4);
-        robot.drive_train.odo_move(42,6,0,0.25);
-        robot.lift.open_claw();
-        sleep(500);
-        robot.drive_train.odo_move(54,0,0,0.4);
-        robot.lift.cone_level(4);
-        robot.drive_train.odo_move(54,28,0,0.4);
-        robot.lift.close_claw();
-        sleep(500);
-        robot.lift.elevate_to(3);
-        robot.drive_train.odo_move(54,-24,0,0.4);
-        robot.drive_train.odo_move(66,-18,0,0.4);
+        robot.drive_train.odo_move(16.5,6,0,0.4);
         sleep(250);
         robot.lift.open_claw();
         sleep(500);
-        robot.lift.elevate_to(0);
-        robot.drive_train.odo_move(30,-24,0,0.4);
+        robot.drive_train.odo_move(16.5, 2, 0, 0.4);
+        sleep(500);
+        robot.lift.cone_level(4);
+        robot.drive_train.odo_move(52,0,3.142,0.4);
+        sleep(150);
+        robot.drive_train.odo_move(52,-28,3.142,0.4);
+        sleep(500);
+        robot.lift.close_claw();
+        robot.lift.elevate_to(3);
+        robot.drive_train.odo_move(52,0,0,0.4);
+        robot.drive_train.odo_move(66,18,0,0.4);
+        sleep(250);
+        robot.lift.open_claw();
+        sleep(500);
+        robot.drive_train.odo_move(52,24,0,0.4);
 
-        if (pattern == 1) {
-            robot.drive_train.odo_move(30,24,0,0.4);
+        if (pattern == 2) {
+            robot.drive_train.odo_move(52,0,0,0.4);
         }
-        else if (pattern == 2) {
-            robot.drive_train.odo_move(30,0,0,0.4);
+        else if (pattern == 3) {
+            robot.drive_train.odo_move(52,-24,0,0.4);
         }
+        sleep(30000);
     }
 
     @Override
     public void on_stop() {
+        robot.sound_player.vineboom();
 
     }
 }

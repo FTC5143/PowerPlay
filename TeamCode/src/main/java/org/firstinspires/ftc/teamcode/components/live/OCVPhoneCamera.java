@@ -149,10 +149,10 @@ public class OCVPhoneCamera extends Component {
                 pattern = 1;
             }
             else if (mean.val[1] >= mean.val[0] && mean.val[1] >= mean.val[2]) {
-                pattern = 2;
+                pattern = 3;
             }
             else if (mean.val[2] >= mean.val[0] && mean.val[2] >= mean.val[1]) {
-                pattern = 3;
+                pattern = 2;
             }
             else {
                 pattern = 0;

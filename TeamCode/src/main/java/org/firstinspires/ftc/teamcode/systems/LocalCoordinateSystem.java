@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.coyote.geometry.Pose;
 class LCSConfig {
     public static double ENCODER_CPR          = 8192;    // Counts per full rotation of an encoder
     public static double ROBOT_DIAMETER       = 10.86801995;    // Distance between the left and right encoder (diameter) in inches
-    public static double CENTER_WHEEL_OFFSET  = -5.143744443;    //Distance of the center encoder to the line made between the left and right encoders (radius) in inches
+    public static double CENTER_WHEEL_OFFSET  = 5.143744443;    //Distance of the center encoder to the line made between the left and right encoders (radius) in inches
 
     public static double WHEEL_DIAMETER_L     = -1.882399991;
     public static double WHEEL_DIAMETER_R     = -1.877092685;

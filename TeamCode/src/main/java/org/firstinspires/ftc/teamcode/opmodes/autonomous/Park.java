@@ -34,7 +34,7 @@ public class Park extends LiveAutoBase {
     }
 
     @Override
-    public void on_stop() {
+        public void on_stop() {
             robot.sound_player.vineboom();
     }
 }

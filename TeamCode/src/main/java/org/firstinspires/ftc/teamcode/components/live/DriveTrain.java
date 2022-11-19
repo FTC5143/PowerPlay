@@ -263,8 +263,8 @@ public class DriveTrain extends Component {
                 double distance_a = Math.abs(a - lcs.a);
 
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
-                double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (5*speed)))/(5*speed)) * speed;
-                double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (5*speed)))/(5*speed)) * speed;
+                double mvmt_x = -Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (5*speed)))/(5*speed)) * speed;
+                double mvmt_y = Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (5*speed)))/(5*speed)) * speed;
                 double mvmt_a = -Range.clip((angle_difference(lcs.a, a))*3, -1, 1) * speed;
 
                 omni_drive(mvmt_x, mvmt_y, mvmt_a);
