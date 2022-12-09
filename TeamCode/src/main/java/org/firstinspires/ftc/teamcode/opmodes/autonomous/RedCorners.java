@@ -30,14 +30,12 @@ public class RedCorners extends LiveAutoBase {
         robot.drive_train.odo_move(40.5,6,0,0.25);
         robot.lift.open_claw();
         sleep(500);
-
         // Grab second cone from stack
         robot.drive_train.odo_move(52,0,0,0.4);
         robot.lift.cone_level(4);
         robot.drive_train.odo_move(52,28,0,0.4);
         robot.lift.close_claw();
         sleep(500);
-
         // Place second cone
         robot.lift.elevate_to(3);
         robot.drive_train.odo_move(52,-24,0,0.4);
@@ -45,7 +43,6 @@ public class RedCorners extends LiveAutoBase {
         sleep(250);
         robot.lift.open_claw();
         sleep(500);
-
         // Move to park and reset robot
         robot.drive_train.odo_move(66, -20, 0, 0.4);
         robot.lift.elevate_to(0);
