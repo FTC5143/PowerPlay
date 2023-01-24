@@ -6,9 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DigitalChannelImpl;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -70,6 +73,9 @@ public class Lift extends Component {
     //// SERVOS ////
     public ServoQUS claw;
 
+    //// SENSORS ////
+    public TouchSensor limit_switch;
+
     // The current level the lift should be holding
     public int level = 0;
     public int cone = 0;
@@ -125,6 +131,9 @@ public class Lift extends Component {
 
         //// SERVOS ////
         claw = new ServoQUS(hwmap.get(Servo.class, "claw"));
+
+        //// SENSORS ////
+        limit_switch = hwmap.get(TouchSensor.class, "limit_switch");
     }
 
     @Override
@@ -141,6 +150,13 @@ public class Lift extends Component {
             set_power(1);
 
             starting_move = false;
+        }
+
+        if (level == -1) {
+            if (limit_switch.isPressed()) {
+                elevate_to(0);
+                lift_offset = lift.getCurrentPosition();
+            }
         }
 
         if (tweak != tweak_cache) {
@@ -190,6 +206,7 @@ public class Lift extends Component {
         telemetry.addData("LIFT RUNNING", running_lift());
         telemetry.addData("LEVEL", level);
         telemetry.addData("MAX LEVEL", max_level);
+        telemetry.addData("LIMIT", limit_switch.isPressed());
     }
 
 
@@ -212,8 +229,12 @@ public class Lift extends Component {
         /**
          * Elevate to an arbitrary lift index level
          */
-        level = Math.max(Math.min(target, max_level), 0);
-        set_target_position(level_positions.get(level) + LIFT_OFFSET);
+        level = Math.max(Math.min(target, max_level), -1);
+        if (level == -1) {
+            set_target_position(-4000);
+        } else {
+            set_target_position(level_positions.get(level) + LIFT_OFFSET);
+        }
         starting_move = true;
     }
 

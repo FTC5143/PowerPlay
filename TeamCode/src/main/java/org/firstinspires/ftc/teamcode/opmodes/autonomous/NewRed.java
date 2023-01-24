@@ -27,51 +27,84 @@ public class NewRed extends LiveAutoBase {
     @Override
     public void on_start() {
 
-        timer.reset();
-
         // Place cone 1 and move signal sleeve
         robot.lift.elevate_to(1);
-        robot.drive_train.odo_move(40.5,0,0,0.8);
-        robot.drive_train.odo_move(40.5,7,0,0.6);
-        robot.lift.open_claw();
+
+        robot.drive_train.odo_move(40.5, 0, 0, 0.5);
+
+        robot.drive_train.odo_move(40.5, 7.5, 0, 0.5, 0.1, 0.02, 2);
+
         sleep(200);
-        robot.drive_train.odo_move(40.5,0,0,0.8);
-        robot.drive_train.odo_move(60,0,0,1);
+        robot.lift.open_claw();
+        sleep(300);
 
-        for (int cone = 4; cone >= 0; cone--) {
-            // Pick up cone
-            robot.drive_train.odo_move(53,2,0,0.8);
-            robot.lift.cone_level(cone);
-            robot.drive_train.odo_move(53,26,0,0.8);
-            robot.drive_train.odo_move(53,29,0,0.5);
-            robot.lift.close_claw();
+        robot.drive_train.odo_move(40.5, 0, 0, 0.5);
 
-            // Place cone
-            sleep(100);
-            robot.lift.elevate_to(3);
-            sleep(200);
-            robot.drive_train.odo_move(53,0,-2.36,0.6);
-            robot.drive_train.odo_move(61.46,-8.46,-2.36,0.4);
-            robot.lift.open_claw();
-            sleep(200);
-            robot.drive_train.odo_move(58,-5,-2.36,0.8);
+        robot.drive_train.odo_move(56.5, 3, 0, 0.5);
 
-            if (timer.seconds()>=23) {
-                break;
-            }
-        }
+        robot.drive_train.odo_move(52, 6.5, 0, 0.5);
+
+        robot.lift.cone_level(4);
+
+        robot.drive_train.odo_move(52.5, 29.25, 0, 0.5, 0.1, 0.02, 2);
+
+        sleep(200);
+        robot.lift.close_claw();
+        sleep(300);
+
+        robot.lift.elevate_to(3);
+        sleep(200);
+
+        robot.drive_train.odo_move(51, -20, 0, 0.5);
+
+        robot.drive_train.odo_move(62.5, -20, 0, 0.5);
+
+        robot.drive_train.odo_move(62.5, -16, 0, 0.5, 0.1, 0.02, 2);
+
+        sleep(200);
+        robot.lift.open_claw();
+        sleep(300);
+
+        robot.drive_train.odo_move(62.5, -20, 0, 0.5);
+
+        robot.drive_train.odo_move(52.5, -20, 0, 0.5);
+
+        robot.lift.cone_level(3);
+
+        robot.drive_train.odo_move(52.5, 29.25, 0,0.5, 0.1, 0.02, 3);
+
+        sleep(200);
+        robot.lift.close_claw();
+        sleep(300);
+
+        robot.lift.elevate_to(3);
+        sleep(200);
+
+        robot.drive_train.odo_move(51, -20, 0, 0.5);
+
+        robot.drive_train.odo_move(62.5, -20, 0, 0.5);
+
+        robot.drive_train.odo_move(62.5, -16, 0, 0.5, 0.1, 0.02, 2);
+
+        sleep(200);
+        robot.lift.open_claw();
+        sleep(300);
+;
+        robot.drive_train.odo_move(63.5, -15, 0, 0.5);
+
+        robot.drive_train.odo_move(51.5, -20, 0, 0.5);
 
         // Park in correct location
         robot.lift.elevate_to(0);
 
         if (pattern == 1) {
-            robot.drive_train.odo_move(53,26,-3.14,1);
+            robot.drive_train.odo_move(53,26,0,0.5);
         }
         else if (pattern == 2) {
-            robot.drive_train.odo_move(53,0,-3.14,1);
+            robot.drive_train.odo_move(53,0,0,0.5);
         }
         else if (pattern == 3) {
-            robot.drive_train.odo_move(53,-24,-3.14,1);
+            robot.drive_train.odo_move(53,-24,0,0.5);
         }
         sleep(30000);
     }

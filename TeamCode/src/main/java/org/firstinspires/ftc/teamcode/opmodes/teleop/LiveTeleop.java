@@ -47,6 +47,9 @@ public class LiveTeleop extends LiveTeleopBase {
                 robot.lift.min_lift();
             }
 
+            if (gamepad2.y) {
+                robot.lift.elevate_to(-1);
+            }
 
         } else {
             if(gamepad2.left_bumper) {

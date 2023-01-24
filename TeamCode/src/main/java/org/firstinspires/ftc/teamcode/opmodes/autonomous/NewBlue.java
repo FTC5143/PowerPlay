@@ -31,29 +31,29 @@ public class NewBlue extends LiveAutoBase {
 
         // Place cone 1 and move signal sleeve
         robot.lift.elevate_to(3);
-        robot.drive_train.odo_move(65,0,0,0.6);
-        robot.drive_train.odo_move(65,7,0,0.5);
+        robot.drive_train.odo_move(65,0,0,0.5);
+        robot.drive_train.odo_move(65,7,0,0.3);
         robot.lift.open_claw();
         sleep(200);
-        robot.drive_train.odo_move(65,0,0,0.8);
+        robot.drive_train.odo_move(65,0,0,0.6);
 
         for (int cone = 4; cone >= 0; cone--) {
             // Pick up cone
-            robot.drive_train.odo_move(53,-2,-3.14,0.8);
+            robot.drive_train.odo_move(53,-2,-3.14,0.6);
             robot.lift.cone_level(cone);
-            robot.drive_train.odo_move(53,-26,-3.14,0.8);
-            robot.drive_train.odo_move(53,-29,-3.14,0.5);
+            robot.drive_train.odo_move(53,-26,-3.14,0.6);
+            robot.drive_train.odo_move(53,-29,-3.14,0.4);
             robot.lift.close_claw();
 
             // Place cone
             sleep(100);
             robot.lift.elevate_to(3);
             sleep(200);
-            robot.drive_train.odo_move(53,0,-0.78,0.6);
-            robot.drive_train.odo_move(61.46,8.46,-0.78,0.4);
+            robot.drive_train.odo_move(53,0,-0.78,0.5);
+            robot.drive_train.odo_move(61.46,8.46,-0.78,0.3);
             robot.lift.open_claw();
             sleep(200);
-            robot.drive_train.odo_move(58,5,-0.78,0.8);
+            robot.drive_train.odo_move(58,5,-0.78,0.6);
 
             if (timer.seconds()>=23) {
                 break;
