@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.opmodes.LiveAutoBase;
 
 // New and improved and improved blue corner auto
-@Autonomous(name = "Slow Blue", group = "autonomous")
-public class SlowBlue extends LiveAutoBase {
+@Autonomous(name = "Slow Red", group = "autonomous")
+public class SlowRed extends LiveAutoBase {
 
     int pattern = 1;
 
@@ -30,9 +30,11 @@ public class SlowBlue extends LiveAutoBase {
 
         robot.drive_train.odo_move(66,0,0,0.5);
 
+        robot.drive_train.odo_move(63.5,0,3.14,0.4);
+
         sleep(400);
 
-        robot.drive_train.odo_move(63.5,6,0,0.3);
+        robot.drive_train.odo_move(63.5,-5,3.14,0.3);
 
         sleep(100);
 
@@ -40,15 +42,15 @@ public class SlowBlue extends LiveAutoBase {
 
         sleep(800);
 
-        robot.drive_train.odo_move(63.5,2,0,0.6);
+        robot.drive_train.odo_move(63.5,-1,3.14,0.6);
 
         robot.lift.cone_level(4);
 
-        robot.drive_train.odo_move(50.5,2,3.14,0.3,1,0.1);
+        robot.drive_train.odo_move(55,-1,0,0.3,1,0.1);
 
         sleep(200);
 
-        robot.drive_train.odo_move(50.5,-26,3.14,0.4,1,0.02,2500);
+        robot.drive_train.odo_move(55,26,0,0.4,1,0.02,2500);
 
         robot.lift.close_claw();
 
@@ -56,11 +58,11 @@ public class SlowBlue extends LiveAutoBase {
 
         robot.lift.elevate_to(3);
 
-        robot.drive_train.odo_move(50.5,2,3.14,0.4);
+        robot.drive_train.odo_move(55,-1,0,0.4);
 
-        robot.drive_train.odo_move(63.5,2,0,0.3,1,0.1);
+        robot.drive_train.odo_move(63.5,-1,3.14,0.3,1,0.1);
 
-        robot.drive_train.odo_move(63.5,6,0,0.3,1,0.01);
+        robot.drive_train.odo_move(63.5,-5,3.14,0.3,1,0.01);
 
         sleep(100);
 
@@ -68,15 +70,15 @@ public class SlowBlue extends LiveAutoBase {
 
         sleep(800);
 
-        robot.drive_train.odo_move(63.5,2,0,0.4);
+        robot.drive_train.odo_move(63.5,-1,3.14,0.4);
 
         robot.lift.cone_level(3);
 
-        robot.drive_train.odo_move(50.5,2,3.14,0.3,1,0.1);
+        robot.drive_train.odo_move(55,-1,0,0.3,1,0.1);
 
         sleep(200);
 
-        robot.drive_train.odo_move(50.5,-26,3.14,0.4,1,0.02,2500);
+        robot.drive_train.odo_move(55,26,0,0.4,1,0.02,2500);
 
         robot.lift.close_claw();
 
@@ -84,11 +86,11 @@ public class SlowBlue extends LiveAutoBase {
 
         robot.lift.elevate_to(3);
 
-        robot.drive_train.odo_move(50.5,2,3.14,0.4);
+        robot.drive_train.odo_move(55,-1,0,0.4);
 
-        robot.drive_train.odo_move(63.5,2,0,0.3,1,0.1);
+        robot.drive_train.odo_move(63.5,-1,3.14,0.3,1,0.1);
 
-        robot.drive_train.odo_move(63.5,6,0,0.4);
+        robot.drive_train.odo_move(63.5,-5,3.14,0.4);
 
         sleep(100);
 
@@ -96,22 +98,22 @@ public class SlowBlue extends LiveAutoBase {
 
         sleep(800);
 
-        robot.drive_train.odo_move(63.5,2,0,0.4);
+        robot.drive_train.odo_move(63.5,-1,0,0.4);
 
         robot.lift.elevate_to(0);
 
-        robot.drive_train.odo_move(50.5,2,0,0.4);
+        robot.drive_train.odo_move(55,-1,0,0.4);
 
         // Park in correct location
 
         if (pattern == 1) {
-            robot.drive_train.odo_move(50.5,20,0,1);
+            robot.drive_train.odo_move(55,20,0,1);
         }
         else if (pattern == 2) {
-            robot.drive_train.odo_move(50.5,0,0,1);
+            robot.drive_train.odo_move(55,0,0,1);
         }
         else if (pattern == 3) {
-            robot.drive_train.odo_move(50.5,-20,0,1);
+            robot.drive_train.odo_move(55,-20,0,1);
         }
         sleep(30000);
     }

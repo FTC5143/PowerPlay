@@ -57,7 +57,7 @@ class LiftConfig {
 
     // The claw on the lift
     public static double CLAW_OPEN_POSITION = 1;
-    public static double CLAW_CLOSE_POSITION = 0;
+    public static double CLAW_CLOSE_POSITION = 0.75;
 
 }
 
