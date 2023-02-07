@@ -116,6 +116,12 @@ public class LiveTeleop extends LiveTeleopBase {
             robot.lift.close_claw();
         }
 
+        if (gamepad1.a) {
+            robot.lift.open_claw();
+        } else if (gamepad1.b) {
+            robot.lift.close_claw();
+        }
+
 
         /// DRIVE CONTROLS ///
         double speed_mod = 0.6;
