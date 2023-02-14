@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.components.live;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.util.qus.ServoQUS;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.teamcode.components.live.LiftConfig.*;
 
 import java.util.ArrayList;
@@ -75,6 +77,7 @@ public class Lift extends Component {
 
     //// SENSORS ////
     public TouchSensor limit_switch;
+    public AnalogInput claw_sensor;
 
     // The current level the lift should be holding
     public int level = 0;
@@ -134,6 +137,7 @@ public class Lift extends Component {
 
         //// SENSORS ////
         limit_switch = hwmap.get(TouchSensor.class, "limit_switch");
+        claw_sensor = hwmap.analogInput.get("light");
     }
 
     @Override
@@ -207,6 +211,11 @@ public class Lift extends Component {
         telemetry.addData("LEVEL", level);
         telemetry.addData("MAX LEVEL", max_level);
         telemetry.addData("LIMIT", limit_switch.isPressed());
+        telemetry.addData("light", claw_sensor.getVoltage());
+    }
+
+    private void auto_claw_close() {
+
     }
 
 

@@ -127,7 +127,7 @@ public class LiveTeleop extends LiveTeleopBase {
         double speed_mod = 0.6;
 
         if(gamepad1.left_bumper) {
-            speed_mod = 0.25;
+            speed_mod = 0.28;
         } else if(gamepad1.right_bumper) {
             speed_mod = 1;
         }
