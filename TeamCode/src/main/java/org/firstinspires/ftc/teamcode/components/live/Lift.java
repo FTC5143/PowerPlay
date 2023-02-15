@@ -35,21 +35,21 @@ class LiftConfig {
     // The encoder counts for the intake level, AKA ground level
     public static int INTAKE_LEVEL_COUNTS = 0;
     // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
-    public static int LOW_LEVEL_COUNTS = 1700;
+    public static int LOW_LEVEL_COUNTS = 650;
     // The encoder counts lift position for the middle level, the second level of the alliance shipping hub
-    public static int MID_LEVEL_COUNTS = 2800;
+    public static int MID_LEVEL_COUNTS = 1025;
     // The encoder counts lift position for the high level, the third level of the alliance shipping hub
-    public static int HIGH_LEVEL_COUNTS = 3950;
+    public static int HIGH_LEVEL_COUNTS = 1450;
 
     // The height between each cone in the stack
-    public static int CONE_HEIGHT_COUNTS = 150;
+    public static int CONE_HEIGHT_COUNTS = 55;
 
     // Lift PID proportion coefficient
-    public static double PID_P = 15;
+    public static double PID_P = 10;
     // Lift PID integral coefficient
     public static double PID_I = 0.1;
     // Lift PID derivative coefficient
-    public static double PID_D = 4;
+    public static double PID_D = 5;
 
     // How many encoder counts to overshoot by when going to the minimum lift level, to ensue the limit switch is hit
     public static int LIFT_DOWN_OVERSHOOT = 100;
@@ -60,6 +60,9 @@ class LiftConfig {
     // The claw on the lift
     public static double CLAW_OPEN_POSITION = 1;
     public static double CLAW_CLOSE_POSITION = 0.75;
+
+    // The distance at which it triggers
+    public static double CLAW_SENSOR_TRIGGER_VOLTAGE = 2.5;
 
 }
 
@@ -106,6 +109,8 @@ public class Lift extends Component {
     // The max height of the cone
     public int max_cone = 4;
 
+    public int last_open_cycle = 0;
+
     {
         name = "Lift";
     }
@@ -125,8 +130,7 @@ public class Lift extends Component {
     }
 
     @Override
-    public void registerHardware (HardwareMap hwmap)
-    {
+    public void registerHardware (HardwareMap hwmap) {
         super.registerHardware(hwmap);
 
         //// MOTORS ////
@@ -137,7 +141,7 @@ public class Lift extends Component {
 
         //// SENSORS ////
         limit_switch = hwmap.get(TouchSensor.class, "limit_switch");
-        claw_sensor = hwmap.analogInput.get("light");
+        claw_sensor = hwmap.get(AnalogInput.class, "claw_sensor");
     }
 
     @Override
@@ -175,6 +179,10 @@ public class Lift extends Component {
                 )
             );
         }
+
+        if (claw_sensor.getVoltage() <= CLAW_SENSOR_TRIGGER_VOLTAGE && robot.cycle >= (last_open_cycle + 200)) {
+            close_claw();
+        }
     }
 
     @Override
@@ -211,13 +219,8 @@ public class Lift extends Component {
         telemetry.addData("LEVEL", level);
         telemetry.addData("MAX LEVEL", max_level);
         telemetry.addData("LIMIT", limit_switch.isPressed());
-        telemetry.addData("light", claw_sensor.getVoltage());
+        telemetry.addData("LIGHT", claw_sensor.getVoltage());
     }
-
-    private void auto_claw_close() {
-
-    }
-
 
     private void set_target_position(int pos) {
         lift_target = pos;
@@ -279,6 +282,7 @@ public class Lift extends Component {
 
     public void open_claw() {
         claw.queue_position(CLAW_OPEN_POSITION);
+        last_open_cycle = robot.cycle;
     }
 
     public void close_claw() {

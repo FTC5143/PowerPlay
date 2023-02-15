@@ -19,6 +19,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
     boolean gp1_a_pressed = false;
     boolean gp1_b_pressed = false;
+    boolean gp1_y_pressed = false;
 
     int prepared_level = 1;
     int prepared_cone = 4;
@@ -108,6 +109,14 @@ public class LiveTeleop extends LiveTeleopBase {
             gp1_b_pressed = true;
         } else if (!gamepad1.b) {
             gp1_b_pressed = false;
+        }
+
+        // Nothing to see here
+        if ((gamepad1.back && gamepad1.y) && !gp1_y_pressed) {
+            robot.sound_player.whopper();
+            gp1_y_pressed = true;
+        } else if (!gamepad1.b) {
+            gp1_y_pressed = false;
         }
 
         if (gamepad2.a) {
