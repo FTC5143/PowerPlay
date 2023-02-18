@@ -29,9 +29,6 @@ import java.util.List;
 
 @Config
 class LiftConfig {
-    // Basic value to add to any lift position, the effective zero
-    public static int LIFT_OFFSET = 0;
-
     // The encoder counts for the intake level, AKA ground level
     public static int INTAKE_LEVEL_COUNTS = 0;
     // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
@@ -243,9 +240,9 @@ public class Lift extends Component {
          */
         level = Math.max(Math.min(target, max_level), -1);
         if (level == -1) {
-            set_target_position(-4000);
+            set_target_position(-1800);
         } else {
-            set_target_position(level_positions.get(level) + LIFT_OFFSET);
+            set_target_position(level_positions.get(level));
         }
         starting_move = true;
     }
@@ -255,7 +252,7 @@ public class Lift extends Component {
          * Elevate to the level of a cone in the stack
          */
         this.cone = Math.max(Math.min(cone, max_cone), 0);
-        set_target_position(this.cone * CONE_HEIGHT_COUNTS + LIFT_OFFSET);
+        set_target_position(this.cone * CONE_HEIGHT_COUNTS);
         starting_move = true;
     }
 
