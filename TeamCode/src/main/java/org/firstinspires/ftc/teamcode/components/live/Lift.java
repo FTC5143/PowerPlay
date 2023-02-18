@@ -35,14 +35,14 @@ class LiftConfig {
     // The encoder counts for the intake level, AKA ground level
     public static int INTAKE_LEVEL_COUNTS = 0;
     // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
-    public static int LOW_LEVEL_COUNTS = 650;
+    public static int LOW_LEVEL_COUNTS = 720;
     // The encoder counts lift position for the middle level, the second level of the alliance shipping hub
-    public static int MID_LEVEL_COUNTS = 1025;
+    public static int MID_LEVEL_COUNTS = 1215;
     // The encoder counts lift position for the high level, the third level of the alliance shipping hub
-    public static int HIGH_LEVEL_COUNTS = 1450;
+    public static int HIGH_LEVEL_COUNTS = 1730;
 
     // The height between each cone in the stack
-    public static int CONE_HEIGHT_COUNTS = 55;
+    public static int CONE_HEIGHT_COUNTS = 62;
 
     // Lift PID proportion coefficient
     public static double PID_P = 10;
@@ -51,18 +51,18 @@ class LiftConfig {
     // Lift PID derivative coefficient
     public static double PID_D = 5;
 
-    // How many encoder counts to overshoot by when going to the minimum lift level, to ensue the limit switch is hit
+    // How many encoder counts to overshoot by when going to the minimum lift level, to ensure the limit switch is hit
     public static int LIFT_DOWN_OVERSHOOT = 100;
 
     // The amount of encoder accounts corresponding to how much the lift should be offset by a maximum tweak
     public static int TWEAK_MAX_ADD = 100;
 
     // The claw on the lift
-    public static double CLAW_OPEN_POSITION = 1;
-    public static double CLAW_CLOSE_POSITION = 0.75;
+    public static double CLAW_OPEN_POSITION = 0.85;
+    public static double CLAW_CLOSE_POSITION = 0.70;
 
     // The distance at which it triggers
-    public static double CLAW_SENSOR_TRIGGER_VOLTAGE = 2.5;
+    public static double CLAW_SENSOR_TRIGGER_VOLTAGE = 0.3;
 
 }
 
@@ -180,7 +180,7 @@ public class Lift extends Component {
             );
         }
 
-        if (claw_sensor.getVoltage() <= CLAW_SENSOR_TRIGGER_VOLTAGE && robot.cycle >= (last_open_cycle + 200)) {
+        if ((claw_sensor.getVoltage() >= CLAW_SENSOR_TRIGGER_VOLTAGE) && (robot.cycle >= (last_open_cycle + 200))) {
             close_claw();
         }
     }

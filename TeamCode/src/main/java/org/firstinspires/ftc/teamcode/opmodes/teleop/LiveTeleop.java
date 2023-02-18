@@ -115,7 +115,7 @@ public class LiveTeleop extends LiveTeleopBase {
         if ((gamepad1.back && gamepad1.y) && !gp1_y_pressed) {
             robot.sound_player.whopper();
             gp1_y_pressed = true;
-        } else if (!gamepad1.b) {
+        } else if (!gamepad1.y) {
             gp1_y_pressed = false;
         }
 
