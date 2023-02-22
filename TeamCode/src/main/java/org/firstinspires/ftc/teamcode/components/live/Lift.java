@@ -34,15 +34,15 @@ class LiftConfig {
     // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
     public static int LOW_LEVEL_COUNTS = 720;
     // The encoder counts lift position for the middle level, the second level of the alliance shipping hub
-    public static int MID_LEVEL_COUNTS = 1215;
+    public static int MID_LEVEL_COUNTS = 1250;
     // The encoder counts lift position for the high level, the third level of the alliance shipping hub
-    public static int HIGH_LEVEL_COUNTS = 1730;
+    public static int HIGH_LEVEL_COUNTS = 1780;
 
     // The height between each cone in the stack
-    public static int CONE_HEIGHT_COUNTS = 62;
+    public static int CONE_HEIGHT_COUNTS = 57;
 
     // Lift PID proportion coefficient
-    public static double PID_P = 10;
+    public static double PID_P = 20;
     // Lift PID integral coefficient
     public static double PID_I = 0.1;
     // Lift PID derivative coefficient
@@ -76,7 +76,7 @@ public class Lift extends Component {
     public ServoQUS claw;
 
     //// SENSORS ////
-    public TouchSensor limit_switch;
+    public DigitalChannel limit_switch;
     public AnalogInput claw_sensor;
 
     // The current level the lift should be holding
@@ -137,7 +137,7 @@ public class Lift extends Component {
         claw = new ServoQUS(hwmap.get(Servo.class, "claw"));
 
         //// SENSORS ////
-        limit_switch = hwmap.get(TouchSensor.class, "limit_switch");
+        limit_switch = hwmap.get(DigitalChannel.class, "limit_switch");
         claw_sensor = hwmap.get(AnalogInput.class, "claw_sensor");
     }
 
@@ -158,7 +158,7 @@ public class Lift extends Component {
         }
 
         if (level == -1) {
-            if (limit_switch.isPressed()) {
+            if (!limit_switch.getState()) {
                 elevate_to(0);
                 lift_offset = lift.getCurrentPosition();
             }
@@ -215,7 +215,7 @@ public class Lift extends Component {
         telemetry.addData("LIFT RUNNING", running_lift());
         telemetry.addData("LEVEL", level);
         telemetry.addData("MAX LEVEL", max_level);
-        telemetry.addData("LIMIT", limit_switch.isPressed());
+        telemetry.addData("LIMIT", limit_switch.getState());
         telemetry.addData("LIGHT", claw_sensor.getVoltage());
     }
 

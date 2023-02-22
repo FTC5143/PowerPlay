@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.opmodes.LiveAutoBase;
 
 // New and improved and improved blue corner auto
-@Autonomous(name = "Side Red", group = "autonomous")
-public class SideRed extends LiveAutoBase {
+@Autonomous(name = "Side Blue", group = "autonomous")
+public class SideBlue extends LiveAutoBase {
 
     int pattern = 1;
 
@@ -25,46 +25,45 @@ public class SideRed extends LiveAutoBase {
     public void on_start() {
 
         // Place cones until park
-        robot.drive_train.odo_move(51.5,-1,0,0.6);
-        robot.drive_train.odo_move(49.5,1,1.57,0.6);
+        robot.drive_train.odo_move(51.5,-0,0,0.6);
         robot.lift.elevate_to(3);
-        robot.drive_train.odo_move(49.5,-11,1.57,0.4);
-        robot.drive_train.odo_move(56.5,-11,1.57,0.3);
+        robot.drive_train.odo_move(63.5,0,0,0.4);
+        robot.drive_train.odo_move(63.5,7,0,0.3);
         robot.lift.cone_level(4);
         robot.lift.open_claw();
         sleep(600);
 
-        robot.drive_train.odo_move(49.5,-11,1.57,0.5);
-        robot.drive_train.odo_move(49.5,1,1.57,0.5);
-        robot.drive_train.odo_move(51.5,-1,0,0.6);
-        robot.drive_train.odo_move(51.5,29,0,0.35,1,0.05,3);
+        robot.drive_train.odo_move(63.5,0,0,0.5);
+        robot.drive_train.odo_move(51.5,0,0,0.5);
+        robot.drive_train.odo_move(51.5,0,3.14,0.8);
+        robot.drive_train.odo_move(51.5,29,3.14,0.35,1,0.05,3);
         robot.lift.close_claw();
         sleep(400);
 
         robot.lift.elevate_to(1);
-        robot.drive_train.odo_move(51.5,-1,0,0.4);
-        robot.drive_train.odo_move(49.5,1,1.57,0.6);
+        robot.drive_train.odo_move(51.5,0,3.14,0.4);
+        robot.drive_train.odo_move(49.5,2,1.57,0.8);
         robot.lift.elevate_to(3);
-        robot.drive_train.odo_move(49.5,-11,1.57,0.4);
-        robot.drive_train.odo_move(56.5,-11,1.57,0.3);
+        robot.drive_train.odo_move(49.5,14,1.57,0.4);
+        robot.drive_train.odo_move(56.5,14,1.57,0.3);
         robot.lift.cone_level(3);
         robot.lift.open_claw();
         sleep(600);
 
-        robot.drive_train.odo_move(49.5,-11,1.57,0.5);
-        robot.drive_train.odo_move(49.5,1,1.57,0.5);
-        robot.drive_train.odo_move(51.5,-1,0,0.6);
-        robot.drive_train.odo_move(51.5,29,0,0.35,1,0.05,3);
+        robot.drive_train.odo_move(49.5,14,1.57,0.5);
+        robot.drive_train.odo_move(51.5,0,1.57,0.5);
+        robot.drive_train.odo_move(51.5,0,3.14,0.8);
+        robot.drive_train.odo_move(51.5,29,3.14,0.35,1,0.05,3);
         robot.lift.close_claw();
         sleep(400);
 
         robot.lift.elevate_to(1);
-        robot.drive_train.odo_move(51.5,-1,0,0.4);
-        robot.drive_train.odo_move(49.5,1,1.57,0.6);
-        robot.lift.elevate_to(3);
-        robot.drive_train.odo_move(49.5,-11,1.57,0.4);
-        robot.drive_train.odo_move(56.5,-11,1.57,0.3);
-        robot.lift.cone_level(2);
+        robot.drive_train.odo_move(51.5,0,3.14,0.4);
+        robot.drive_train.odo_move(49.5,2,1.57,0.8);
+        robot.lift.elevate_to(2);
+        robot.drive_train.odo_move(49.5,14,1.57,0.4);
+        robot.drive_train.odo_move(56.5,14,1.57,0.3);
+        robot.lift.cone_level(3);
         robot.lift.open_claw();
         sleep(600);
 
