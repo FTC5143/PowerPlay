@@ -90,6 +90,7 @@ public class LiveTeleop extends LiveTeleopBase {
             }
 
             robot.lift.tweak(- gamepad2.left_trigger);
+            robot.lift.tweak(gamepad2.right_trigger);
         }
 
 
@@ -133,7 +134,7 @@ public class LiveTeleop extends LiveTeleopBase {
 
 
         /// DRIVE CONTROLS ///
-        double speed_mod = 0.6;
+        double speed_mod = 0.7;
 
         if(gamepad1.left_bumper) {
             speed_mod = 0.28;

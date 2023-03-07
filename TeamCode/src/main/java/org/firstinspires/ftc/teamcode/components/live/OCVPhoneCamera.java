@@ -144,13 +144,16 @@ public class OCVPhoneCamera extends Component {
             // Get the average color of each rect
             Scalar mean = Core.mean(mat);
 
-            //
+            // This determines the pattern based on what color is most prevalent
+            // if Red is most common
             if (mean.val[0] >= mean.val[1] && mean.val[0] >= mean.val[2]) {
                 pattern = 1;
             }
+            // if Green is most common
             else if (mean.val[1] >= mean.val[0] && mean.val[1] >= mean.val[2]) {
                 pattern = 3;
             }
+            // if Blue is most common
             else if (mean.val[2] >= mean.val[0] && mean.val[2] >= mean.val[1]) {
                 pattern = 2;
             }

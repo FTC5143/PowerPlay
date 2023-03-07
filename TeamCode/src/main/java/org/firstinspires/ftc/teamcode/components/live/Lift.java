@@ -32,14 +32,14 @@ class LiftConfig {
     // The encoder counts for the intake level, AKA ground level
     public static int INTAKE_LEVEL_COUNTS = 0;
     // The encoder counts lift position for the low level, the first level of the alliance shipping hub or the shared shipping hub
-    public static int LOW_LEVEL_COUNTS = 720;
+    public static int LOW_LEVEL_COUNTS = 800;
     // The encoder counts lift position for the middle level, the second level of the alliance shipping hub
-    public static int MID_LEVEL_COUNTS = 1250;
+    public static int MID_LEVEL_COUNTS = 1300;
     // The encoder counts lift position for the high level, the third level of the alliance shipping hub
-    public static int HIGH_LEVEL_COUNTS = 1780;
+    public static int HIGH_LEVEL_COUNTS = 1830;
 
     // The height between each cone in the stack
-    public static int CONE_HEIGHT_COUNTS = 57;
+    public static int CONE_HEIGHT_COUNTS = 64;
 
     // Lift PID proportion coefficient
     public static double PID_P = 20;
@@ -55,7 +55,7 @@ class LiftConfig {
     public static int TWEAK_MAX_ADD = 100;
 
     // The claw on the lift
-    public static double CLAW_OPEN_POSITION = 0.85;
+    public static double CLAW_OPEN_POSITION = 0.83;
     public static double CLAW_CLOSE_POSITION = 0.70;
 
     // The distance at which it triggers
@@ -158,7 +158,7 @@ public class Lift extends Component {
         }
 
         if (level == -1) {
-            if (!limit_switch.getState()) {
+            if (!limit_switch.getState())  {
                 elevate_to(0);
                 lift_offset = lift.getCurrentPosition();
             }
